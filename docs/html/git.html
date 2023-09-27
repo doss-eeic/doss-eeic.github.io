@@ -1,0 +1,988 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Git/gitlabで共同作業をするための最小限の知識</title>
+
+<style>
+body {counter-reset: h2 assignment; }
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+  div.assignment:before { counter-increment: assignment; content: "作業 " counter(assignment) ". ";}
+  div.assignment { background-color : #FFEEEE; border: 1px solid #FF0000; }
+
+h1 {
+  font-size   : 18pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h2 {
+  font-size   : 16pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h3 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 20pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+div.analects {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 550pt;
+  padding     : 3pt 20pt;
+  background-color : #ffd;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 14pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+</head>
+
+<body>
+  <a href=../ >home</a>
+<h1>Git/gitlabで共同作業をするための最小限の知識</h1>
+<div>
+<font size=-1>(the page is encoded in UTF-8)</font>
+</div>
+
+<h2>Gitとは</h2>
+<div>
+Gitは，「バージョン管理システム (Version Control System)」
+と呼ばれるソフトウェアの一種で，同種のものとしては，
+CVS, Subversion, Mercurialなどがある．
+要するに複数の人間で，ソースコードに関する変更を安全に行うシステムである．
+複数の人間で同じソフトウェアをいじるときに，
+変更点を他の人に伝えるのにまさか毎回手動でメールをやりとり，
+というわけにも行かない．
+かといって，本当に同じファイルを複数人が同時に更新したら，
+タイミング次第でお互いの更新をお互いにつぶしあうような事態が，
+容易に発生してしまう．
+<font color=blue>手元である程度まとまった更新を行い，
+最低でもコンパイルが通る程度までまとまったところで，
+変更点を一括して他の人に伝える</font>，
+というのがそれらのシステムの主な目的である．<br/>
+<br/>
+このページでは，Git（とGitLab）の基本的な使い方として，
+ソースコードに対する変更をチーム内で共有する方法について解説する．<br/>
+
+<ul>
+    <li><a href="#topology">前提とする構成</a></li>
+    <li><a href="#setup">事前のセットアップ</a></li>
+    <li><a href="#project_start">プロジェクト開始時の作業</a></li>
+    <li><a href="#push_pull">日常繰り返される作業</a></li>
+    <li><a href="#conflict">衝突 (conflict) を理解する</a></li>
+    <li><a href="#glossary">用語の説明</a></li>
+    <li><a href="#ssh_key">SSHキーの登録方法</a></li>
+    <li><a href="#advanced">もう少し進んだ使い方</a></li>
+</ul>
+</div>
+
+
+<a name=topology> </a>
+<h2>前提とする構成</h2>
+<div>
+<!--例えば，3人チームで作業を行う際の基本的な構成は下図のようになる．-->
+下図に示しているのは，3人チームで作業を行う場合の基本的な構成である．
+各メンバーの個人マシンにはディレクトリとファイルの集合（以下，<b>作業ツリー</b>と呼ぶ）があって，
+「中間の置き場」であるサーバには
+作業ツリーの変更内容が格納されている．
+この「中間の置き場」のことを，バージョン管理システムでは<font color=blue><b>リポジトリ (repository)</b></font>と呼ぶ．
+<br />
+<a href="svg/git_basic2.svg"><img src="svg/git_basic2.svg" height="500" /></a>
+<br />
+<!--<font color=blue>各メンバーの個人マシンと，こちらが準備したgitlabのサーバが，
+それぞれソースツリーの完全なコピーを持つ．</font>-->
+各自は個人マシンの作業ツリーで作業をして，切りのいいところで変更点をサーバに反映させる．
+他のメンバーはその変更点を適当なタイミングでサーバから取り寄せて，
+自分の作業ツリーに適用する．
+<!--分散されている等々の説明は後回し．-->
+<!--Gitは自由度が高いシステムで，上記以外の構成も可能で，
+例えば別に一つのサーバを介す必要はなく，
+お互いのマシンの間で直接変更をやりとりしたりすることもできるし，
+コピーされたツリーを再びコピーして孫を作り，
+階層化したりすることもできる．
+だが一番の目的はメンバー間で効率的に変更を
+伝え合うことであって，
+それ以上のややこしいことはさしあたり必要ないし，
+ハマる元になるので，-->以降ではこのモデルで作業するために必要な，
+最低限のGitの概念と操作方法を説明する．
+また，サーバとしてはGitLabというソフトウェアを用いることにする．
+GitとGitLabの違いについては，<a href="#glossary">用語の説明</a>を参照されたい．<br/>
+<br/>
+また，この課題ではこちらが
+<font color=red>進捗把握やコードレビューをするために
+GitLabに上がっているソースを眺めたりもするので，
+こまめに途中経過でも上げてもらうことを推奨している．</font>
+</div>
+
+<a name=setup> </a>
+<h2>gitlabサーバへのユーザ登録とログイン</h2>
+<div>
+<p>
+上記のような構成で作業をするにあたっては，
+まずはgitlabサーバにアカウントが作られていなくてはならない．
+<!--このアカウント作成作業はこちらで行う．-->
+アカウントは，以下のURLにアクセスして，右の"Register"の項目から登録する．
+</p>
+<a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp" target="_blank">https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp</a>
+<p>
+</p>
+<a href="svg/register.png"><img src="svg/register.png" width="300"/></a>
+<!--
+<p>
+トップページにアクセスすると以下のようなsign inページに飛ばされるので，
+ユーザ名とパスワードを入力してsign inする．
+この際注意として，LDAP, Standardと表示される二つのタブのうち，
+<font color=red>"Standard"を選んでsign in</font>する．
+<br />
+<a href="svg/signin.svg"><img src="svg/signin.svg" height="500" /></a>
+</p>
+<p>初めてsign inした際に，パスワードも変更する．
+それには，sign in直後のページで左のメニューから"Profile Settings"
+をクリック．
+<br />
+<a href="svg/signin_top.svg"><img src="svg/signin_top.svg" height="500" /></a>
+<br />
+そこから，"Password"をクリックしてパスワード変更画面へ行く．
+<br />
+<a href="svg/profile_password.svg"><img src="svg/profile_password.svg" height="500" /></a>
+</p>
+</p>
+-->
+<p>
+なお，以降の作業をするにあたって必ずしも必須ではないが，
+推奨される設定作業として，SSHキーの登録がある．
+その説明は<a href=#sshkey>後回し</a>にして，その先の説明を行う．
+</p>
+
+<div class="assignment">
+授業用のGitLabに自分のアカウントを登録せよ．
+</div>
+
+</div>
+
+<!--
+<h3>ユーザ名とメールアドレスの設定</h3>
+<div>
+<p>
+初めて自分のマシンでGitを使う際は，変更履歴に記録される名前とメールアドレスを設定する必要がある．
+それには，端末で次のようなコマンドを入力する．
+</p>
+<pre>
+$ <u>git config --global user.name "(名前)"</u>
+$ <u>git config --global user.email "(メールアドレス)"</u>
+</pre>
+この設定はホームディレクトリの設定ファイルに記録され，
+そのマシンでGitリポジトリを扱う際に用いられる．
+<pre>
+$ <u>cat ~/.gitconfig</u>
+[user]
+	name = (名前)
+	email = (メールアドレス)
+</pre>
+
+<div class="assignment">
+Gitに名前とメールアドレスを登録せよ．
+</div>
+</div>
+-->
+
+<a name="project_start"> </a>
+<h2>プロジェクト開始時の作業</h2>
+<div>
+<p>
+ここでは，チームで作業する練習として，
+チーム内の一人がGitLabにソースコードを追加し，
+別のメンバーがそれを取り寄せることを体験してもらう．
+練習のため，前回改造したgnuplotのソースをチーム内で共有してもらう
+ことにする．
+</p>
+
+<div class="assignment">
+以下の手順でGitLab上に新しいプロジェクトを作り，
+そこに（元々公式で配布されている）gnuplotのソースコードを送信せよ．
+</div>
+
+<p>
+GitLabの「プロジェクト」というのは，今はGitのリポジトリと一対一対応すると覚えてもらえばよい．
+<!--，
+すなわち誰かがダウンロードして，展開したソースツリーを，
+上で示した状態まで持ってくるために必要な作業を説明する．
+概要は，-->
+プロジェクト開始時に必要なセットアップ手順は，
+<ol>
+  <li>GitLab上でプロジェクトを作成．すると，内容が空のリポジトリができる(GUI 操作)</li>
+  <li>GitLabからリポジトリを複製して，手元に作業ツリーを作成
+    <!--内容が空のリポジトリが，手元のマシンに複製される-->(git clone)．空の作業ツリーができる．</li>
+  <li>作業ツリーにソースコードを追加し，
+    フォルダをGitに追加 (git add)</li>
+  <li>変更をコミットする (git commit)</li>
+  <li>コミットした変更をGitLabサーバに送り込む (git push)</li>
+  <li>他のメンバーもGitLab上のリポジトリを複製 (git clone) すると，
+    ソースコード一式が既に入った作業ツリーが取得できる</li>
+</ol>
+となる．以下で詳細を述べる．
+</p>
+</div>
+
+<!--<p>
+以下では，gnuplotを変更するプロジェクトを例に取り，
+上記のステップを終えるまでの手順を具体的に説明する．
+</p>!-->
+
+<a name=add_project> </a>
+<h3>GitLab上でプロジェクトを作る</h3>
+<div>
+<!--画面右上の + ボタンが，プロジェクト追加のとボタン．-->
+<p>GitLabの画面上のどこかにある <b>"New Project"</b> というボタンを押す．
+（以降，GitLabのバージョンによって画面に多少の差異があるかもしれない．）
+</p>
+<!--<a href="svg/gitlab.svg"><img src="svg/gitlab.svg" height="200" /></a>-->
+<a href="svg/new_project_1.png"><img src="svg/new_project_1.png" width="500" /></a>
+<a href="svg/new_project_2.png"><img src="svg/new_project_2.png" width="500" /></a>
+<p>
+そして，プロジェクト名を入力して確定する．
+</p>
+<a href="svg/new_project.png"><img src="svg/new_project.png" width="700" /></a>
+<p>
+これで，GitLabサーバ上に，空のプロジェクトが作られる．
+なお，この状態でプロジェクトのページへ行くと，
+以下のような画面で以降の手順が案内される．
+以下で説明するのはこの内の上の方(Create a new repository)
+に沿ったやり方である．
+</p>
+<a href="svg/project.svg"><img src="svg/project.svg" height="500" /></a>
+</div>
+
+<a name=clone_initial> </a>
+<h3>GitLabサーバ上の空のリポジトリを複製(clone)する</h3>
+<div>
+<p>
+  cloneするには https 経由で行う方法と，SSH経由で行う方法がある．
+  後者を用いるには，
+<a href=#sshkey>SSHキーの登録</a>作業を事前に行っておく必要がある．
+本格的作業が始まったら後者にすることを推奨するが,
+もしSSHキーの登録にハマったら後回しにして https 経由でも良い.
+</p>
+<ul>
+<li>https経由:
+<pre>
+$ <u>git clone https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/ユーザ名/プロジェクト名.git</u>
+</pre>
+<!--
+<strike>
+なお現在(こちらの不具合で),
+certificationエラーとかなんとか言われるので,
+<tt>GIT_SSL_NO_VERIFY=1</tt>という環境変数を設定する.
+シェルを終了すると向こうになるので注意.
+<pre>
+$ <u>export GIT_SSL_NO_VERIFY=1</u>
+$ <u>git clone https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/ユーザ名/プロジェクト名.git</u>
+</pre>
+</strike>
+<p>
+<b>直りました。</b>
+</p>
+-->
+
+<p>
+sshでやりたいけどもうhttps経由でcloneしてしまったよ，という場合，改めてcloneし直すか，以下のコマンドでリモートリポジトリを変更することができる．
+</p>
+<pre>
+$ <u>git remote set-url origin git@doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:ユーザ名/プロジェクト名.git</u>
+</pre>
+
+</li>
+<li>SSH経由:
+<pre>
+$ <u>git clone git@doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:ユーザ名/プロジェクト名.git</u>
+</pre>
+</li>
+</ul>
+
+<p>URLは，わざわざ打ち込まなくてもGitLabの画面から簡単にコピーできる．</p>
+<a href="svg/url.png"><img src="svg/url.png" width="300" /></a>
+
+<p>
+どちらにしても手元に，「プロジェクト名」という，空のディレクトリができるはずで，
+これが作業ツリーとなる．
+<!--なお，前者でcloneしても，あとからSSH経由でcloneすればそれ以前の作業は引き継げるので，現時点ではどちらで行っても問題はない．-->
+一見すると何も入っていないように見えるが，実際には
+変更を管理するためのディレクトリ「.git」が存在している．
+（「.」で始まるファイルは隠しファイルとみなされて，普段は表示されないが，
+lsに-aをつけると表示される．）
+</p>
+<pre>
+$ <u>ls -a プロジェクト名</u>
+.    ..   .git
+</pre>
+<p>
+ちなみに，なぜこの作業を<font color="blue">複製 (clone)</font>と呼ぶかというと，
+実は<b>「作業ツリーもリポジトリの一種」</b>だからで，
+これはGitが採用している分散リポジトリという仕組みの特徴である．
+興味があれば調べてみるとよい．
+</p>
+</div>
+
+<a name=extract_source> </a>
+<h3>ソースファイルを配置する</h3>
+<div>
+<p>
+できた作業ツリーに早速ソースコードを追加したいところだが，
+ここで一つ注意点がある．
+ソースコード管理のお作法として，
+リポジトリ内には人間が直接編集するファイル（広い意味でのソース）だけを入れ，
+configureやmakeの結果各マシン上で生成されるもの
+（Makefile, config.h, .o ファイルや実行可能ファイル）は入れない，
+というのが普通である．各マシンの
+上で，configure, make, make install とすることで
+ビルドできるようなものを共有したいのだから，
+これは当然のことである．だから，<font color=red>
+ソースコードを追加する時は常に，解凍したばかりの，
+まだ何も作業をしていない状態で加える</font>ことを推奨する．
+</p>
+
+<p>
+前回の演習でtar ballをダウンロードしてそれを展開する，
+というところまで済んだはずなので，
+もう一度そのtar ballを展開して
+変更前のソースコードを追加することにする．
+</p>
+
+<!--$ <u>mv どっか/gnuplot-5.0.1.tar.gz .</u>-->
+<pre>
+$ <u>cd プロジェクト名</u>
+$ <u>tar xvf /home/denjo/gnuplot-5.0.1.tar.gz</u>
+</pre>
+ディレクトリ構成は以下のようになる．
+<pre>
+プロジェクト名/
+  +- gnuplot-5.0.1/
+     +- config/
+     +- demo/
+     +- ...
+</pre>
+
+</div>
+
+<a name=add_source> </a>
+<h3>ファイル・ディレクトリをリポジトリに加える(add)</h3>
+<div>
+<pre>
+$ <u>git add gnuplot-5.0.1</u>
+</pre>
+<p>
+これで，gnuplot-5.0.1というディレクトリおよびその下の
+ファイルが全て追加される．ただし，追加されるとはいっても，
+その内容がすでにGitLabサーバに反映されている訳ではない．
+</p>
+
+</div>
+
+<a name=commit> </a>
+<h3>追加されたファイルをコミット(commit)</h3>
+<div>
+<pre>
+$ <u>git commit -m "コメント" </u>
+</pre>
+とする．コメントのところは適切に書く．例えば今なら，
+"Add source code" とか．
+
+<br/>
+
+このとき以下のような文句を言われたら
+<pre>
+$ git commit -m "コメント"
+
+*** Please tell me who you are.
+
+Run
+
+  <font color="red">git config --global user.email "you@example.com"</font>
+  <font color="red">git config --global user.name "Your Name"</font>
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+</pre>
+言われたとおりにする(上記の下線部を実行する.
+もちろんEmailアドレスと名前の部分は自分のものに置き換える).
+初めてgitを使った人はこう言われるはず.
+コミットした記録に誰がやったのかを記録しないといけない.
+<br/>
+
+ところで，この段階に至っても，GitLabサーバにデータが
+送られているわけではない (それをやるのは次の，push)．
+</div>
+
+<a name=push_source> </a>
+<h3>コミットした変更を別のマシン(GitLabサーバ)へ送り込む(push)</h3>
+<div>
+<pre>
+$ <u>git push</u>
+</pre>
+<p>
+ここに至って，先ほどまでに行われ，コミットされた変更
+（つまり，ソースコードの追加）が，GitLabサーバへ送り込まれる．
+pushに至って初めて変更が送り込まれるんだったら，
+では，その前段のcommitはいったい，何をしていると思えばよいのか．
+</p>
+<p>
+要するに，ここまで行った色々な変更を一つのパッケージにまとめて，
+あとで別のマシン（GitLabサーバ）に送り込む際の単位を作っている，
+と理解してもらえれば良いのではないかと思う．
+</p>
+
+</div>
+
+<a name=clone> </a>
+<h3>他のメンバーがリポジトリを複製する</h3>
+<div>
+<p>
+ここまででGitLabサーバにコミットが無事送り込まれた．
+GitLabをブラウザで見れば，ファイルが見られるはずである．
+他の人が行った変更やそれらの履歴などを見ることも出来，
+GitLabを使うことのメリットが感じられる．
+</p>
+<p>
+こうしておけば，他のメンバーがcloneコマンドを実行しても
+ソースコード一式がダウンロードできる．
+<ul>
+<li>https経由:
+<pre>
+$ <u>git clone https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/ユーザ名/プロジェクト名.git</u>
+</pre>
+</li>
+<li>SSH経由:
+<pre>
+$ <u>git clone git@doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:ユーザ名/プロジェクト名.git</u>
+</pre>
+</li>
+</ul>
+今度は「プロジェクト名」というフォルダの中にソースコード一式が入った
+リポジトリが複製されることになる．以上で，プロジェクトごと
+に必要なセットアップは終わりである．
+</p>
+
+<p>自分に見えるプロジェクトはgitlabの画面の,
+  "Projects" -&gt;
+  "Explore Projects" -&gt;
+  "All" から見ることが出来る.
+</p>
+
+<div class="assignment">
+他の人が作ったリポジトリを見て, cloneできることを確認せよ．
+</div>
+</div>
+
+<h2>グループの作成</h2>
+<div>
+  <p>
+  <font color="red">これは2回目以降, チームが出来た時点で行う.</font>
+    まだチームが出来ていなければ飛ばして良い.
+  </p>
+<p>
+GitLabでは，各ユーザアカウントが所属できる「グループ」を作ることができる．
+チームごとにグループを作っておくと，後々便利なので，予め作っておくことにする．
+下図のボタンを辿ると，グループを作れる．
+</p>
+<a href="svg/group_groups.png"><img src="svg/group_groups.png" width="300" /></a>
+<a href="svg/group_newgroup.png"><img src="svg/group_newgroup.png" width="300" /></a>
+<a href="svg/group_create.png"><img src="svg/group_create.png" width="300" /></a>
+<p>
+グループができたら，他のメンバーをグループに招待する．
+下図のように追加する．
+</p>
+<a href="svg/group_newmember.png"><img src="svg/group_newmember.png" width="700" /></a>
+
+<div class="assignment">
+  おもしろいチーム名前を考え,
+  チームの誰かが代表してグループを作成し，
+  チームメンバー全員をGitLabグループのメンバーとして追加せよ．
+</div>
+
+<div class="assignment">
+  プロジェクトのリスト("Projects" -&gt; "Explore Projects" -&gt; "All")
+  から doss20xx (20xxの部分は年度) チームリストのプロジェクト
+  を見つけ, そのREADME.md に自分のチーム情報(決まっているところまで)を書き込め
+  (もちろんこれには git clone, 修正, git commit, git push の作業が必要).
+</div>
+
+</div>
+
+
+
+<a name="push_pull"> </a>
+<h2>日常繰り返される作業</h2>
+<div>
+いったん全員が同一のリポジトリの複製を手にしたら，
+以降の作業の流れは以下のようになる．<br>
+
+<a href="svg/git_cycle.svg"><img src="svg/git_cycle.svg" height="500" /></a>
+
+<ul>
+  <li>自分の編集作業</li>
+  <ol>
+    <li>手元の作業ツリー内で普通にファイルを編集する
+      </li>
+    <li>切りのいいところでコミットする (commit -a)</li>
+    <li>それをGitLabサーバに送り込む (push)</li>
+  </ol>
+  <li>時折適切なところで他のメンバーがpushした変更を取り込む(pull)</li>
+</ul>
+これらを変更点があるたびにこまめに繰り返す，というサイクルである．
+もっとも今回の演習に限って言えば，
+他の人に渡す変更内容ができるよりも，
+試行錯誤をする時間のほうが中心となり，
+そこまでpushが細かく発生するわけではないかも知れない．
+
+<div class="assignment">
+Gitに追加したgnuplotのソースファイルに，初回の演習で行った変更を適用し，
+その変更をGitLabに送信せよ．
+</div>
+
+<h3>手元の作業ツリー内で普通にファイルを編集する</h3>
+<div>
+これは通常通りエディタで行えば良い．
+なお，新しいファイルやディレクトリを追加する場合は，
+上でソースツリーのディレクトリを追加した時と同じように，
+git addコマンドを使って追加する．<br>
+
+前回の演習で改造したgnuplotであれば，
+tables.cやcommand.cを同じように直接編集するか，
+別ディレクトリにまだ残っていればそこからコピーしてくればよい．
+<pre>
+$ <u>cp /home/denjo/gnuplot-5.0.1/src/tables.c プロジェクト名/gnuplot-5.0.1/src/tables.c</u>
+</pre>
+</div>
+
+<h3>切りのいいところでコミットする</h3>
+<div>
+<!--<pre>
+$ <u>git commit -m "コメント" <font color=blue>-a</font></u>
+</pre>-->
+<pre>
+$ <u>git commit -m "コメント" <font color=blue></font></u>
+</pre>
+既に説明したcommitをここでも使うのだが，ひとつだけ注意がある．
+それは，<font color=red>
+commitはそれに先立ってaddコマンドで指定されたファイルしか，
+変更されたとはみなしてくれない，</font>ということである．
+つまり，既存のファイルをただ変更するだけでは，
+commitはそれに気づいてくれない．それを勝手に発見してくれるようにするために，
+<font color=blue>-aオプションを指定</font>する．もしくは変更したいファイルをいちいち
+git addで指定しても良いのだが，普通は余りやりたくないのではないか．
+</div>
+
+
+<h3>コミット結果をgitlabサーバに送り込む</h3>
+<div>
+<pre>
+$ <u>git push</u>
+</pre>
+ここは先程と同じ．新たに説明することはない．<br/>
+コミットを新たにpushすると，GitLabで履歴が確認できるようになっているはずである．
+余力があればこれも確認するとよい．
+
+</div>
+
+<h3>他のメンバーがpushした変更を取り込む</h3>
+<div>
+
+<div class="assignment">
+他のメンバーのリポジトリをcloneした後，
+そのメンバーに変更をpushしてもらい，
+その変更が取り込めることを確認せよ．
+</div>
+
+<pre>
+$ <u>git pull</u>
+</pre>
+これは，他の人がpushした変更を取り込む手段である．
+自分が変更をしていようといまいと，時折実行するのが良い．
+もしくはとなりに座って作業しているのであれば，
+他の人がpushしたら自分はpullをするようにすればよい．
+</div>
+
+</div>
+
+<a name="commands"> </a>
+<h2>これだけは，というコマンドまとめ</h2>
+<div>
+<ul>
+  <li>git clone ...</li>
+  <li>git add ...</li>
+  <li>git commit -m "..." -a</li>
+  <li>git push</li>
+  <li>git pull</li>
+</ul>
+<p>今手元の作業ツリーがどうなっているかを調べるのに，
+以下の3つのコマンドも知っておくと便利．</p>
+<ul>
+  <li>git status</li>
+  <li>git diff</li>
+  <li>git log</li>
+</ul>
+</div>
+
+<a name="github"> </a>
+<h2>元になるソースがgithub上にある場合</h2>
+<div>
+  <ul>
+    <li>多くのオープンソースプロジェクトがgithubというサービス
+      (doss-gitlab.eidos.ic.i.u-tokyo.ac.jp はgithubのローカル版だと思えば良い)
+      でホストされている. その場合一旦それをcloneしてあらためてdoss-gitlab上
+      に注入する代わりに, githubのプロジェクトをdoss-gitlabに直接
+      コピー(github用語で, forkという)することができる.
+      なおこうしておくと, 最終的に本家にコミットしたい変更を,
+      githubの機能を使ってコミットすることも出来る</li>
+  </ul>
+
+</div>
+
+
+<a name="conflict"> </a>
+<h2>衝突 (conflict) を理解する</h2>
+<div>
+<p>
+ここまでの話で作業は始められる．
+<font color=blue>以降は時間を見つけて好きなときに読んで下さい．</font>
+トラブルに遭遇してから読んでも良いが，
+事前に読んでおけば心の平穏は保ちやすい．
+</p>
+<p>
+授業時間中は皆で相談しながら
+コーディングは一人で，というスタイルを推奨するが，
+時には並行して作業をすることもあるだろう
+(そもそもリビジョン管理システムの本来の目的は，
+それを可能にすることである)．すると，
+<font color=red>複数のメンバーが同じファイルを変更</font>し，
+commit, pushをするという事態が避けられない．
+これが，変更の「衝突(conflict)」という現象で，
+このようなときにgitが何を言ってくるか，
+自分は何をすればよいかを知っておくことは，
+安心して作業をするために重要である．
+</p>
+<h3>衝突はいつ「判明」するか</h3>
+<div>
+<p>
+今，A, B二人が編集をしているとする．
+当然のことながら衝突は二つの，
+別の場所で行われた変更が「出会う」ところで判明する．
+それには少なくとも, A, Bのどちらかが，
+pushを行っていることが前提である．
+つまり，リポジトリ内でのファイルの編集や，
+commitだけでは衝突は発生しない．
+より具体的には以下の時点で衝突が，
+明るみに出る．
+<ul>
+  <li>(ケース1) Aがpushした．その後Bもpushしようとした (A, B両者の変更がgitlabサーバ上で出会う)
+<br/>
+<a href="svg/push_push_conflict.svg"><img src="svg/push_push_conflict.svg" height="300" /></a>
+</li>
+  <li>(ケース2) Aがpushした．その後Bがpullしようとした (Aの変更が，Bのマシン上にやってきてそこでBの変更と出会う)．
+<br/>
+<a href="svg/push_pull_conflict.svg"><img src="svg/push_pull_conflict.svg" height="300" /></a>
+<br/>
+これにはさらに二つの場合があり，
+    <ul>
+      <li>(ケース2-1) Bがcommitする以前の変更と衝突</li>
+      <li>(ケース2-2) Bがcommitしたあとの変更と衝突</li>
+    </ul>
+  </li>
+</ul>
+
+
+その語感から受ける印象とは異なり，commitだけでは衝突は発生しないことに注意．
+git特有の言葉遣いだが，commitはあくまでそのリポジトリ内で，
+変更点を「パッケージ化」するだけの，ローカルな操作である．
+データベースを始めとして，「コミット」という言葉は普通，
+他と衝突したら失敗する操作，逆に言うと，コミットが成功すれば
+その変更はグローバルに反映されたとみなせるような操作を
+意味するのだが，gitではそうではない．したがって，commitが
+成功したあと，いざpushをしようとして衝突が判明する．
+</p>
+<p>それぞれの場合のgitの挙動を説明しておく．</p>
+</div>
+
+<h3>ケース1: push時の衝突</h3>
+<div>
+ これは操作自身が失敗する．出るのは以下のようなメッセージ:
+<pre>
+nanamomo:gnuplot-5.0.1% <u>git push</u>
+To git@doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:tau/my-awful-project.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'git@doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:ta\
+u/my-awful-project.git'
+ヒント: Updates were rejected because the remote contains work that you do
+ヒント: not have locally. This is usually caused by another repository pushing
+ヒント: to the same ref. <font color=red>You may want to first integrate the remote changes
+ヒント: (e.g., 'git pull ...') before pushing again.</font>
+ヒント: See the 'Note about fast-forwards' in 'git push --help' for details.
+</pre>
+つまり，Bに「まずAの変更を取り込むためにpullせよ」と言っている．
+ので，Bは素直にこれに従う．
+<pre>
+$ <u>git pull</u>
+</pre>
+よって，<font color=blue>結局ケース2の場合に帰着</font>される．
+</div>
+<h3>ケース2: pull時の衝突, かつBがcommitする以前の変更と衝突</h3>
+<div>
+  つまりBはまだファイルの変数作業をしている最中で，まだそれを
+  commitはしていなうちに，pullを行った場合．
+  この場合のメッセージがこれ．
+<pre>
+nanamomo:gnuplot-5.0.1% <u>git pull</u>
+remote: Counting objects: 7, done.        
+remote: Compressing objects: 100% (5/5), done.        
+remote: Total 7 (delta 3), reused 0 (delta 0)        
+Unpacking objects: 100% (7/7), done.
+From doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:tau/my-awful-project
+   b672bcb..a6f0c56  master     -> origin/master
+Updating b672bcb..a6f0c56
+error: Your local changes to the following files would be overwritten by merge:
+        gnuplot-5.0.1/CodeStyle
+<font color=red>Please, commit your changes or stash them before you can merge.</font>
+Aborting
+</pre>
+stashというのは，コミット以前の変更を一時保存する操作で，大概の場合これがやりたい操作ではないだろう．
+なのでまずは自分の変更を(自分のリポジトリ内に)commitすることになる．
+<pre>
+$ <u>git commit -m "..." -a</u>
+$ <u>git pull</u>
+</pre>
+そこで<font color=red>結局すべては，ケース2-2の場合に帰着</font>する．
+</div>
+<h3>ケース2: pull時の衝突, かつBがcommitした変更と衝突</h3>
+<div>
+場合により，gitが両者の変更を行単位で勝手に統合してくれる場合と，
+そうでなくさじを投げられる(例えば同じ行を二人が編集した)場合がある．
+さじを投げられた場合は以下のメッセージが出る．
+<pre>
+nanamomo:gnuplot-5.0.1% <u>git pull</u>
+remote: Counting objects: 4, done.        
+remote: Compressing objects: 100% (3/3), done.        
+remote: Total 4 (delta 2), reused 0 (delta 0)        
+Unpacking objects: 100% (4/4), done.
+From doss-gitlab.eidos.ic.i.u-tokyo.ac.jp:tau/my-awful-project
+   76bcaeb..bbbec8a  master     -> origin/master
+<font color=red>Auto-merging gnuplot-5.0.1/ChangeLog
+CONFLICT (content): Merge conflict in gnuplot-5.0.1/ChangeLog
+Automatic merge failed; fix conflicts and then commit the result.</font>
+</pre>
+後者の場合はファイル中に両者の相違点が織り込まれたファイルができる．
+<pre>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Gitはクソだ
+=======
+Gitはクールだ
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 72616890b37a0fb7b2f8cadf83524ed591430d5f
+</pre>
+これを見ながら手動で変更する．
+どちらの場合でも，Bはその後改めて，commitをする．その後push
+をすれば，めでたく，A, B両者の変更点を統合したバージョンが
+gitlabサーバにとどく．
+
+<pre>
+ ... 手動で変更をマージして, &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; とかがないファイルを作る ...
+$ <u>git commit -m "..." -a</u>
+$ <u>git push</u>
+</pre>
+
+</div>
+</div>
+
+<a name="glossary" />
+<h2>用語の説明</h2>
+<div>
+<p><a href="https://git-scm.com/">"Git"</a>というのはオープンソースソフトウェアの一つのことで，
+各々のコンピュータごとにインストールして使うものである．
+Gitには標準のGraphical User Interface (GUI) が存在しないので，
+基本的には端末エミュレータからコマンドで操作することになる．
+「Gitの初心者はGUIから始めるべき」という主張をする人もいるが，
+ツールの演習も兼ねて，今回はコマンドのみを使ってもらうことにする．
+</p>
+<p>Gitを便利に使えるようにしたウェブサービスは複数存在し，
+代表的なものに<a href="https://github.com/">Git<b>Hub</b></a>があり，
+現在のオープンソースプロジェクトの多くがこうしたサービスを使って
+運用されている．
+GitHubはウェブブラウザから各種操作ができて便利ではあるが，
+一企業の商用サービスなので非公開のソースコードを置くと料金がかかる．
+そこで，GitHubと同じような利便性を提供しつつ，
+自前のサーバ上で管理するようなソフトウェアとして
+<a href="https://about.gitlab.com/">Git<b>Lab</b></a>があり，
+本授業でもこれを使っている．
+</p>
+<p>紛らわしいことに，GitLabの開発元では「GitLabの公開サーバ」を
+<a href="https://gitlab.com/explore/projects/">gitlab.com</a>
+上で運用しているが，
+本授業で使うのは授業用に立てた以下のURLにあるサーバである．</p>
+<a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp">https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp</a>
+</div>
+
+<a name=sshkey> </a>
+<h2>SSHキーの登録方法</h2>
+<div>
+<p>
+リポジトリとのやりとりはhttpsを利用して行う方法と，
+SSHを利用して行う方法がある．httpsの場合，pushやpullをするたびに，
+gitlabサーバ上のユーザ名とパスワードを入力する必要がある．
+SSHを利用するためには事前に公開鍵を登録する必要がある．
+以下はその手順について述べる．
+
+<ol>
+<li>sign in直後の画面で，左のメニューから，"Profile Settings"をクリック．
+<br />
+<a href="svg/signin_top.svg"><img src="svg/signin_top.svg" height="500" /></a>
+</li>
+
+<li>Profile Settingsの画面から，"SSH Keys"をクリック．
+<br />
+<a href="svg/profile.svg"><img src="svg/profile.svg" height="500" /></a>
+</li>
+
+<li>"ADD SSH KEY"ボタンをクリック
+<br />
+<a href="svg/sshkeys.svg"><img src="svg/sshkeys.svg" height="500" /></a>
+</li>
+
+<li>キーを貼り付けるボックスに，SSHの公開鍵の中身をペーストし，
+"ADD KEY"ボタンをクリック．
+<br />
+<a href="svg/addkey.svg"><img src="svg/addkey.svg" height="500" /></a>
+<br />
+公開鍵は，すでに他の目的で生成したことがある人は，
+~/.ssh/id_rsa.pub (または ~/.ssh/id_dsa.pub)という名前で生成されている
+(~/ はホームディレクトリの意味)．
+生成したことがない人は，
+<pre>
+$ <u>ssh-keygen</u>
+</pre>
+というコマンドで生成する．すでに存在する場合上書きしてよいか，
+という警告が出るので，その場合は上書きせずにコマンドを中断し，
+既にあるものを使えば良い．
+</li>
+</ol>
+
+なお，SSHキーを登録していない状態では，プロジェクトのトップページに
+以下のようなオレンジのバナーが表示される．
+ここから "add an SSH key"をクリックしても同じ登録画面に到達できる．
+<blockquote>
+<a href="svg/addkey_prompt.svg"><img src="svg/addkey_prompt.svg" height="500" />
+</a>
+</blockquote>
+</p>
+</div>
+
+<!--
+<h2>upstreamブランチが設定されていない場合</h2>
+<div>
+<p><font color=blue>以下の段落はこれでうまく行った人は読む必要ないが</font>
+gitのバージョンが新しい(2.0以降)とこれではダメらしい．
+<pre>
+$ <u>git push origin master</u>
+</pre>
+としないといけないらしい．2.0以前のgitでもこうしておけば
+大丈夫だが，git pushでも省略時の動作として結果的に同じ動作をする．
+なお，2.0以降でも，-u オプションをつけると，以降それらを
+省略できるらしい．つまり，一度
+<pre>
+$ <u>git push -u origin master</u>
+</pre>
+としておけば，以降は
+<pre>
+$ <u>git push</u>
+</pre>
+でOKになる．
+いったいoriginって何? masterって何?
+ということでイライラしてくるに違い
+ない気がするのだが，その説明を今はじめては
+無意味に説明が長くなるので省略する．
+</p>
+</div>
+-->
+
+<a name="advanced" />
+<h2>もう少し進んだ使い方</h2>
+<div>
+<p>授業では詳しく解説していないが，
+Gitに限らずバージョン管理システムには数多くの機能があり，
+それに慣れることで生産性を高めることができる．
+余裕のある人は，チーム開発の練習と思って，
+以下のような機能の使い方に慣れてみるとよい．
+</p>
+<ul>
+<li><b>ステージ</b>の使い方に慣れる．</li>
+<ul>
+<li>具体的には，git resetやgit stashなどのコマンド．</li>
+<li>
+ステージをうまく使いこなせると，コミットしたい重要なファイルと
+したくないファイルを分けて扱える．</li>
+</ul>
+<li>コミットを，<b>ブランチ</b>やタグとして管理する．</li>
+<ul>
+<li>具体的には，git branchやgit checkoutなどのコマンド．</li>
+</ul>
+<li>GitLabに備わっているMerge Requests（GitHubでいう<b>Pull Requests（略してプルリク）</b>）を試す．</li>
+<ul>
+<li>マージを複数人でレビューして承認するといった，より慎重な作業に役立つ．</li>
+</ul>
+<li>コミットの内容を間違えてしまった時に，
+適切に履歴を編集する操作（<b>リベース (rebase)</b>）を試す．</li>
+</ul>
+</div>
+
+
+</body>
+</html>

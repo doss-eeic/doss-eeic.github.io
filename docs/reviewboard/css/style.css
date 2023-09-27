@@ -1,0 +1,86 @@
+.main {
+    position: absolute;
+    /*left: 50%;
+    width: 950px;
+    margin-left: -475px;*/
+    color: #2b2b61;
+    z-index: 100;
+}
+
+.contents {
+    position: relative;
+}
+
+table tr th {
+    font-size: large;
+    text-align: center;
+    border-bottom: 2px solid #848495;
+}
+
+table tr td {
+    font-size: middle;
+    text-align: left;
+}
+
+div#teamboard {
+    position: fixed;
+    top:    0px;
+    left:   0px;
+    width:  100%;
+    height: 75px;
+    z-index: 5000;
+    background-color: white;
+    /*border-right: 5px solid #848495;*/
+    /*border-left: 5px solid #848495;*/
+    border-bottom: 5px solid #848495;
+}
+table#teamboard {
+    position: relative;
+    width: 800px;
+    left: 50%;
+    height: 100%;
+    margin-left: -400px;
+}
+table#teamboard tr td{
+    font-size:  small;
+    text-align: center;
+}
+
+table#scoreboard {
+    margin-top: 75px;
+    /*border-right: 5px solid #848495;*/
+    border-left: 5px solid #848495;
+    border-spacing: 30px;
+}
+
+table#scoreboard tr td {
+    vertical-align: top;
+    width: 600px;
+}
+
+table tr td.chart {
+    text-align: center;
+}
+
+a {
+    color: #2b2b61;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #666670;
+    text-decoration: underline;
+}
+
+#commentboard {
+    padding-top: 100px;
+}
+
+div#scoreboard {
+    padding-top: 50px;
+}
+
+#timeline {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

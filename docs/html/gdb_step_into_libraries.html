@@ -1,0 +1,954 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>自分がコンパイルしていないライブラリの中をGDBで追跡する</title>
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+
+
+h1 {
+  font-size   : 18pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h2 {
+  font-size   : 16pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h3 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 20pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h4 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 20pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+div.analects {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 550pt;
+  padding     : 3pt 20pt;
+  background-color : #ffd;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 14pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+</head>
+
+<body>
+  <a href=../ >home</a>
+<h1>自分がコンパイルしていないライブラリの中をGDBで追跡する</h1>
+<div>
+<font size=-1>(the page is encoded in UTF-8)</font>
+</div>
+
+<div>
+<p>
+多くのプログラムはすべての機能を自前で実装しているわけではなく，
+ライブラリと呼ばれる外部のプログラムに依存しています．
+よく使われるライブラリには，
+<ul>
+  <li>数学関数(cos, sinなど)</li>
+  <li>各種データ形式(XMLなど)の読み書きを扱うライブラリ</li>
+  <li>GUIを構成するライブラリ. GTK, Qtなど</li>
+  <li>グラフィクス (X Window)</li>
+</ul>
+などがあります．あるプログラムの内部を調べようと思って，
+ソースからコンパイルしたとしても，
+それらのライブラリまでコンパイルされるわけではなく，
+ライブラリは元々システムにインストールされているものが使われることがほとんどです．
+なので，プログラムの実行がライブラリ内に突入すると，
+ソースコードを見ながらデバッガで追跡することが困難になります．
+</p>
+<p>
+通常，ライブラリ関数の中身まで追跡する必要はないので，
+このことはあまり問題になりません．
+ライブラリ関数の呼び出しに差し掛かったら，nextコマンドで
+関数呼び出し毎飛ばせば良いだけの話です．
+</p>
+<p>
+しかし，それではすまない場合というのがあり，
+その代表例がGUIプログラムです．
+GUIプログラムは通常，「コールバック」と呼ばれる関数を，
+GUIライブラリに登録しておき，あるイベント
+(キーが押されたとか，マウスがクリックされたなど)
+が起きたら登録してあるコールバック関数が呼ばれる，
+という作りをしています．そして通常アプリケーションの全ての処理は，
+コールバックの中でなされます．
+このような構造のアプリケーションでは，
+関数呼び出しのフローが，
+<blockquote>
+ユーザプログラム -----&gt; GUIライブラリ --- (コールバック) ---&gt; ユーザプログラム
+</blockquote>
+という流れになるので，ユーザプログラムからGUIライブラリを呼び出すところで，
+GUIライブラリの内部を追跡していかないと，そこから呼ばれる（コールバックされる）ユーザプログラムを追跡することも出来ません．
+</p>
+
+<p>
+  ライブラリ内部を追跡するひとつの方法は，
+  そのライブラリ自身も自分でソースからコンパイルすることでありますが，
+  それをやっていくと果てしなく色々なソースをコンパイルをする羽目に陥る可能性があります．
+  特にGUIライブラリの多くは巨大なので，
+  コンパイルに失敗したり，
+  アプリケーション本体よりもよほど長時間を要し，
+  だんだん何をやっていたのかわからなくなることもあります．
+</p>
+
+<p>ここではひとつの有用なスキルとして，
+  パッケージとして提供されているライブラリ内部を
+  (自分でコンパイルせずに)追跡する方法を紹介します．
+</p>
+
+<p>ただし，GUIアプリを理解するのに，
+  巨大なGUIライブラリの中を本当に追跡したいか，
+  というのは，また別の問題かもしれません．一旦それはおいておいて，
+  ここではライブラリの中を追跡できるようになることは有用であるので，
+  そのやり方を説明します．GUIアプリを追跡するためのいくつかの作戦
+  については最後に述べます．
+</p>
+</div>
+
+<h2>ライブラリを追跡するために必要な二つのこと</h2>
+<div>
+  <p>
+    例として，C言語のシステム関数である<font color=blue>qsort</font>
+    の中身を追跡することにします．
+    qsortは2つの要素を比較する関数(まさにコールバック)を受け取って，
+    それを呼び出すので，
+    GUIアプリケーションで遭遇する問題の単純ケースになっています．
+  </p>
+    
+  <p>
+    以下で順に説明しますが，端的に行って次の2つのことを行います．
+    <ul>
+      <li>対象ライブラリの
+        <font color=blue>「デバッグシンボル」</font>を提供しているパッケージをインストールする</li>
+      <li>対象ライブラリの<font color=blue>「ソースファイル」</font>をインストールする</li>
+    </ul>
+    それぞれ具体的に何をインストールすればよいのか?
+    今回の場合，qsortという関数が，
+    <font color=blue>libc6</font>というパッケージに含まれていることを
+    <font color=red>もし知っていれば，</font>
+    前者は，
+<pre>
+$ <u>sudo apt-get install libc6-dbg</u>
+</pre>
+後者は，
+<pre>
+$ <u>apt-get source libc6</u>
+</pre>
+でインストールします．後者は，システムディレクトリにインストールするのではなく，
+カレントディレクトリに大量のソースフォルダや，付随物をインストールするので，
+散らかされたくない場所ではやらないでください
+(適当な空のサブフォルダを作ってやりましょう)．
+  </p>
+  <p>以下ではそれぞれがある時と無いときで何がおきるのか，
+    また，
+    そもそも何というパッケージをいれればよいのかを突止める方法を紹介します．
+  </p>
+</div>
+
+<h2>例題</h2>
+<div>
+  <p>qsortを用いた例として，対象プログラムは以下の通りとします．
+<pre>    
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int cmp_int(const void * a_, const void * b_) {
+  const int * a = a_, * b = b_;
+  return a[0] - b[0];
+}
+
+int main() {
+  int i;
+  int a[] = { 7, 6, 3, 8, 5, 4 };
+  int n = sizeof(a)/sizeof(int);
+  qsort(a, n, sizeof(int), cmp_int);
+  for (i = 0; i &lt; n; i++) {
+    printf("%d ", a[i]);
+  }
+  printf("\n");
+  return 0;
+}
+</pre>
+  </p>
+</div>
+
+
+<h2>何もない状態でのGDBの挙動</h2>
+<div>
+  <p>
+    単純に上記のソースファイルだけを-g付きでコンパイルした場合の動作は，
+    qsort関数の中にstepコマンドで入っていこうと思っても，
+    単純に飛ばされてしまいます．これは，qsortという関数のデバッグ情報
+    (具体的にはqsortのソースコードの各行が，
+    どの命令アドレスに対応しているかという情報)が
+    ないためにおきます．この情報がないと，stepせよと言われても，
+    どの命令で実行をとめていよいのかわからないので，当然の動作と言えます．
+  </p>
+</div>
+
+<h2>デバッグシンボルをインストールする</h2>
+<div>
+  <p>
+    Linuxのパッケージ管理システムでは，主要な(全部ではない)
+    ライブラリのデバッグシンボルが別のパッケージとして
+    提供されていることが多いです．我々が普段，-g をつけて
+    プログラムをコンパイルすると，プログラムの命令列と，
+    デバッグ情報が一つに収まった実行可能ファイルが出来ます．
+    もしこのようにしてコンパイルされたライブラリが最初から
+    出荷されているのであれば，わざわざ別のパッケージをインストール
+    する必要は最初からなかったのですが，
+    配布ファイルの大きさを小さくする目的から，
+    実行命令列と，
+    デバッグ情報が分離されて提供されています．
+    (具体的にどうやって分離するかはここでの本題ではないが，
+    興味があれば，<a href=http://stackoverflow.com/questions/866721/how-to-generate-gcc-debug-symbol-outside-the-build-target>こちら</a>)．
+    デバッグシンボルパッケージとはまさしくこの，
+    別ファイルに納められたデバッグ情報（だけ）を提供するパッケージです．
+  </p>
+
+  <p>たとえば
+    <pre>
+$ <u>apt-cache search libc6</u>
+    </pre>
+    とすると，多数のパッケージが見つかりますがその中に，
+    以下のようにlibc6-dbg というパッケージが見つかります．
+    <pre>
+$ <u>apt-cache search libc6</u>
+libc6 - GNU C Library: Shared libraries
+libc6-arm64-cross - GNU C Library: Shared libraries (for cross-compiling)
+libc6-armhf-cross - GNU C Library: Shared libraries (for cross-compiling)
+<font color=blue>libc6-dbg</font> - GNU C Library: detached debugging symbols
+libc6-dev - GNU C Library: Development Libraries and Header Files
+   ...
+    </pre>
+    Debian, UbuntuなどのLinuxディストリビューションでは，
+    ライブラリの名前-dbg という名前のパッケージがあれば，
+    それが目当てのものでしょう．
+
+    分離されたデバッグシンボルのパッケージをインストールする手順は，
+    他のパッケージと同じです．
+    <pre>
+$ <u>sudo apt-get install libc6-dbg</u>
+    </pre>
+  </p>
+
+  <p>これを入れた状態でgdbを用いて qsort に step を試みる(qsortの行にデバッガのカーソルがある状態で，stepコマンドを実行する)と，
+    以下のような動作になります．
+<pre>
+(gdb) <u>step</u>
+__GI_qsort (b=0x7fffffffe390, n=6, s=4, cmp=0x400626 &lt;cmp_int&gt;) at msort.c:308
+<font color=red>308     msort.c: そのようなファイルやディレクトリはありません.</font>
+(gdb)
+</pre>
+  </p>
+
+  <p>これの意味するところは，以下の通り．
+    <ul>
+      <li>デバッガは，デバッグ情報のおかげで今や，
+        qsortという関数(の先頭行)が msort.c というファイルの，
+        308行目であるということ，およびその命令アドレスを取得できた
+        (ので，ちゃんとデバッガがqsort内で実行を停止している)</li>
+      <li>しかし，ソースコードを見つけることは出来なかった，
+        ので，ソース(msort.cの308行目)を表示することは出来なかった．
+      </li>
+    </ul>
+  </p>
+
+  <p>この状態でも，(各行に対応する命令アドレスがわかるため)，step, next
+    などのコマンドでqsort関数の内部を実行していくことは可能ですが，
+    おそらくここで終わらせたくはないでしょう．
+    ソースコードを表示したければ，ソースファイルを入手する必要があります．
+  </p>
+
+  
+</div>
+
+<h2>ライブラリのソースファイルをインストールする</h2>
+<div>
+  ソースファイルを表示するために，libc6というパッケージのソースファイルを入手します．以下のコマンドがそれを実行します．
+  <pre>
+$ <u>apt-get source libc6</u>
+  </pre>
+  小さな注意として，まず，sudoで実行する必要はありません(しないほうが良い)．
+  ソースファイルはシステムディレクトリ(/usrとか)ではなく，
+  コマンドを実行したディレクトリ(カレントディレクトリ)にダウンロードされます．
+  もうひとつの注意は，一つのディレクトリにきれいにダウンロードされるとは
+  限らず，複数のファイルがカレントディレクトリにぶちまけられることです．
+  多すぎて，
+  どのファイルが実際にダウンロードされたのかわからない，ということもあります．
+  ので，これをやる際は，以下のように空のフォルダを作ってそこで実行することをおすすめです．
+  <pre>
+$ <u>mkdir libc6-src</u>
+$ <u>cd libc6-src</u>
+$ <u>apt-get source libc6</u>
+パッケージリストを読み込んでいます... 完了
+'libc6' の代わりに 'glibc' をソースパッケージとして選出しています
+    ...
+    ...
+    ...
+$ <u>ls</u>
+glibc-2.23/                        glibc_2.23-0ubuntu3.dsc
+glibc_2.23-0ubuntu3.debian.tar.xz  glibc_2.23.orig.tar.xz
+  </pre>
+</div>
+
+<h2>デバッガにソースのありかを教える</h2>
+<div>
+  <p>無事にデバッガがソースファイルを勝手に表示してくれるようになるためには，
+    どこにソースがありますよ，ということをデバッガに教えるステップが必要です．
+    それは，GDBでは，directory というコマンドでおこないます．
+    例えば，qsortに入った時の以下のメッセージを思い出して下さい．
+<pre>
+(gdb) <u>step</u>
+__GI_qsort (b=0x7fffffffe390, n=6, s=4, cmp=0x400626 &lt;cmp_int&gt;) at msort.c:308
+308     msort.c: そのようなファイルやディレクトリはありません.
+</pre>
+これが無事見つかるためには， msort.c というファイルが存在するフォルダを指定する必要があります．そのために，
+そもそも msort.c がどこにあるのかを突き止めましょう．
+先ほどソースをダウンロードしたフォルダで，
+以下のようにして見つけます．
+<pre>
+$ <u>find glibc-2.23 -name msort.c</u>
+glibc-2.23/stdlib/msort.c
+</pre>
+ということでこの glibc-2.23/stdlib/ というフォルダを，directoryコマンドに指定してやればOKです(実際のパス名はどこで作業をしているかで異なります．以下はたまたまこれを書いている時のパス名です)．
+<pre>
+(gdb) directory ~/tmp/dbg/libc6-src/glibc-2.23/stdlib
+Source directories searched: /home/tau/tmp/dbg/libc6-src/glibc-2.23/stdlib:$cdir:$cwd
+</pre>  
+  </p>
+
+  <p>これで，無事ソースファイルを表示しながら実行を追っていくことが出来ます．
+
+<pre>
+void
+qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
+{
+=&gt;  return __qsort_r (b, n, s, (__compar_d_fn_t) cmp, NULL);
+}
+libc_hidden_def (qsort)
+</pre>
+      
+  </p>
+</div>
+  
+<h2>パッケージ名の見つけ方</h2>
+<div>
+  <p>
+  今の場合，qsortという関数を提供しているのが，
+  libc6というパッケージであるということは，既知として話をすすめました．
+  GUIライブラリを使っている時も，
+  なんとなく当てずっぽうパッケージ名がわかっている時もあるでしょうが，
+  一般には，もう少し確実に突き止める方法が必要です．
+  関数名からパッケージ名へたどり着くには以下の二つの関連を追う必要があります．
+  <ul>
+    <li>関数名(qsort)から，その関数が納められているライブラリのファイルそのもの
+      (今の場合，/lib/x86_64-linux-gnu/libc.so.6)を突き止める</li>
+    <li>ライブラリのファイルを含んでいるパッケージを突き止める</li>
+  </ul>
+  以下，順に説明します．
+  </p>
+</div>
+
+<h3>関数名から，それが納められているライブラリファイルを見つける</h3>
+<div>
+  <ul>
+    <li>方法1:
+      デバッガで目的の関数名でブレークポイントをかけ，そこまで実行する．
+<pre>
+(gdb) <u>b qsort</u>
+Breakpoint 1 at 0x4004e0
+(gdb) <u>r</u>
+Starting program: /home/tau/tmp/dbg/a.out 
+
+Breakpoint 1, 0x00007ffff7a47750 in qsort ()
+   <font color=red>from /lib/x86_64-linux-gnu/libc.so.6</font>
+</pre>
+ここで表示されるファイル名(/lib/x86_64-linux-gnu/libc.so.6)が求めるもの．
+デバッグシンボルがない状態でも，
+各関数名の先頭アドレスはわかります．
+従って，関数名でブレークポイントをかければ，そこで実行を止め，
+その関数がなんというファイルにあるのかを表示させることが出来ます．
+    </li>
+
+    <li>方法2: おそらく上記は最も手堅い方法ですが，もう少しお手軽で，
+      単独でも有用なコマンドとして，lddがあります．
+      <font color=blue>"ldd 実行可能ファイル名"</font>で，
+      それを実行した時に使うであろうファイル
+      が表示されます．その中から，それらしいファイル名を探すことが出来ます．
+<pre>
+$ <u>ldd a.out</u>
+        linux-vdso.so.1 =>  (0x00007ffd0e3f5000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb08e2e9000)
+        /lib64/ld-linux-x86-64.so.2 (0x0000564998139000)
+</pre>
+もちろんある程度知識がないと，
+この3つのうちのどれなのかということがわからないかもしれませんが，
+ライブラリの一般的な名称(gtkとか，qtとか)が判っているなら，
+お手軽な方法です．
+    </li>
+  </ul>
+</div> 
+
+<h3>ライブラリファイル名から，パッケージ名を見つける</h3>
+<div>
+  <p>
+    <font color=blue>dpkg -S</font>というコマンドで，
+  あるファイルを提供しているパッケージ名を得ることが出来ます
+  (ただしそのパッケージがインストールされていることが条件です)．
+  今既に，/lib/x86_64-linux-gnu/libc.so.6 というファイル名がわかっていますので，
+  <pre>
+$ <u>dpkg -S /lib/x86_64-linux-gnu/libc.so.6</u>
+<font color=red>libc6:amd64:</font> /lib/x86_64-linux-gnu/libc.so.6
+  </pre>
+  とします．左側に表示されているのがパッケージ名．このうち:amd64 部分は
+  アーキテクチャ名なので，libc6というのがパッケージ名になっていると
+  理解すればおそらく良いのでしょう．これができたら，libc6, libc6-dbgという
+  パッケージが実際に存在するかを以下で確かめて下さい．
+<pre>
+$ <u>apt-cache search libc6</u>
+<font color=blue>libc6</font> - GNU C Library: Shared libraries
+libc6-arm64-cross - GNU C Library: Shared libraries (for cross-compiling)
+libc6-armhf-cross - GNU C Library: Shared libraries (for cross-compiling)
+<font color=blue>libc6-dbg</font> - GNU C Library: detached debugging symbols
+libc6-dev - GNU C Library: Development Libraries and Header Files
+    ...
+</pre>
+  </p>
+</div>
+
+<h2>GUIアプリケーションの追跡</h2>
+<div>
+  <p>これら(デバッグ情報のパッケージ，ソースファイルのダウンロード，
+    種々のケースでのデバッガの動作，ldd, dpkgなど)
+    はすべて有用な知識とはおもいます
+    (この演習では，その場その場の場当たり的な
+    方法で答えを見つけることよりも，一般的に有用な考え方や
+    手法，ツールの使い方を習得して欲しいので，その意味からも
+    これは有用なexerciseです)．
+  </p>
+  <p>
+    しかし，果たしてでかいGUIライブラリを用いて書かれた
+    でかいGUIアプリを追跡するのに，
+    本当にGUIライブラリの中を一歩一歩追跡していくのが
+    よいかというのは別問題かもしれません．
+    多くの場合，GUIライブラリの中が見たいわけではなく，
+    追跡したいのは(GUIからコールバックされた)，
+    アプリ内の関数です．GUIライブラリには，
+    コールバックを登録するAPIがきちんと定義されているわけですから，
+    その登録APIを呼び出している場所を突き止める，
+    またはソース全体を見て，コールバックらしき関数を見つければ，
+    その関数に直接ブレークポイントを設定することが出来ます．
+    このやり方では，
+    自分が怪しいと思った関数にブレークポイントをかけているので，
+    知らないうちに重要な関数がコールバックされていてもわからず，
+    実行の正確な順番が把握できない(例えば知らぬ間に変数の値が，
+    見逃したコールバックによって書き換わっている)，
+    というリスクもあります．
+    しかし，所望の動作を実現するのに必要な関数が
+    少なく，関係する関数を把握できるとおもうのであれば良い方法です．
+  </p>
+  <p>
+    当てずっぽうでいじってみて動かしてみる，という方法で動けばそれは
+    めでたいですが，裏を返せば設定課題が簡単ということかもしれません．
+    ぜひ，複雑なアプリ内部を変更できるようになる汎用的・強力な知識，
+    スキルを身につけるという気持ちで臨んでみて下さい．
+  </p>
+
+</div>
+
+<a name=when_symbol_loading_takes_forever> </a>
+<h2>シンボルのロードに死ぬほど時間がかかる場合</h2>
+<div>
+  <font color=red>(2016/10/13追記)</font>
+  大きなプログラムだと，run でプログラムを開始した際に，
+  デバッグされるプログラムの
+  デバッグ情報を読み込むのに永遠とも思える時間がかかることがあります．
+  これが起きた時の効率改善手法を紹介します．
+  <a href=http://visualgdb.com/gdbreference/commands/set_auto-solib-add>
+    シンボルをすべて読み込む動作をオフにする
+  </a>
+  ということができます．
+</div>
+
+<h3>使うコマンド</h3>
+<div>
+以下のgdbコマンドを組み合わせて使います．
+  <ul>
+    <li>
+<pre>
+(gdb) <font color=blue>set auto-solib-add off</font>
+</pre>
+runをした時や，その他のタイミングで，自動的にすべてのライブラリのシンボルを読み込むという動作をオフにする</li>
+    <li>
+<pre>
+(gdb) <font color=blue>share <i>ライブラリ名</i></font>
+</pre>
+必要だと思ったライブラリのシンボルを明示的に読み込みます．
+  </ul>
+    その他，直接の関係はありませんが，
+    効果を見やすくするために便利なコマンドを紹介しておきます．
+  <ul>
+    <li>
+      <pre>(gdb) <font color=blue>set verbose</font></pre>
+      ライブラリのシンボルをロードするたびにメッセージを表示します．
+      set auto-solib-add on/off することの効果を目で見られます．
+    </li>
+    <li>
+      <pre>(gdb) <font color=blue>thread apply all コマンド</font></pre>
+      全部のスレッドに同じコマンドを適用します．例えば，
+      <pre>(gdb) <font color=blue>thread apply all bt</font></pre>
+      で全部のスレッドのスタックトレースを一気に表示できます．
+      スタックトレースを一気に表示することで，
+      どのファイルのシンボルをロードすればよいかがわかります．
+    </li>
+  </ul>
+</div>
+
+<h3>gnumericsを追いかける例</h3>
+<h4>通常(auto-solib-add が有効)の場合</h4>
+<div>
+  <p>以下のように，
+runを実行した時に多数のライブラリがロードされます．
+  ちなみにですが，できるかぎり多数のライブラリのデバッグシンボル
+  パッケージを
+  インストールしており，なるべく多くのシンボルが
+  読み込まれるようにしています．
+  それでも一部のライブラリに対しては，no debugging symbols found と表示されます．通常の環境ではもっと多くのライブラリが，
+  no debugging symbols found となることでしょう．
+  皮肉なことに，そうであるほうが，立ち上がるのは速くなります．
+  </p>
+
+  <p>さらに余談．
+    それでもgnumericの起動にかかる時間はせいぜい，5秒程度でした．
+    Chromiumとは桁が違います．おそらく，
+    Chromiumは，サイズが大きいだけでなく，
+    多くのファイルを，外部のライブラリではなく
+    自分自身の中に抱えているせいで，
+    ほぼすべてのファイルにデバッグシンボルが存在しているのでしょう．
+    ここで紹介している手法は（おそらく）そういう場合にこそ力を
+    発揮します．
+  </p>
+
+  <pre>
+    Reading symbols from gnumeric...done.
+<font color=blue>(gdb) set verbose</font>
+<font color=blue>(gdb) run</font>
+Starting program: /home/tau/install/gnumeric/bin/gnumeric 
+Reading symbols from /lib64/ld-linux-x86-64.so.2...Reading symbols from /usr/lib/debug//lib/x86_64-linux-gnu/ld-2.23.so...done.
+done.
+Reading symbols from system-supplied DSO at 0x7ffff7ffa000...(no debugging symbols found)...done.
+Reading in symbols for rtld.c...done.
+Reading symbols from /home/tau/install/gnumeric/lib/libspreadsheet-1.12.9.so...done.
+
+    ... この間約100行 ...
+
+Reading symbols from /usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so...(no debugging symbols found)...done.
+Reading symbols from /usr/lib/x86_64-linux-gnu/gtk-3.0/3.0.0/immodules/im-fcitx.so...(no debugging symbols found)...done.
+Reading symbols from /usr/lib/x86_64-linux-gnu/libfcitx-gclient.so.0...(no debugging symbols found)...done.
+Reading symbols from /usr/lib/x86_64-linux-gnu/libfcitx-utils.so.0...(no debugging symbols found)...done.
+[New Thread 0x7fffe088f700 (LWP 13127)]
+Reading in symbols for dl-close.c...done.
+  </pre>
+</div>
+
+<h4>auto-solib-add を無効にした場合</h4>
+
+<div>以下のように何事もなく，（結果としてすぐに）立ち上がります．
+  <pre>
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from gnumeric...done.
+<font color=blue>(gdb) set verbose</font>
+<font color=blue>(gdb) set auto-solib-add off</font>
+<font color=blue>(gdb) run</font>
+Starting program: /home/tau/install/gnumeric/bin/gnumeric 
+Reading symbols from system-supplied DSO at 0x7ffff7ffa000...(no debugging symbols found)...done.
+Reading symbols from /lib/x86_64-linux-gnu/libpthread.so.0...Reading symbols from /usr/lib/debug/.build-id/b7/7847cc9cacbca3b5753d0d25a32e5795afe75b.debug...done.
+done.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7fffe95e8700 (LWP 15718)]
+[New Thread 0x7fffe8d97700 (LWP 15719)]
+[New Thread 0x7fffe3fff700 (LWP 15720)]
+[New Thread 0x7fffe088f700 (LWP 15729)]
+  </pre>
+
+  ただしこれだけではもちろん，ソースファイル上でプログラムの実行を追っていくことはできません．肝心なことはここから，「必要に応じて」ファイルをロードしていくことです．そのためには，プログラムが現在止まっているライブラリファイルを突き止め，そのライブラリファイルのデバッグ情報をロードします．現在どこで止まっているかは，バックトレースを見るとわかります．
+
+<pre>
+(gdb) <font color=blue>bt</font>
+#0  0x00007ffff5dd1e8d in ?? () from <font color=purple>/lib/x86_64-linux-gnu/libc.so.6</font>
+#1  0x0000000000000000 in ?? ()
+</pre>
+
+現在，<tt>/lib/x86_64-linux-gnu/libc.so.6</tt> というファイルの中の
+どこかで止まっているということだけがわかります．それ以外の情報，
+はすべて?? になっていて，要するにデバッグシンボルがないので
+わからないということです．
+なお，これは
+プログラム中に多数存在する1スレッドの情報です．すべてのスレッドの情報を
+一気に表示させるには，thread apply allを使います．
+
+<pre>(gdb) <font color=blue>thread apply all bt</font>
+
+Thread 4 (Thread 0x7fffe3fff700 (LWP 15720)):
+#0  0x00007ffff5dd1e8d in ?? () from <font color=purple>/lib/x86_64-linux-gnu/libc.so.6</font>
+#1  0x0000000000000000 in ?? ()
+
+Thread 3 (Thread 0x7fffe8d97700 (LWP 15719)):
+#0  0x00007ffff5dd1e8d in ?? () from <font color=purple>/lib/x86_64-linux-gnu/libc.so.6</font>
+#1  0x0000000000000000 in ?? ()
+
+Thread 2 (Thread 0x7fffe95e8700 (LWP 15718)):
+#0  0x00007ffff5dd1e8d in ?? () from <font color=purple>/lib/x86_64-linux-gnu/libc.so.6</font>
+#1  0x0000000000000000 in ?? ()
+
+Thread 1 (Thread 0x7ffff7f24a40 (LWP 15712)):
+#0  0x00007ffff5dd1e8d in ?? () from <font color=purple>/lib/x86_64-linux-gnu/libc.so.6</font>
+#1  0x0000000000000000 in ?? ()
+(gdb)
+</pre>
+
+ここでとりあえず唯一のわかっている情報である，
+<font color=purple>/lib/x86_64-linux-gnu/libc.so.6</font> のデバッグ情報を以下のコマンドで読み込みます．ちなみにこういうコマンドを打ち込む時も，Emacsでマウス無しのコピペなどが使えるようになっておくと，作業が何倍も高速になります．
+
+<pre>(gdb) <font color=blue>share /lib/x86_64-linux-gnu/libc.so.6</font>
+Reading symbols from /lib/x86_64-linux-gnu/libc.so.6...Reading symbols from /usr/lib/debug//lib/x86_64-linux-gnu/libc-2.23.so...done.
+done.
+Reading in symbols for ../sysdeps/unix/syscall-template.S...done.
+Current language:  auto
+The current source language is "auto; currently asm".
+</pre>
+
+その後でまたバックトレースを表示してみます．
+するとどうでしょう，何やら情報が増えていることがわかります．
+
+
+<pre>(gdb) <font color=blue>thread apply all bt</font>
+Thread 4 (Thread 0x7fffe3fff700 (LWP 15720)):
+#0  0x00007ffff5dd1e8d in <font color=purple>poll ()
+    at ../sysdeps/unix/syscall-template.S:84</font>
+#1  0x00007ffff630739c in ?? ()
+    from <font color=purple>/lib/x86_64-linux-gnu/libglib-2.0.so.0</font>
+#2  0x0000000000000020 in ?? ()
+#3  0x0000000100682d00 in ?? ()
+#4  0xffffffff7fffffff in ?? ()
+#5  0xe315e2a68ed3d400 in ?? ()
+#6  0x0000000000000000 in ?? ()
+
+Thread 3 (Thread 0x7fffe8d97700 (LWP 15719)):
+#0  0x00007ffff5dd1e8d in <font color=purple>poll ()
+    at ../sysdeps/unix/syscall-template.S:84</font>
+#1  0x00007ffff630739c in ?? ()
+    from <font color=purple>/lib/x86_64-linux-gnu/libglib-2.0.so.0</font>
+#2  0x0000000000000000 in ?? ()
+
+Thread 2 (Thread 0x7fffe95e8700 (LWP 15718)):
+#0  0x00007ffff5dd1e8d in <font color=purple>poll ()
+    at ../sysdeps/unix/syscall-template.S:84</font>
+#1  0x00007ffff630739c in ?? ()
+   from <font color=purple>/lib/x86_64-linux-gnu/libglib-2.0.so.0</font>
+#2  0x000000000000000f in ?? ()
+#3  0x00000001f65cc900 in ?? ()
+#4  0xffffffff7fffffff in ?? ()
+#5  0xe315e2a68ed3d400 in ?? ()
+#6  0x000000000065eca0 in ?? ()
+#7  0x0000000000661380 in ?? ()
+#8  0x0000000000000001 in ?? ()
+#9  0x0000000000000000 in ?? ()
+
+Thread 1 (Thread 0x7ffff7f24a40 (LWP 15712)):
+#0  0x00007ffff5dd1e8d in <font color=purple>poll ()
+    at ../sysdeps/unix/syscall-template.S:84</font>
+#1  0x00007ffff630739c in ?? ()
+   from <font color=purple>/lib/x86_64-linux-gnu/libglib-2.0.so.0</font>
+#2  0x0000000000000010 in ?? ()
+#3  0x00000001f632390d in ?? ()
+#4  0xffffffff7fffffff in ?? ()
+#5  0xe315e2a68ed3d400 in ?? ()
+#6  0x0000000000000000 in ?? ()
+(gdb) 
+</pre>
+
+ここで新しく発見されたファイル
+<tt>/lib/x86_64-linux-gnu/libglib-2.0.so.0</tt>
+のシンボルもロードします．どんどん情報が増えていきます．
+
+<pre>
+(gdb) <font color=blue>thread apply all bt</font>
+
+Thread 4 (Thread 0x7fffe3fff700 (LWP 15720)):
+Reading in symbols for /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c...done.
+Reading in symbols for /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gthread.c...done.
+Reading in symbols for pthread_create.c...done.
+Reading in symbols for ../sysdeps/unix/sysv/linux/x86_64/clone.S...done.
+#0  0x00007ffff5dd1e8d in <font color=purple>poll ()
+    at ../sysdeps/unix/syscall-template.S:84</font>
+#1  0x00007ffff630739c in <font color=purple>g_main_context_poll (priority=2147483647, 
+    n_fds=3, fds=0x7fffd80010c0, timeout=&lt;optimized out&gt;, 
+    context=0x7fffe400e0e0)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:4135</font>
+#2  <font color=purple>g_main_context_iterate (context=0x7fffe400e0e0, 
+    block=block@entry=1, dispatch=dispatch@entry=1, 
+    self=&lt;optimized out&gt;)
+  at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:3835</font>
+#3  0x00007ffff6307722 in <font color=purple>g_main_loop_run (loop=0x7fffe400e070)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:4034</font>
+#4  0x00007ffff467c916 in ?? ()
+  from <font color=purple>/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0</font>
+#5  0x000000000064f720 in ?? ()
+#6  0x00007ffff632dbc5 in <font color=purple>g_thread_proxy (data=0x7fffe400e0b0)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gthread.c:780</font>
+#7  0x00007ffff60a76fa in <font color=purple>start_thread (arg=0x7fffe3fff700)
+    at pthread_create.c:333</font>
+#8  0x00007ffff5dddb5d in <font color=purple>clone ()
+      at ../sysdeps/unix/sysv/linux/x86_64/clone.S:109</font>
+
+Thread 3 (Thread 0x7fffe8d97700 (LWP 15719)):
+#0  0x00007ffff5dd1e8d in poll ()
+    at ../sysdeps/unix/syscall-template.S:84
+#1  0x00007ffff630739c in g_main_context_poll (priority=2147483647, 
+    n_fds=2, fds=0x7fffdc0008c0, timeout=<optimized out>, 
+    context=0x7fffe400d920)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:4135
+#2  g_main_context_iterate (context=context@entry=0x7fffe400d920, 
+    block=block@entry=1, dispatch=dispatch@entry=1, 
+    self=<optimized out>)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:3835
+#3  0x00007ffff63074ac in g_main_context_iteration (
+    context=0x7fffe400d920, may_block=may_block@entry=1)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:3901
+#4  0x00007ffff63074e9 in glib_worker_main (data=<optimized out>)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:5672
+#5  0x00007ffff632dbc5 in g_thread_proxy (data=0x64f6d0)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gthread.c:780
+#6  0x00007ffff60a76fa in start_thread (arg=0x7fffe8d97700)
+    at pthread_create.c:333
+#7  0x00007ffff5dddb5d in clone ()
+    at ../sysdeps/unix/sysv/linux/x86_64/clone.S:109
+
+Thread 2 (Thread 0x7fffe95e8700 (LWP 15718)):
+#0  0x00007ffff5dd1e8d in poll ()
+    at ../sysdeps/unix/syscall-template.S:84
+#1  0x00007ffff630739c in g_main_context_poll (priority=2147483647, 
+    n_fds=1, fds=0x7fffe40010e0, timeout=<optimized out>, 
+    context=0x661380)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:4135
+#2  g_main_context_iterate (context=context@entry=0x661380, 
+    block=block@entry=1, dispatch=dispatch@entry=1, 
+    self=<optimized out>)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:3835
+#3  0x00007ffff63074ac in g_main_context_iteration (
+    context=0x661380, may_block=1)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:3901
+#4  0x00007fffe95f028d in ?? ()
+   from /usr/lib/x86_64-linux-gnu/gio/modules/libdconfsettings.so
+#5  0x000000000064f140 in ?? ()
+#6  0x00007ffff632dbc5 in g_thread_proxy (data=0x661380)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gthread.c:780
+#7  0x00007ffff60a76fa in start_thread (arg=0x7fffe95e8700)
+    at pthread_create.c:333
+#8  0x00007ffff5dddb5d in clone ()
+    at ../sysdeps/unix/sysv/linux/x86_64/clone.S:109
+
+Thread 1 (Thread 0x7ffff7f24a40 (LWP 15712)):
+#0  0x00007ffff5dd1e8d in poll ()
+    at ../sysdeps/unix/syscall-template.S:84
+#1  0x00007ffff630739c in g_main_context_poll (priority=2147483647, 
+    n_fds=3, fds=0x8e0020, timeout=<optimized out>, context=0x656260)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:4135
+#2  g_main_context_iterate (context=0x656260, block=block@entry=1, 
+    dispatch=dispatch@entry=1, self=<optimized out>)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:3835
+#3  0x00007ffff6307722 in g_main_loop_run (loop=0x8e0000)
+    at /build/glib2.0-7IO_Yw/glib2.0-2.48.1/./glib/gmain.c:4034
+#4  0x00007ffff6d0d395 in ?? ()
+   from /usr/lib/x86_64-linux-gnu/libgtk-3.so.0
+#5  0x0000000000000000 in ?? ()
+(gdb)
+</pre>
+
+<p>
+  あとはこれを，自分がソース上で追跡したい所まで
+  表示される状態
+  （さしあたりスタックの上から数段分が表示されていればよいでしょう）
+  にしてから，
+  プログラムの実行を(おそらく， finコマンドで)開始して下さい．
+</p>
+
+<p>繰り返しますが，どうやって該当箇所を突き止めるのが最善手かは，
+  ケースバイケースです．ソースを検索した方が速い
+  (あとは当てずっぽうでなんとかなる)という場合もあるでしょう．
+  ソースを検索するのが絨毯爆撃なら，
+  デバッガで追いかけるのは，精密誘導ミサイルのようなものです．
+  どちらが良いかはケースバイケースです．
+  ここでは，本当はデバッガで追いかけたいのだがこのせいで諦める，
+  ということがないように(+ こちらも皆さんを見ながらon demandに学んで
+  いることのアピールとして)紹介しておきます．
+</p>
+
+<p>また当然のことながらデバッガは，大きな，未知のコードを探るための手段です．
+  ある程度全体像が把握できたところで，徐々にいらなくなってくる（この機能を入れるには，
+  これをいじればいい，ということが，手探りではなく，確かな知識として蓄積されてくる）
+  ものです．いくら規模が大きくても，自分で全て書いたプログラムの拡張をするのに，
+  デバッガでどこをいじるべきかを見つける人はいないでしょう．この演習で，
+  デバッガで追跡することを妙に推していると感じたとしたら，その理由は，
+  <ul>
+    <li>当初，中身が未知の状態からスタートする</li>
+    <li>そのための「あてずっぽう」ではない，一般的な方法は何か?</li>
+  </ul>
+  というところに焦点を当てているからです．「一般的」という言葉は，当てずっぽうに頼らない，
+  と言い換えてもいいです．実際には勘は過たずで，当てずっぽうが当たることもあります（その場合は
+  結果的にそっちが速い）．問題は，それが通用しない時に，正しく答えを「導けるか」
+  ということです．
+</p>
+<p>
+  printf挿入方式とて，おおよそどこに
+  挿入したらいいかということがわかっていないとできません．当てずっぽうで絞り込めても，
+  10箇所あったら全てに挿入する気はなかなかしないでしょう．さらに，コードを眺めるだけでは，
+  関数呼び出しの先を追うのは一苦労（デバッガなら勝手に関数呼び出し先も開いてくれる）ですし，
+  if文のどちらを追っていけばいいのかもわかりません（デバッガなら，その時選んだ枝を教えてくれる）．
+  <ul>
+    <li><font color=blue>こういう場合</font>にはprintfがよい．なぜなら...</li>
+    <li><font color=blue>こういう場合</font>にはデバッガがよい．なぜなら...</li>
+  </ul>
+  という整理で，場合に応じて「適切な方」を選択できるようになるのが目指すところです．
+  「プログラムが大規模になったらprintfがよい」なんていうのは停止しているに近い思考でしょう．
+</p>
+<p>
+  printfが良いのは例えば，あるいくつかの関数が多数回呼ばれていてそれら全体を流れでおいたいとか，
+  ある変数の値が多数回書き換わり，それらの変遷を見たい，のような，時間方向の変化を一望したい，
+  というような場合でしょう．これを1ステップごとに追いながら把握するのは難しいです．
+  一方，「ボタンが押されたらどの関数が呼ばれるの?」とか，「これをやると窓が出てくるけど，
+  その窓を出しているのはどの関数?」みたいな場合に，簡単なソースコード検索(grep, htags)
+  でそれらしいのが絞りきれなかったとしたら，そこでprintfが何かの助けになるとはあまり期待できません．
+  また，自分がソースから理解している挙動と何故か違う動作をしてしまうという時に，
+  その原因追求を，デバッガではなく，printfをひたすら挟む（しかできない）というのは，
+  ぜひこのたび卒業してほしい子供の手法です．
+</p>
+</div>
+
+<a name=chromium> </a>
+<h2>Chromiumでやってみると</h2>
+<div>
+  
+  この方法でChromiumをgdbにかけてみた結果:
+  <ul>
+    <li>gdbコマンドを起動してから，
+      chromeのシンボルを読み込み(これはおそらく避けられない)，
+      (gdb)プロンプトが出るまで ... およそ 1分45秒 (ただし下記<font color=red>注※</font>参照)</li>
+    <li>set auto-solib-add off したあとで，run してからChromiumの窓が出るまで
+      ... およそ1分</li>
+    <li>その状態で C-c でデバッガに制御を戻し，数個のライブラリのシンボルを読み込むと，
+      デバッグできるようになります．そこから，こないだの授業中になんとかたどり着いた，
+      イベント処理ループらしきところへたどり着くのは，割りとすぐにできました．</li>
+    <li>全てを読み込んだ時の時間（数十分くらいだったでしょうか?）と比べると劇的に改善
+      しているとはいえ，一度の上げ下げに合計2-3分かかる（Chrome自身に変化がないのであれば，
+      gdbを起動し直す必要はないのでその場合はrunするための約1分）というのは，
+      じれったくはあります．なんとなくではなく，目的を見定めて使いましょう．</li>
+    <li>あとは一回のループの中で呼ばれる関数を，勘も交えつつ step で調べていけば，
+      登録された処理がどのへんで呼ばれるか，その登録された処理の関数名，などが
+      わかっていくことでしょう．</li>
+    <li>それでも目当てのイベントにたどり着くにはかなりの数のイベントを処理しないといけません．
+      そんなとき，<pre>c 30</pre>でcontinueコマンド30回，<pre>n 30</pre>でnextコマンド
+      30回，のように，何度も同じコマンドを打たずにすむということを覚えておくと良いかも知れません．
+      そうすると，たとえばクリックしてからその効果が出るまでにだいたい何回，
+      ループを回ればよいのか，などということもわかるようになるでしょう．
+    </li>
+  </ul>
+
+  <font color=red>注※</font>
+  <ul>
+    <li>同じことをもう一度やったときには，1分くらいになります．OSのキャッシュの効果です．
+      ので，最初の一回は1分45秒，以降は1分と，大雑把にはなります．</li>
+    <li>最初の1回の速度は，搭載しているのがHDDかSSDか，によっても違います．
+      田浦がやったのは，外付けUSB SSDです．おそらくですが，HDDだとこれよりもだいぶ遅く，
+      内蔵SSDだとこれよりも速いでしょう．2回目以降の速度はおそらくですが，どの場合も
+      大差ない(1分くらい)と予想されます．</li>
+    <li>最初の1回がとてつもなく遅い場合，gdbを起動する前に以下のコマンドを一度実行してみて下さい．
+      <pre>cat chrome &gt; /dev/null</pre>
+      おそらくですが，こうすると(このコマンド自体に多少時間がかかりますが)，
+      1回目から，2回目以降の速度と同じくらい(1分程度)になります．</li>
+    <li>この辺のことはOSの授業でそのうち :-) それ以外にもプロダクションコードの中身を見ると，
+      スレッドなど，OS知っとくといいねと思わせることがいくつも出てきます．</li>
+    <li>搭載しているCPUの性能によっても，もちろん前後します．</li>
+    <li>ちなみにChromeは，実行可能ファイル(共有ライブラリを含めない)単体で，44MB,
+      depot_toolsでビルドした（デバッグ情報付き）実行可能ファイルは，800MBほどあります．
+      Firefoxは実行可能ファイル単体のサイズは，120KB．デバッグ情報付きのサイズは，
+      コンパイルしていないのでわかりませんが，比例するとすると，2-3MBというところでしょう．
+      Chromeのデバッグ情報を読み込むのが遅いのはこの辺にも理由があるのでしょう．
+      Google様はこのあたりのことは考えてくれないのでしょうかね．
+    </li>
+  </ul>
+</div>
+
+  
+</body>
+</html>
+

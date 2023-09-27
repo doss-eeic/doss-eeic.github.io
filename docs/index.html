@@ -1,0 +1,809 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>大規模ソフトウェアを手探る</title>
+
+<style>
+h1 {
+  font-size   : 18pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h2 {
+  font-size   : 16pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h3 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 20pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+div.analects {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 550pt;
+  padding     : 3pt 20pt;
+  background-color : #ffd;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 14pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+
+<script src="./html/show.js"></script>
+
+</head>
+
+<body>
+<h1>大規模ソフトウェアを手探る<br />田浦健次朗</h1>
+<div>
+  <font size=-1>(the page is encoded in UTF-8)</font>
+  <!--
+      以下をやると httpsの中にhttpがあるという，mixed contents で，この
+      ページは安全でないとかナントカ言う警告が出る．
+
+      <p align=right>
+	<a href="http://www.rays-counter.com/">
+	  <img src="http://www.rays-counter.com/d306_f6_024/556d6c331d26b/" alt="アクセスカウンター" border="0" />
+	</a>
+	<br />
+	<img src="http://www.rays-counter.com/images/counter_01.gif" border="0" /><img src="http://www.rays-counter.com/images/counter_02.gif" border="0" /><img src="http://www.rays-counter.com/images/counter_03.gif" border="0" /><a href="http://primo-color.jp/"><img src="http://www.rays-counter.com/images/counter_04.gif" border="0" alt="カラコンならプリモカラー" /></a><img src="http://www.rays-counter.com/images/counter_05.gif" border="0" />
+      </p>
+      -->
+</div>
+
+<h2>What's New</h2>
+<div>
+  括弧内は投稿日. 新しいものを上に書き足します.
+  <a href=#past>(過去ログ)</a>, <a href=#reports>(過去レポ)</a>
+
+<hr />  
+
+<ul>
+  <!--
+  <li><font size="-1" color="black">2020/9/19:</font>
+    <font size="+3">開始 <font color="green">13:15</font></font>
+  </li>
+  <li><font size="-1" color="black">2020/9/19:</font>
+    <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE3902E10J01">
+      ITC-LMS 実験コースページ</a></li>
+  <li><a href=html/report.html>レポートその他の提出手続き</a>
+    に従って最終提出物を提出してください.
+  </li>
+  <li>
+    <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2020">
+      2020プロジェクト一覧</a>
+    <font size=-1>(遅ればせながら直リンを作った. 中身はおなじみのページ)</font>
+  </li>
+  <li><font size="-1" color="black">2020/xx/xx:</font>
+    <a href="html/questionnaire.html" target="_blank">初回アンケート</a>
+    に答えてください</li>
+  -->
+  <li><font size="-1" color="black">2021/10/4:</font>
+    自己紹介用Google spreadsheetの共有を飛ばしているので,
+    Google Drive から見てください. Gmail (@g.ecc.u-tokyo.ac.jp) が行っていると思われる.
+    </li>
+  <li>細かいお知らせや質問, 学生間の情報共有のためにSlackを使います.
+    参加は強制ではないですが相談用に便利なので是非.
+    チャンネル名は 2022a-大規模ソフトウェアを手探る.
+    <a href="html/slack.html" target="_blank" rel="noopener">参加方法</a>
+  </li>
+  <li><font size="-1" color="black">2021/10/2:</font>
+    <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2021FEN-EE3902E10J01">
+      ITC-LMS 後期実験コースページ</a></li>
+  <li><font size="-1" color="black">2021/10/2:</font>
+    2021年版ホームページ開設</li>
+</ul>
+
+</div>
+
+
+<h2>スライド・資料</h2>
+<div>
+  <ul>
+    <li>テキスト
+      <ul>
+	<li><a href=textbook/doss_textbook.pdf>テキスト</a></li>
+        <li><a href="https://youtu.be/XgHjf14NBpc" targt="_blank">GDBを使えるようになろう. 動画版</a></li>
+        <li><a href="https://youtu.be/orynl8Tjc5A" targt="_blank">Globalを使おう. 動画版</a></li>
+        <li>補足資料: uftraceについての紹介ブログ
+          <ul>
+            <li> <a href=http://namopa.hatenablog.com/entry/2017/12/13/174725 target="_blank">uftrace 紹介編</a></li>
+            <li> <a href=http://namopa.hatenablog.com/entry/2017/12/13/175106 target="_blank">gnumericへ適用編</a></li>
+          </ul>
+          教科書執筆後, 補足資料として執筆
+          (自分も教科書の代わりにブログを書いてみた).
+        </li>
+        <li>
+          参考: uftraceが上手く行かないときの代わりになるかもしれないツール
+          <a href="html/tips.html#libitrace">
+            libitrace</a>
+        </li>
+      </ul>
+    </li>
+    <li>説明スライド
+      <ul>
+	<li><a href=slides/pdf/00_intro.pdf>イントロ</a>
+          <font size="-1">(説明予定: 第1回)</font></li>
+	<li><a href=html/git.html>Gitについて</a>
+          <font size="-1">(説明予定: 第2〜3回)</font>, 
+	  <a href=slides/pdf/dvcs_intro.pdf>イントロスライド</a>
+        </li>
+	<li><a href=slides/pdf/01_report.pdf>提出物について</a>
+          <font size="-1">(説明予定: 後半)</font></li>
+	<li><a href=html/report.html>レポートその他の提出手続き</a></li>
+        <!--
+	    <li><a href=slides/pdf/02_wrapup.pdf>振り返って</a>
+              <font size="-1">(説明予定: 最終回)</font>
+            </li>
+            -->
+      </ul>
+    </li>
+    <li>課題設定ヒント
+      <ul>
+	<li><a href=html/soft.html>どんなソフト</a>
+	  をいじればいいかのヒント</li>
+	<li><a href=html/past_patches.html>過去のテーマ (今後も蓄積予定)</a></li>
+        <li>最終レポートのサンプルをいくつか
+          <ul>
+            <li><a href="http://fish2017.hatenablog.com/entry/2017/11/02/011847" target="_blank">fish</a></li>
+            <li><a href="https://doss2018-vscoders.hatenablog.com/" target="_blank">vscode</a>
+            </li>
+            <li><a href="https://ika2018.hatenablog.com/entry/2018/11/05/114408" target="_blank">inkscape</a>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#reports">過去レポすべてはこちら</a>から</li>
+      </ul>
+    </li>
+
+    <li>日々の進め方ヒント
+      <ul>
+        <li>
+          <font color="blue">進捗の書き方: </font>
+          「同じことを他の人がもう一度やるのに役に立つ情報」を
+          書くことを推奨します. 例えばビルドにしても, 日本語でこうしたああした,
+          というレベルの情報ではなく, 打ち込んだコマンドラインを
+          そのまま残す(貼り付ける)のが推奨. 特に,
+          公式サイトの指示では上手く行かなったような場合, 代わりにどうした,
+          ということを「他の人はそれをコピペすればいい」
+          レベルでそのまま書いておくことがよいです.
+          <ul>
+            <li>他のメンバーの役に立つ</li>
+            <li>後輩の役にも立つ</li>
+            <li>トラブル発生時に他の人が介入・ヘルプするのにも役に立つ
+              <font color="red">(重要)</font></li>
+          </ul>
+        </li>
+        <li>
+          <font color="blue">トラブル報告の仕方:</font>
+          同じ理由で, トラブルに遭遇しているときも「やったことをありのまま書く」
+          というのが大事です. 特に他の人に見てもらう場合,
+          「ビルドしたけど◯◯がないとか言って上手く行きませんでしたがどうすればいいですか?」ではなく, 打ち込んだコマンドラインとシステムの出力, エラーメッセージなどをそのままベタッと(修正なく)貼り付けるのが重要です.
+          これはこの授業だけでなくオンラインコミュニティにヘルプを求める際にも重要な作法です. 「読んだ人が同じ現象を再現できるため」の情報, それも「最短時間で」再現できる(相手の時間を節約する)情報が重要で, それはすなわち, コピペすればいいだけのコマンドラインと, 起きることが同じかどうかを確かめられる出力,
+          ということになります.
+        </li>
+        <li>
+          <font color="blue">トラブルも進捗:</font>
+          「こうやったけどこんなエラーになって困っている」というのも
+          進捗です. 進捗報告に残したり,
+          最後のミニ発表でそれを見せるようにしましょう.
+          有用なヘルプをもらえる可能性が高まります.
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<h2>色んな情報・ヒント</h2>
+<div>
+  <ul>
+    <li>参考スライド・ページ
+      <ul>
+        <li><a href=slides/oss_license.pdf>
+            OSSのライセンスについて</a>
+        </li>
+	<li><a href=slides/procedure_of_compilation.pdf>
+            ビルドとは何をしてるのか？</a>
+        </li>
+	<li><a href=slides/pdf/03_shell_emacs.pdf>
+            Shell and Emacs with Little Customizations</a>
+          <font size="-1">(余興)</font>
+        </li>
+      </ul>
+    </li>
+
+    <li><a href=html/tips.html>もろもろのtips集</a>
+      <ul>
+        <li>
+          <a href="html/tips.html#gnuplot_nowindow">
+            ビルドしたgnuplotで窓が出ない件</a>
+        </li>
+        <li>
+          <a href="html/tips.html#mxshell">
+            Emacs + M-x shellのススメ</a>
+        </li>
+        <li>
+          <a href="html/tips.html#tabtabtab">
+            キーボード入力の削減: タブ，タブ，タブ，タブ，...</a>
+        </li>
+        <li>
+          <a href="html/tips.html#build_inkscape">
+            inkscapeビルドしてみました
+            (configureすると, アレがないコレがないといって失敗するときの,
+            解決法)</a>
+        </li>
+        <li>
+          <a href="html/tips.html#easily_revert">
+            すぐに元に戻せるソースコード変更の仕方</a>
+        </li>
+        <li>
+          <a href="html/tips.html#onoff_without_compilation">
+            コンパイルし直さずに機能をON/OFFできるようにするための
+            ソースコード変更の仕方</a>
+        </li>
+        <li>
+          <a href="html/tips.html#howto_debug_programs_you_broke">
+            いじったら(案の定)動かなくなったプログラムをどう調べていくか</a>
+        </li>
+        <li>
+          <a href="html/tips.html#cmake">
+            CMake (configureじゃなくて)について</a>
+        </li>
+
+        <li>
+          <a href="html/tips.html#libitrace">
+            yet another 追跡ツール libitrace</a>
+        </li>
+      </ul>
+    </li>
+        
+    <li><a href="html/advanced_gdb.html">GDB中級編</a>
+      <ul>
+        <li><a href="html/advanced_gdb.html#step_from_the_middle">
+            アプリを実行途中から追跡する
+        </a></li>
+        <li><a href="html/advanced_gdb.html#attach">
+            起動済みのアプリ・
+            勝手に起動してしまう(いつどうやって起動しているかよくわからない)
+            のアプリを追跡する</a>
+        </li>
+        <li><a href="html/advanced_gdb.html#postmortem">
+            異常終了(例: segmentation fault)したプログラムをあとからgdbで「検死」する</a>
+        </li>
+        <li><a href="html/advanced_gdb.html#multithread">
+            マルチスレッドプログラムを追跡する</a>
+        </li>
+        <li><a href="html/advanced_gdb.html#fork">
+            子プロセスを作る(forkする)プログラムを追跡する</a>
+        </li>
+        <li><a href="html/advanced_gdb.html#libraries">
+            ライブラリの中をGDBで追跡する(自分でコンパイルせずに)</a>
+        </li>
+        <li><a href="html/advanced_gdb.html#when_symbol_loading_takes_forever">
+            シンボルのロードに死ぬほど時間がかかる場合</a>
+        </li>
+      </ul>
+    </li>
+
+    <li><a href=http://www.delorie.com/gnu/docs/gdb/gdb_toc.html>
+        GDBマニュアル．</a> 
+      同じものはinfoコマンドやEmacsのM-x infoでも閲覧可能.
+      infoのメニューにGDBが現れない場合，
+      apt-getでgdb-docをインストールする</li>
+    <li><a href="https://summerofcode.withgoogle.com/">
+        Google Summer of Code</a>
+      の<a href="https://summerofcode.withgoogle.com/projects/">
+        プロジェクト集</a>.
+      興味があれば
+      <a href="https://n-yoshikawa.hatenablog.com/entry/2019/06/29/111527">
+        参戦記</a>も
+    </li>
+
+    <li>JavaScript Engine (SpiderMonkey) 関連
+      <font size="-1">
+        (2016年, SpiderMonkeyの開発者である藤澤氏がTAをやっていた時に,
+        関連して提供した情報. 関係者と近くで相談が出来るため,
+        SpiderMonkey課題へ取り組むことを推奨したが今でもオンラインでの
+        相談はきっと可能)
+      </font>
+      <ul>
+	<li><a href="slides/04_js_workflow.pdf">スライド</a>
+        </li>
+        <li><a href="https://tc39.github.io/ecma262/">ECMAScript Language Specification (draft)</a></li>
+        <li><a href="https://github.com/tc39/ecma262/blob/master/README.md">スペックのレポジトリ (プロポーザルのリストあり)</a></li>
+        <li><a href="https://bugzilla.mozilla.org/">Bugzilla (バグトラッキングシステム)</a></li>
+        <li><a href="https://www.joshmatthews.net/bugsahoy/?jseng=1&unowned=1">SpiderMonkey 関連のメンターつきバグ</a></li>
+        <li>最近のアサインされていないバグリスト (全部が valid なわけではないので注意)
+          <ul>
+            <li><a href="https://bugzilla.mozilla.org/buglist.cgi?emailtype1=substring&chfieldto=Now&emailassigned_to1=1&query_format=advanced&chfieldfrom=-60d&bug_status=UNCONFIRMED&bug_status=NEW&email1=nobody%40mozilla.org&component=JavaScript%20Engine&product=Core&list_id=13802766">JavaScript Engine</a></li>
+            <li><a href="https://bugzilla.mozilla.org/buglist.cgi?list_id=13802768&emailtype1=substring&query_based_on=jit_nobody&chfieldto=Now&emailassigned_to1=1&query_format=advanced&chfieldfrom=-90d&bug_status=UNCONFIRMED&bug_status=NEW&email1=nobody%40mozilla.org&component=JavaScript%20Engine%3A%20JIT&product=Core&known_name=jit_nobody">JIT</a></li>
+            <li><a href="https://bugzilla.mozilla.org/buglist.cgi?list_id=13802770&emailtype1=substring&query_based_on=jsgc_nobody&chfieldto=Now&emailassigned_to1=1&query_format=advanced&chfieldfrom=-90d&bug_status=UNCONFIRMED&bug_status=NEW&email1=nobody%40mozilla.org&component=JavaScript%3A%20GC&product=Core&known_name=jsgc_nobody">GC</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+<h2>コンタクト</h2>
+
+<div>
+  授業時間以外の質問等の送り先: doss アットマーク eidos.ic.i.u-tokyo.ac.jp
+</div>
+
+<h2>はじめに</h2>
+<div class=analects>
+<p align=right>
+<script src="./html/analects_intro.js">
+</script>
+<noscript>
+<font color=orange size=-2>JavaScriptが有効ではないようです</font>
+</noscript>
+</p>
+</div>
+
+<div>
+この演習では，世の中で実際に使われている大きな
+ソフトウェアを変更，機能拡張することを目標にする．
+テーマは，
+<font color=blue>
+「全容を把握できるわけがない程大きなソフトウェ
+アをいかに扱い，必要な動作を理解し，変更す
+るか」</font>
+ということである．
+</div>
+
+<h2>この課題を作った理由</h2>
+<div class=analects>
+<p align="right">
+<script src="./html/analects_why.js"></script>
+</p>
+</div>
+
+<div>
+<p>
+多くの大学の情報系学科
+の演習・実験は，小さな(たまに中規模程度の)ソフ
+トウェアを一から書くというものである．しかし大
+きなソフトウェアは，全てを自分で書くことは稀で
+あるし，一人で書く場合も，どこかで誰かが書いた，
+すでに存在するソフトウェアを元にして拡張・修正
+を重ねていくことがほとんどである．この先研究でソフト
+を実現する場合も一から全てを作るより，既存のソ
+フトウェアを元にして拡張することが多い．一から
+作る場合でも，やがれそれが大きくなっても大丈夫な，
+他の人でもいじれるソフトを作らなくてはならない．
+</p>
+<p>
+それらができるためには，小さなソフトウェアを一から書く
+のでは身につかない，「全容がわからないながらも
+関係ありそうな部分を探り，修正する方法」を習得
+する必要がある．また，世の中の人が大きなソフトウェアを書くときに
+常識的に使っている流儀やツールにも習熟する必要がある．
+それらはあまり体系立てて説明でき
+ないノウハウや知識の寄せ集めが7割を占めるのか
+もしれない．そうであるがゆえに大学の授業や演習
+で正面切って扱われることは稀で，この演習ではそ
+れをあえて行って，大学の普通の演習レベルと本格的ソフ
+トウェア開発のギャップを埋めることを試みるのが，
+この演習である．
+</p>
+</div>
+
+<h2>進め方</h2>
+<h3>チーム</h3>
+<div class=analects>
+<p align="right">
+<script src="./html/analects_team.js"></script>
+</p>
+</div>
+
+<div>
+まずは2-3人で一つのチームを作る
+</div>
+
+<h3>基本練習</h3>
+<div class=analects>
+<p align="right">
+<script src="./html/analects_tools.js"></script>
+</p>
+</div>
+
+<div>
+最初は，多くの
+ソフトウェアが踏襲するビルド方式(configure,
+make)，デバッガを使いこなして未知のソフトの動
+きを追いかける方法など，基本ノウハウを説明し，
+実践する．
+</div>
+
+<h3>共通課題</h3>
+<div class=analects>
+<p align="right">
+<script src="./html/analects_common.js"></script>
+</p>
+</div>
+
+<div>
+次に，ポピュラーであるが比較的単純なソフトウェア(例:
+gnuplot; 10万行程度)を対象に，共通課題を設定し
+てその動作の解析と変更を試みる．ソフトウェアを，
+デバッグ可能状態でビルドする，デバッガでステップ実行する，
+必要なところで止める，などの機能を正しく，効率的に駆使して，
+「変更したい動作と関連するコード」に到達する練習をする．
+</div>
+
+<h3>自由課題</h3>
+<div class=analects>
+<p align="right">
+<script src="./html/analects_free.js"></script>
+</p>
+</div>
+
+<div>
+残り時間は各チー
+ムで対象ソフトウェアと目標を設定して取り組む．
+対象ソフトウェアの分野は限定しないが，世の中で
+広く使われている，ポピュラーなプロジェクトを対
+象にすることを推奨する．例: 
+<ul>
+  <li>言語処理系: gcc, LLVM, Python, JavaScript, etc.</li>
+  <li>データベース: sqlite, Maria DB, etc.</li>
+  <li>OS: Linux, FreeBSD</li>
+  <li>オフィス系: gnumeric, inkscape, etc.</li>
+  <li>...</li>
+</ul>
+など．ただし，ビルドするだけで一晩かかってしまうようなソフトは，
+やり方を工夫しないと難しいかもしれない．
+</div>
+
+<h2>達成目標</h2>
+<div>
+<ul>
+  <li>少なく教わり，大きく学ぶ</li>
+  <li>大きなソフトウェアと格闘できるようになるということ</li>
+  <li>大きなソフトウェアの書かれ方を感じる</li>
+  <li>よく使われるソフトウェア設計のパターン
+    (拡張のためのインタフェースやマクロ言語など)を知る</li>
+  <li>ソフトの中身を知ろうにも座学で習う，
+    OS, データベース，言語処理系，etc.の理屈がわからないと，
+    手出しが出来ないこともあるかもしれない．わからないなりに格闘する
+    根性(オンデマンドに学ぶ姿勢)と，それらの座学を聞く際の
+    モチベーションアップ</li>
+</ul>
+</div>
+
+<h2>その他のご利益</h2>
+<div>
+<ul>
+  <li>ソースを追いかけることで，
+    普段使っているソフトの知らなかった機能を知る</li>
+  <li>エディタやデバッガなど普段使っているはずの道具も，
+    作業を効率的にするための投資をし，より高度に使いこなす</li>
+  <li>ソフトウェア構築や問題追求のための色々な道具を知る
+    (valgrind) </li>
+</ul>
+</div>
+
+
+
+<a name=reports> </a>
+<h2>過去レポ集</h2>
+<div>
+  見られない場合はお知らせください
+<ul>
+  <li><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2020"
+         target="_blank">
+      2020</a></li>
+  <li><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2019"
+         target="_blank">
+      2019</a></li>
+  <li><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2018"
+         target="_blank">
+      2018</a></li>
+  <li><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2017"
+         target="_blank">
+      2017</a></li>
+  <li><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2016"
+         target="_blank">
+      2016</a>,
+    <a href="http://pf-siedler.hatenablog.com/entry/2017/02/07/101831"
+       target="_blank">
+      とある課題参加者がまとめてくれた(thanks)
+    </a>
+  </li>
+  <li><a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2015"
+         target="_blank">
+      2015</a>,
+    <a href="http://swimath2.hatenablog.com/entry/2015/12/03/172000"
+       target="_blank">
+      とある課題参加者がまとめてくれた(thanks)
+    </a>
+  </li>
+</ul>
+</div>
+
+
+<!--
+<a name=misc_docs>
+<h2>もろもろの資料</h2>
+<div>
+<ul>
+  <li><a href=adm/titlepage_2015.xlsx>タイトルページ</a></li>
+  <li><a href=textbook/doss_textbook_no_page_no.pdf>テキスト(ページ番号なし)</a></li>
+  <li><a href=textbook/doss_textbook.pdf>テキスト(ページ番号あり)</a></li>
+</ul>
+</div>
+-->
+
+<a name=past> </a>
+<h2>過去のお知らせログ</h2>
+
+<h3>2020年度</h3>
+<div>
+<ul>
+  <li><font size="-1" color="black">2020/9/19:</font>
+    <font size="+3">開始 <font color="green">13:15</font></font>
+  </li>
+  <li><font size="-1" color="black">2020/9/19:</font>
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE3902E10J01">
+        ITC-LMS 実験コースページ</a></li>
+    <!--
+        <li><a href=html/report.html>レポートその他の提出手続き</a>
+          に従って最終提出物を提出してください.
+        </li>
+        <li>
+          <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2020">
+            2020プロジェクト一覧</a>
+          <font size=-1>(遅ればせながら直リンを作った. 中身はおなじみのページ)</font>
+        </li>
+        -->
+
+        <!--
+            <li><font size="-1" color="black">2020/xx/xx:</font>
+              <a href="html/questionnaire.html" target="_blank">初回アンケート</a>
+              に答えてください</li>
+            -->
+    <li><font size="-1" color="black">2020/9/19:</font>
+      2020年版ホームページ開設</li>
+</ul>
+</div>
+
+<h3>2019年度</h3>
+<div>
+<ul>
+  <li><a href=html/report.html>レポートその他の提出手続き</a>
+    に従って最終提出物を提出してください.
+  </li>
+  <li>
+    <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/doss/doss2019">
+      2019プロジェクト一覧</a>
+    <font size=-1>(遅ればせながら直リンを作った. 中身はおなじみのページ)</font>
+  </li>
+  <li><font size="-1" color="black">2019/10/8:</font>
+    参考: uftraceが上手く行かないときの代わりになるかもしれないツール
+    <a href="html/tips.html#libitrace">
+      libitrace</a>
+  </li>
+  <li><font size="-1" color="black">2019/10/2:</font>
+    <font color="blue">進捗の書き方: </font>
+    「同じことを他の人がもう一度やるのに役に立つ情報」を
+    書くことを推奨します. 例えばビルドにしても, 日本語でこうしたああした,
+    というレベルの情報ではなく, 打ち込んだコマンドラインを
+    そのまま残す(貼り付ける)のが推奨. 特に,
+    公式サイトの指示では上手く行かなったような場合, 代わりにどうした,
+    ということを「他の人はそれをコピペすればいい」
+    レベルでそのまま書いておくことがよいです.
+    <ul>
+      <li>他のメンバーの役に立つ</li>
+      <li>後輩の役にも立つ</li>
+      <li>トラブル発生時に他の人が介入・ヘルプするのにも役に立つ
+        <font color="red">(重要)</font></li>
+    </ul>
+  </li>
+  <li><font size="-1" color="black">2019/10/2:</font>
+    <font color="blue">トラブル報告の仕方:</font>
+    同じ理由で, トラブルに遭遇しているときも「やったことをありのまま書く」
+    というのが大事です. 特に他の人に見てもらう場合,
+    「ビルドしたけど◯◯がないとか言って上手く行きませんでしたがどうすればいいですか?」ではなく, 打ち込んだコマンドラインとシステムの出力, エラーメッセージなどをそのままベタッと(修正なく)貼り付けるのが重要です.
+    これはこの授業だけでなくオンラインコミュニティにヘルプを求める際にも重要な作法です. 「読んだ人が同じ現象を再現できるため」の情報, それも「最短時間で」再現できる(相手の時間を節約する)情報が重要で, それはすなわち, コピペすればいいだけのコマンドラインと, 起きることが同じかどうかを確かめられる出力,
+    ということになります.
+  </li>
+  <li><font size="-1" color="black">2019/10/2:</font>
+    <font color="blue">トラブルも進捗:</font>
+    「こうやったけどこんなエラーになって困っている」というのも
+    進捗です. 進捗報告に残したり,
+    最後のミニ発表でそれを見せるようにしましょう.
+    有用なヘルプをもらえる可能性が高まります.
+  </li>
+  
+  <li><font size="-1" color="black">2019/9/25:</font>
+    <a href="html/questionnaire.html" target="_blank">初回アンケート</a>
+    に答えてください</li>
+  <li><font size="-1" color="black">2019/9/25:</font>
+    2019年版ホームページ開設</li>
+</ul>
+</div>
+
+<h3>2018年度</h3>
+<div>
+  <ul>
+    <li>お疲れ様でした. 
+      <a href=html/report.html>レポートその他の提出手続き</a>
+      のページを更新しました(再読込してください)
+    </li>
+    <li>10/2 の終了状態
+      <ul>
+        <li>gitlabになんかプロジェクト追加</li>
+        <li>そこに基本情報を書く
+          <ul>
+            <li>チーム名(決まり次第)</li>
+            <li>メンバー全員の実名</li>
+            <li>進捗ログ(googledocsなど,
+              読めれば形式は自由)へのポインタ.
+              プロジェクトに .md ファイルの追加とか
+              でも良い
+            </li>
+            <li>ログに作業日記を残す習慣を始める</li>
+            <li>Slackを見れるようになっとく
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+<h3>2017年度第二期用</h3>
+<div>
+<ul>
+  <li>2017年度第一期のチーム「お寿司」の
+    <a href=http://fish2017.hatenablog.com/entry/2017/11/02/011847>
+      fishにwaitコマンドを加える</a>
+    拡張が
+    <a href=https://github.com/fish-shell/fish-shell/pull/4498>
+      fishの次期バージョン3.0に
+      マージ</a>されそう.
+  </li>
+  <li>2017年度第一期のチーム「希望ファースト」のレポート「<a href="http://siquare.hatenablog.com/entry/2017/10/25/151600">授業でFirefoxにコントリビュートした話</a>」 が <a href="http://b.hatena.ne.jp/entry/siquare.hatenablog.com/entry/2017/10/25/151600">はてなブックマーク</a>で話題!</li>
+  <li>(2017/11/13): <a href="html/final_questionnaire.html">最終アンケート(無記名)</a>を書いて下さい</li>
+    <li>(2017/10/23): 全員, 
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/">
+        gitlabへの登録</a>をお願いします("Register" タブを表示)。
+    </li>
+    <li>(2017/10/23):
+      チームが決まり次第,
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScYN9oTnCXQlqeldHLjH4rlOiliDCqH1-PpCfH1Va7R52dGZA/viewform">チーム登録</a>
+      をお願いします。
+    </li>
+    <li>(2017/10/23):
+      <a href=html/questionnaire.html>初回アンケート</a>
+      に答えてください</li>
+</ul>
+</div>
+
+<h3>2017年度第一期</h3>
+<div>
+  <ul>
+    <li>(2017/11/13): <a href="html/final_questionnaire.html">最終アンケート(無記名)</a>を書いて下さい</li>
+    <li>(2017/9/28): 全員, 
+      <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/">
+        gitlabへの登録</a>をお願いします。
+    </li>
+    <li>(2017/9/28):
+      チームが決まり次第,
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScYN9oTnCXQlqeldHLjH4rlOiliDCqH1-PpCfH1Va7R52dGZA/viewform">チーム登録</a>
+      をお願いします。
+    </li>
+    <li>(2017/9/25):
+      <a href=html/questionnaire.html>初回アンケート</a>
+      に答えてください</li>
+    
+    <li>(2017/9/25): 2017年度用 HP開設</li>
+  </ul>
+</div>
+
+<h3>2016年度第二期</h3>
+<div>
+<ul>
+  <li>2016/11/22: <a href="html/report.html">レポートその他の提出手続き</a>を読んでください</li>
+  <li>2016/11/22: <a href="html/final_questionnaire.html">最終アンケート(無記名)</a>を書いて下さい</li>
+  <li>2016/11/22: <a href="./reviewboard">発表アンケート</a>を書きながら発表を聞きましょう！</li>
+  <li>2016/11/7: 第二期のプレゼン発表を11/22(火)5限に実施する代わりに、11/15(火)は3限のみとします。</li>
+  <li>2016/10/24: <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/">gitlabへの登録</a>をお願いします。</li>
+  <li>2016/10/24: <a href="https://docs.google.com/forms/d/e/1FAIpQLScYN9oTnCXQlqeldHLjH4rlOiliDCqH1-PpCfH1Va7R52dGZA/viewform">チーム登録</a>をお願いします。</li>
+  <li>2016/10/24: <a href=html/questionnaire.html>初回アンケート</a>に答えてください</li>
+</ul>
+</div>
+
+
+<h3>2016年度第一期</h3>
+<div>
+<ul>
+  <li>2016/10/20: <a href="html/report.html">レポートその他の提出手続き</a>を読んでください</li>
+  <li>2016/10/20: <a href="html/final_questionnaire.html">最終アンケート(無記名)</a>を書いて下さい</li>
+  <li>2016/10/20: <a href="./reviewboard">発表アンケート</a>を書きながら発表を聞きましょう！</li>
+  <li>2016/10/13: 以下の記事に，さらに，<a href=html/gdb_step_into_libraries.html#chromium>Chromiumに適用した</a>場合の情報を追記</li>
+  <li>2016/10/13: 以下の記事に，追記: <a href=html/gdb_step_into_libraries.html#when_symbol_loading_takes_forever>シンボルのロードに死ぬほど時間がかかる場合</a></li>
+  <li>2016/10/3: 記事を追加: <a href=html/gdb_step_into_libraries.html>ライブラリの中をGDBで追跡する(自分でコンパイルせずに)</a>
+  </li>
+  <li>2016/9/27: <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/">gitlabへの登録</a>をお願いします。</li>
+  <li>2016/9/27: <a href="https://docs.google.com/forms/d/e/1FAIpQLScYN9oTnCXQlqeldHLjH4rlOiliDCqH1-PpCfH1Va7R52dGZA/viewform">チーム登録</a>をお願いします。</li>
+  <li>2016/9/23: <a href=html/questionnaire.html>初回アンケート</a>に答えてください</li>
+</ul>
+</div>
+
+<h3>2015年度第二期</h3>
+<div>
+<ul>
+  <li>2015/11/12: <a href="html/report.html">レポートその他の提出手続き</a>を書きました</li>
+  <li>2015/11/12: <a href="html/final_questionnaire.html">最終アンケート(無記名)</a>を書いて下さい</li>
+  <li>2015/11/12: <a href="./reviewboard">発表アンケート</a>を書きながら発表を聞きましょう！</li>
+  <li>2015/10/26: <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/">gitlabへの登録</a>をお願いします。</li>
+  <li>2015/10/26: <a href="http://goo.gl/forms/kxpcbE4xnF">チーム登録</a>をお願いします。</li>
+
+  <li>2015/10/22: <a href="http://goo.gl/forms/AvW99X8TkZ">グループ決め</a>を、2回目(10/26)の実験開始までに済ませておいて下さい。</li>
+  <li>2015/10/22: <a href=html/questionnaire.html>初回アンケート</a>に答えてください</li>
+</ul>
+</div>
+
+<h3>2015年度第一期</h3>
+<div>
+<ul>
+  <li>2015/10/20: <a href="html/report.html">レポートその他の提出手続き</a>を書きました</li>
+  <li>2015/10/20: <a href="html/final_questionnaire.html">最終アンケート(無記名)</a>を書いて下さい</li>
+  <li>2015/10/20: <a href="./reviewboard">発表アンケート</a>を書きながら発表を聞きましょう！</li>
+  <li>2015/10/19: <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/my-gnuplot-project">レポートのサンプル</a>みたいなものを書きました</li>
+  <li>2015/09/29: <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/">
+gitlabへの登録</a>をお願いします。</li>
+  <li>2015/09/29: <a href="http://goo.gl/forms/kxpcbE4xnF">チーム登録</a>をお願いします。</li>
+  <li>2015/09/28: <a href="http://goo.gl/forms/AvW99X8TkZ">グループ決め</a>を、２回目(9/29)の実験開始までに済ませておいて下さい。</li>
+  <li>2015/09/28: <a href=html/questionnaire.html>初回アンケート</a>に答えてください</li>
+</ul>
+</div>
+
+</body>
+</html>

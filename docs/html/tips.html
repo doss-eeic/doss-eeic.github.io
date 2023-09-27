@@ -1,0 +1,1098 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>小ネタ集</title>
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+
+
+h1 {
+  font-size   : 18pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h2 {
+  font-size   : 16pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h3 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 20pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+div.analects {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt 10pt 10pt 550pt;
+  padding     : 3pt 20pt;
+  background-color : #ffd;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 14pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+</head>
+
+<body>
+  <a href=../ >home</a>
+<h1>小ネタ集</h1>
+<div>
+<font size=-1>(the page is encoded in UTF-8)</font>
+</div>
+
+<h2>目的</h2>
+<div>
+実験中に遭遇した個々のトラブルや現象について，
+適宜フォローアップします．細かいところで時間を
+大きくロスしないために，実際に遭遇した問題に
+対する単刀直入な答えを載せるようにしますが，
+そのような個々のトラブルに対して，後々似た場面で通用する
+汎用的な知識や技を得ようとする姿勢が大事です．
+その意味から，初めて遭遇したトラブルにある程度
+時間を費やしてしまうというのも，「それが世の中」
+と思う精神も大事です(研究や仕事が始まれば，
+遅かれ早かれ，誰もすぐには答えてくれないトラブルにも遭遇します)．
+
+<ul>
+  <li><a href="#gnuplot_nowindow">ビルドしたgnuplotで窓が出ない</a></li>
+  <li><a href="#mxshell">M-x shellのススメ</a></li>
+  <li><a href="#tabtabtab">タブ，タブ，タブ，タブ，...</a></li>
+  <li><a href="#gpaint2_issues">gpaint-2をビルドした時のあれこれ</a></li>
+  <li><a href="#mecab_issues">mecabをビルドした時のあれこれ</a></li>
+  <li><a href="#build_inkscape">inkscapeビルドしてみました</a></li>
+  <li><a href="#easily_revert">すぐに元に戻せる変更の仕方</a></li>
+  <li><a href="#onoff_without_compilation">コンパイルし直さずに機能をON/OFFするための基本フォーム</a></li>
+  <li><a href="#howto_debug_programs_you_broke">いじったら(予想通り)動かなくなったプログラムをどう調べていくか</a></li>
+  <li><a href="#no_debug_symbols_in_mac">Macのgdbでデバッグシンボルが読み込まれない現象</a></li>
+  <li><a href="#cmake">CMake (configureじゃなくて)について</a></li>
+  <li><a href="#libitrace">yet another 追跡ツール libitrace</a></li>
+</ul>
+</div>
+
+
+<a name=gnuplot_nowindow> </a>
+<h2>ビルドしたgnuplotで窓が出ない</h2>
+<div>
+  <ul>
+    <li>現象: gnuplotのconfigure, make, make install
+    は無事成功するが，いざplotコマンドを実行しても，窓が表示されない．
+    よく見ると立ち上げ時のバナーに，
+<pre>
+Terminal type set to 'unknown'
+gnuplot> 
+</pre>
+と表示されている．
+</li>
+    <li>原因: gnuplotに限らずよくある現象として，依存する
+      ソフトウェア(ライブラリ)が備わっていない場合に，
+      一部の機能が削られて(OFFになって)コンパイルされることがあります．
+      今回の場合，GUI (窓表示)関係のライブラリ
+      (を用いた開発に必要なファイル)がインストールされていないことで
+      おこります．
+      configureを実行した際，警告らしきものが出ていないかを見る，
+      また，configureの最後に表示されるサマリーを見るなどして，
+      ある程度，情報を得ることが出来ます．
+    </li>
+    <li>対策: 初回の課題をやるだけなら窓がでなくてもOK.
+      <tt>set terminal dumb</tt>とか適当なターミナル設定をすればOK</li>
+    <li>窓を出したい場合:
+      全ての人がこれで解決するなどと断定は出来ませんが，
+      libqt4-dev というパッケージを入れることで解決したという人が複数います．
+<pre>
+$ sudo apt-get install libqt4-dev
+</pre>
+として，gnuplotをもう一度configureからやり直します．
+<pre>
+$ cd gnuplotのソースがある
+$ ./configure --prefix=... 
+$ make clean ## 重要
+$ make
+$ make install
+</pre>
+make cleanは，すでに一度コンパイルしたものを消去するために必要です．
+これをせずにmakeとだけやっても，再コンパイルしてくれないことが多々あります．
+本来はconfigureによってMakefileが書き換わったことを検知して，
+再コンパイルしてくれるべき，という気がしますが，そうなっているかどうかは，
+パッケージを用意した人次第，というところがあります．あまり一般的に
+こうなっていると決め付けることは出来ません．
+    </li>
+    <li>教訓: 実際のソフトウェア構築では，
+      このようなこと(環境が整っていないために一部機能がOFFになったり，
+      configureやコンパイルがエラーになったりする)が起きがちです．
+      これに従えば大丈夫，という公式はありません．今回の場合正解は，
+      libqt4-devというパッケージを入れる，というところに
+      あったわけですが，大事なのは「gnuplotを入れるのに
+      libqt4-devが必要」という今回限りの知識を覚えることではなく，
+      <font color=red>どうやってその情報にたどりつくか，</font>
+      そのためのある程度汎用的な知識を得ておくことです．
+      以下は，「こうすればうまく行く」公式だなどと思ってはいけませんが，
+      類似ケースの解決策を見出すにあたり覚えておくとよい事項です．
+      <ul>
+	<li><font color=blue>configureのログや警告を見る</font>
+	  (何かがうまく行かなかったあとで見直すのでも良い)</li>
+	<li>とくに，
+<pre>
+checking xxxxxxx ... no
+</pre>
+のように，ある機能が環境にそなわっていないことが判定された行を，
+注意深く見る．
+	</li>
+	<li>欠けている機能のインストールを試みる．全うにはここで，
+	依存しているパッケージなどについて，ドキュメント(README
+	  やINSTALL)に書かれていないかを見てみるべきである．
+	  以下は，当てずっぽうが必要だとなった場合の話:
+	</li>
+
+	<li>環境ごとの<font color=blue>パッケージ名の推測</font>が必要になるが，
+	  ソフトウェア構築に必要なパッケージ名は，
+<pre>
+lib機能名-dev
+</pre>	 
+などという名前をしていることが多い．
+	</li>
+	<li>パッケージを検索するツールとして，apt-cache, aptitudeなどがある．
+	  たとえば，
+<pre>
+$ apt-cache search libqt
+</pre>
+または
+<pre>
+$ aptitude search libqt
+などとして，qt関係のパッケージ名を検索できる．
+	</li>
+	<li>依存しているパッケージがよくわからない場合や，大量になりそうなときに，
+<pre>
+$ sudo apt-get build-dep パッケージ名
+</pre>
+とすることで，構築に必要なライブラリがインストールされるので，
+よくわからなかったこれを試すのも良い．
+ただしこの方法にも限界はある．盲信してはいけない.
+<ul>
+  <li>そもそも今構築しているソフトウェア自身(gnuplot)
+    がパッケージ化されていなければ使えない</li>
+  <li>パッケージ化されていたとしても，パッケージ化されているものと，
+    今ビルドしようとしているソースとで，バージョンが異なるなどして，
+    依存しているパッケージやそのバージョンがが異なることもある．
+    そもそも実用的には，apt-get install で入らないものこそ，
+    ソースからビルドしたくなるのが普通なのだから，
+    これらの点は割りと本質的な限界と言える．</li>
+  <li>build-depで表示される情報自身が，そこまで信頼できるものとは限らない．
+  </li>
+</ul>
+	</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<a name=mxshell> </a>
+<h2>M-x shellのススメ</h2>
+<div>
+構築作業をするのに，端末ソフトを使うのではなく，
+EmacsでM-x shellとして，その中で作業をすることを勧める．
+理由はいくつかある．
+<ul>
+  <li>configureのログなどをあとで見返す，探索する(C-r)，
+    コピペする，などに便利</li>
+  <li>M-x gud-gdbや，M-x compileを正しいディレクトリで起動するための，
+    遊撃的なバッファとして使える．説明が長くなるので省略．
+  </li>
+</ul>
+</div>
+
+
+<a name=tabtabtab> </a>
+<h2>タブ，タブ，タブ，タブ，...</h2>
+<div>
+とにかく長いファイル名を自分で丁寧に打ち込む癖をやめよう．
+Emacsにしろ，シェルにしろ，Unix系の多くのCUI (文字ベース)
+プログラムでは，ファイル名を途中まで打って，タブキーを押せば，
+曖昧性が生じるところまで補完してくれるという機能が備わっている．
+これはタイプ量を省略する上でも重要だし，タイプミス
+(や，それに伴う精神的，肉体的苦痛，それから生ずる生産性ややる気のロス)
+を減らす意味でも重要である．
+<br>
+少し使い慣れた人は，ファイル名を入れるのに，2-3文字打ってはタブ，
+ということを癖にしているのではないかと思われる．
+ちなみに田浦はタブに頼りすぎているのだろうか，
+時としてタブを打っても(曖昧性のために)ほとんど補完してくれないことが2度3度と
+続くとそちらでイライラしてしまうということもしばしば．
+</div>
+
+
+<a name=gpaint2_issues> </a>
+<h2>gpaint-2をビルドした時のあれこれ</h2>
+<div>
+<p>
+チーム... が，gpaint-2 をビルドした時のあれこれを共有します．
+これも，ソフトの不出来をディスってすませるのは簡単ですが，
+自分がソフトを開発する立場に立って考えると，
+「他の人の環境で動かない」ということは，大いにありそうなわけで，
+これを逆の目線から見ると「ちょっとした環境の違いで動かない」
+ときに，そこで諦めてしまう人から，
+修正して動かせるようになる人へのステップアップということも出来ます．
+他のソフトでも似たようなことが起きる可能性は大いにあるので，
+一般的な教訓として共有しておきます．
+</p>
+
+<h3>ダウンロード</h3>
+<div>
+<a href=https://www.gnu.org/software/gpaint/ >ホームページ</a>
+から，<a href=ftp://alpha.gnu.org/gnu/gpaint/gpaint-2-0.3.2.tar.gz >
+  GNOME 2 version</a>と書かれたソースを取得します．
+</div>
+
+<h3>configure, make</h3>
+<div>
+<p>
+configureとmakeを行うと，以下のエラーに遭遇します．
+<pre>
+drawing.c: In function ‘drawing_prompt_to_save’:
+drawing.c:432:69: error: ‘GTK_RESPONSE_DISCARD’ undeclared (first use in this function)
+         gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_DISCARD,GTK_RESPONS
+</pre>
+</p>
+<p>
+さて今回は，configureが失敗するのではなく，コ
+ンパイルに失敗するわけですが，どうしたらよいで
+しょうか．もちろん今回も，万能公式などありません．
+結局，本当にぶっ壊れたソースなのかも知れませんが，
+まがりなりにも配布しているコードですから，
+どんな環境でもコンパイルできない，というところまで
+壊れたコードということは考えがたく，やはり，
+「環境依存」の問題である可能性のほうがはるかに高いです．
+</p>
+<p>では何が行けないのかを突き止める方法は?
+非常にしばしば功を奏する方法が，「教えて! Google先生」
+という方法です．エラーメッセージをそのままGoogleに
+ぶち込んで，同じ問題を報告している人を探します．
+今回の場合，「error: GTK_RESPONSE_DISCARD」
+という文字列をGoogleに放り込むだけで，
+同じ問題に遭遇している人の
+<a href=http://savannah.gnu.org/bugs/?33371>
+  バグレポートとその後のやりとり</a>を記したページが見つかります．
+あとは英語を読むだけです．
+なんてすばらしい(ここで，同じ問題に遭遇し，それを最初にバグレポートに
+あげた人にも感謝をしなくてはいけません．逆に言うと，
+答えが見つからなかった時に，レポートをあげるということも，
+重要な貢献だということです)．
+</p>
+<p>答えは，GTKという，gpaintが用いているライブラリのバージョンが，
+gpaintが書かれた当時よりもあがってしまい，
+互換性のない変更が行われていた(結果としてこれまで
+存在していたGTK_RESPONSE_DISCARDというマクロが削除された)，
+というものでした．
+</p>
+<p>この問題をクリアすると次にぶつかる問題は，最後のリンク時のエラーで，
+<pre>
+...
+$ gcc  -O0 -g  -o gpaint-2  about.o brush.o callbacks.o canvas.o color_palette.o drawing.o file.o fill.o freehand.o gtkscrollframe.o image.o image_processing.o lasso.o main.o menu.o paste.o pen.o pixmaps.o polyselect.o rectselect.o print.o selection.o shape.o support.o text.o tool_palette.o ui.o -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lfontconfig -lfreetype -lpango-1.0 -lgobject-2.0 -lglib-2.0    
+/usr/bin/ld: image.o: シンボル 'cos@@GLIBC_2.2.5' への未定義参照です
+</pre>
+</p>
+<p>
+エラーメッセージ: 「シンボル 'cos@@GLIBC_2.2.5' への未定義参照」
+が最初の手がかりになります．これは要するに，cosという関数が
+見当たらないというエラーで，cos関数を使うためには，-lm という
+フラグを与えて，libmをリンクしなくてはならないということです．
+</p>
+<p>作業の進め方として，まずは
+  <font color=red>それを手動で実行してみて同じエラーが出ることを確認</font>
+  するのが効率が良いです．手動で，コマンドラインの最後に -lm を追加して，
+  実行してみます．
+<pre>
+$ gcc  -O0 -g  -o gpaint-2  about.o brush.o callbacks.o canvas.o color_palette.o drawing.o file.o fill.o freehand.o gtkscrollframe.o image.o image_processing.o lasso.o main.o menu.o paste.o pen.o pixmaps.o polyselect.o rectselect.o print.o selection.o shape.o support.o text.o tool_palette.o ui.o -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lfontconfig -lfreetype -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lm
+</pre>
+</p>
+<p>首尾よく行きました．ということで残された問題は，
+どうやってmakeに，-lmというオプションを付けさせるか，です．
+とりあえずストレートな考え方は，Makefile中で，
+このコマンドを実行しているらしきところを突き止め，
+そこを書き換えるということになります．
+ただし，Makefile自身，configureによって生成されるものなので，
+実際にはMakefileを書き換える方式はうまくありません．
+Makefileは実は，Makefile.in
+というファイルをテンプレートとして生成されています
+(実はMakefile.in自身，人間が手で書いたものではないという，
+かなり病的な世界なのですが，今の本題とは関係ないの飛ばします)．
+なので，Makefile.inから探しても似たようなものは見つかります．
+今回の場合，src/Makefile.inから以下のような関係しそうな行が見つかりました．
+<pre>
+gpaint-2: $(gpaint_2_OBJECTS) $(gpaint_2_DEPENDENCIES)
+	@rm -f gpaint-2
+	$(LINK) $(gpaint_2_LDFLAGS) $(gpaint_2_OBJECTS) $(gpaint_2_LDADD) $(LIBS)
+</pre>
+</p>
+<p>
+  この，<t>$(LINK) $(gpaint_2_LDFLAGS) $(gpaint_2_OBJECTS) $(gpaint_2_LDADD) $(LIBS)</t>という行が実は先ほどのコマンドラインになっているという事自体，
+想像しがたい話かも知れませんが，どちらかというと手がかりは，
+<pre>
+gpaint-2: 
+</pre>
+つまり，このルールがgpaint-2 というファイルをターゲットとしている
+(gpaint-2を作るためのルールである)という点です(Makefileの読み方
+については教科書の付録: makeの基本を参照して下さい)．
+</p>
+<p>
+  これを見るとコマンドラインの最後に，<t>$(LIBS)</t>という変数
+  がついていますので，実はLIBSという変数に -lm 
+  を滑りこませればいいということがわかります．
+  src/Makefileの上のほうを見ると，
+<pre>
+LIBS = 
+</pre>
+という行が見つかり，LIBSは空文字列になっています．
+Makefile.inでは対応する行はどうなっているかというと，
+<pre>
+LIBS = @LIBS@
+</pre>
+となっています．実はconfigureが，
+右辺の@LIBS@という形をした文字列を，
+環境変数 LIBS で置き換えるということをします．
+CFLAGSなどの変数が置き換わるのも同じ仕組みです．
+実際，src/Makefile.inには次のような行もあります．
+<pre>
+CFLAGS = @CFLAGS@
+</pre>
+ですので実は LIBS という変数も CFLAGS と同様，configure時に
+  環境変数として指定することで，Makefileに行き渡らせることができます．
+  結論として，configureを以下のように行えば良いということです．
+<pre>
+$ <font color=blue>LIBS=-lm</font> CFLAGS="-O0 -g" ./configure --prefix=$HOME/gpaint_install
+</pre>
+</p>
+<p>
+疲れましたが教訓は，
+<ul>
+  <li>configure時に，LIBS=...で，追加でリンクしたいライブラリを指定できる．
+    実はこれはgpaintに限らず多くのconfigureで共通の動作．</li>
+  <li>Makefileはconfigureによって，Makefile.inをテンプレートとして
+    生成されているがその際，@XXXX@という変数が置き換えられる．
+    したがって，makeが実行するコマンドラインをいじりたい場合，
+    <ul>
+      <li>直接Makefileをいじるのはダメ(configureするたびに書き換える羽目になる)</li>
+      <li>いじるのであればMakefile.inをいじる</li>
+      <li>しかしMakefile.inを眺めると，上記の変数置き換えの仕組みを利用して，
+      configure時に適切な指定をすることで回避できることがある</li>
+  </li>
+</ul>
+です．
+</p>
+<p>
+
+  <font color=red>Update:</font> ふと思いまし
+  たが，なぜ我々だけ-lmが必要なのか，の理由は，
+  我々が -O0 でコンパイルしているからかも知れ
+  ません．-O0だと，cos関数の呼び出しがライブラ
+  リ関数への呼び出しになりますが，最適化レベル
+  を上げると(無指定の場合も含め)，cosなどの関
+  数は組み込み関数としてインライン展開されると
+  いうことがよくあります．ためしに-O0なしで，
+  configure, makeしてみると確かめられます(やっ
+  てません)．この問題が開発者の手元で見つから
+  なかったのはそういう理由かも知れません．
+</p>
+</div>
+</div>
+
+<a name=mecab_issues> </a>
+<h2>mecabをビルドした時のあれこれ</h2>
+<div>
+  <p>mecabは，mecab本体をインストールしてから，
+    辞書をインストールするという2段構成になっているようですが，
+    辞書をconfigureするときに mecab-config がない，
+    というエラーに遭遇します．
+<pre>
+todo: エラーログを貼れ
+</pre>
+  </p>
+  <p>解決策ですが，辞書のconfigure時に，
+<pre>
+./configure --with-mecab-config=...
+</pre>
+というオプションで，mecab-configのありかを指定してあげます．
+mecab-configは，mecab本体をインストールしたのと同じ場所に見つかります．
+なので，/home/denjo/mecab_install にmecabをインストールしたのであれば，
+<pre>
+./configure --with-mecab-config=/home/denjo/mecab_install/bin
+</pre>
+としてやればよいようです．
+  </p>
+  <p>ここでも，一般的な教訓をまとめておきます．--with-mecab-config
+    というオプションは，
+<pre>
+./configure --help
+</pre>
+で表示されます．何かのファイルがなくてconfigureに失敗したら，
+それを教えるオプションがないか，--helpを使って見てあげましょう，
+というのが覚えておくべき教訓です．
+  </p>
+</div>
+
+
+<a name=build_inkscape> </a>
+<h2>inkscapeビルドしてみました</h2>
+<div>
+<p>
+  inkscapeをビルドしようとすると，おそらく大概の人は，
+  色々と依存しているパッケージがない旨のエラーが出ます．
+  それは本質的には，<a href=#gnuplot_nowindow>
+    ビルドしたgnuplotで窓が出ない</a>のと同じ問題で，
+  異なるのはgnuplotのように，機能OFFのままコンパイルするということは
+  できないため，configureがエラーになることです．
+</p>
+<p>
+  なので，解決策も同じで，必要なパッケージを入れていくことです．
+  但し今回の場合，依存しているパッケージの量がかなり多いので，
+  apt-get build-depを使うのが実践的です．
+<pre>
+$ sudo apt-get build-dep inkscape
+</pre>
+として必要パッケージをどさっと投入すればうまく行くようです．
+</p>
+</div>
+
+
+<a name=easily_revert> </a>
+<h2>すぐに元に戻せる変更の仕方</h2>
+<div>
+<p>コードをいじって一発で動くなどということは事実上ありえないので，
+多くの場合，施した変更を元に戻して試したい，ということが起こります．
+その時に本当に手でソースコードを元に戻すのは大変ですし，
+間違いも起きます．そのうち何をやっているのかもわからなくなってくることでしょう．
+  これをうまく管理する方法として，
+  Cの <tt>#if ... #endif</tt> というディレクティブが使えます.
+  例えばソースコードに
+<pre>
+#if FOO
+int foo() { ... }    
+#endif
+</pre>
+と書いておいてコンパイル時に,
+<pre>
+gcc -DFOO=1 ...
+</pre>
+としてコンパイルすれば, <tt>#if FOO ... #endif</tt> の間のコードが有効になり,
+<pre>
+gcc -DFOO=0 ...
+</pre>
+とすれば無効になります. これをconfigureなどで
+<tt>CFLAGS="-DFOO=1 ..."</tt>
+または
+<tt>CFLAGS="-DFOO=0 ..."</tt>
+などとして与えれば,
+ある変更を有効・無効にしてコンパイルをすることが簡単になります.
+  
+詳しくは, 教科書の3.22 「より模範的なソースコードの変更の仕方」
+を見てみて下さい．
+</p>
+</div>
+
+<a name=onoff_without_compilation> </a>
+<h2>コンパイルし直さずに機能をON/OFFするための基本フォーム</h2>
+<div>
+前節で述べたのは，いわば，
+一つのソースコードをふた通りにコンパイルする豊富です．
+しかし，開発効率を考えるならば，一個の実行可能ファイルで，
+変更前・変更後の両方を実行できるようにする，というのも
+考えてみるべきです．主に二つの方法があります．
+<ol>
+  <li>適当な環境変数を決め，そのあるなしで動作を変える</li>
+  <li>コマンドライン引数を追加し，そのあるなしで動作を変える</li>
+</ol>
+</div>
+
+<h3>環境変数を用いる方法</h3>
+<div>
+getenv(環境変数名) という関数を用いて，
+ある環境変数がセットされているか否かを判断できます．
+例えば以下のようにコードを書けば，
+環境変数 HOGEHOGE がセットされているかどうかで，動作を変えることが出来ます．
+<pre>
+if (getenv("HOGEHOGE")) {
+  セットされている動作
+} else {
+  セットされていない動作
+}
+</pre>
+環境変数をセットするには，コマンドを起動するときに，
+<pre>
+HOGEHOGE=X ./your_program ...
+</pre>
+のようにします．こうするとgetenv("HOGEHOGE")が 0 でない
+ポインタ---具体的にはセットされた値へのポインタ(文字列)---
+を返します．
+上記のコードでは，
+HOGEHOGEがセットされているか否かだけを区別しましたが，
+実際にセットされている値によって動作を変えるということも出来ます．
+</p>
+<p>
+この方式の利点は，割合にお手軽であるということでです．
+ソースコード中のだいたいどんな場所にでも入れられます．
+欠点その1は，タイプミスに(非常に)弱いということでしょう．
+getenvに渡す文字列や，コマンドラインでの文字列をタイプミスすると，
+知らぬ間に予期しない方の動作をしてしまいます．
+その間違いを事前に防止したければ，
+<pre>
+getenv("HOGEHOGE")
+</pre>
+のように，文字列を直打ちするのをやめて，
+<pre>
+const char * ENV_HOGEHOGE = "HOGEHOGE";
+</pre>
+または
+<pre>
+#define ENV_HOGEHOGE "HOGEHOGE"
+</pre>
+のように，どこかに一度だけ文字列の定義を書いておいて，
+<pre>
+getenv(ENV_HOGEHOGE)
+</pre>
+のようにします．もしくは以下のように，getenvを呼ぶのは一度だけにして，
+どこかで変数に値を設定しておきます．
+<pre>
+int VAL_HOGEHOGE = 0;
+</pre>
+<pre>
+/* どこかで初期化 */
+if (getenv("HOGEHOGE")) { VAL_HOGEHOGE = atoi(getenv("HOGEHOGE")); }
+</pre>
+<pre>
+/* 使う場所 */
+if (VAL_HOGEHOGE) { ... }
+else { ... }
+</pre>
+こうすると，VAL_HOGEHOGE などの変数が，
+ソースコードのどこからでも参照できるように，
+適切なヘッダファイルを見つけてあげたり，
+なければ自分で作ってあげたりと，
+コードの変更量が多くなるというデメリットがあります．
+このコードの変更をするくらいならおそらく，
+コマンドライン引数を追加してあげるほうが，
+きれいと言えますし，タイプミスによる予期しない動作の
+発生も防ぎやすいです(コマンドライン引数を間違えれば，
+そこでエラーになる)．
+</p>
+</div>
+
+<h3>コマンドライン引数を追加する方法</h3>
+<div>
+その解析をどこで行っているかをデバッガで突き止め
+(大概，mainから追跡していけばすぐに見つかります)，
+そこに新しい選択肢を追加する，というのが必要な作業の一つ．
+これは，ほとんどのプログラムで既にそういうことをしている
+ので，あまりコードの変更は大きくならずにすみます．
+あるオプションがONになった場合，普通大域変数の
+どこかにそのような情報をセットし，残りの部分ではそれを
+参照します．そのために，複数ファイルにわかれたソースコード間
+で，変数を参照しあったりするための，
+正しいコードの書きかたを知らなくてはなりません．
+その基本については教科書 A.1 あたりを見て下さい．
+また，対象プログラムにおいても似たようなことをしている
+でしょうから，それに習うと，新しいオプションを追加するのに
+自然な場所というのもわかることが多いでしょう．
+</div>
+
+
+<a name=howto_debug_programs_you_broke> </a>
+<h2>いじったら(予想通り)動かなくなったプログラムをどう調べていくか</h2>
+<div>
+<p>いじったら動かなくなったプログラムも，
+やはりデバッガをうまく使うことで道が開けます．
+「動かない」にも色々有りますが，典型例は以下の二つです．
+<ul>
+  <li>いきなりsegmentation faultで落ちるようになる</li>
+  <li>assertion failureというエラーが出て落ちるようになる</li>
+</ul>
+まず前者の場合，その瞬間をデバッガで捕まえるのは容易である．
+普通に(ブレークポイントも何も設定せず)，gdb内でrunさせれば，
+そこまで実行して，segmentation faultが起きたところで実行が
+(gdb内)で止まる．その場所が，
+自分でコンパイルしたファイル内であれば，
+いつもようにソースコード行なども表示される．
+よくあるのは，そこが，今自分が変更しているソースコード内ではなく，
+それが呼び出している(自分でコンパイルしたわけではない)関数
+の中，という場合である．そのような場合まず，
+<pre>
+(gdb) where
+</pre>
+または
+<pre>
+(gdb) bt  ## backtrace
+</pre>
+コマンドによって，どのような関数呼び出しが積み重なって，
+その場所にたどり着いているのかを見ることができる．
+例:
+<pre>
+(gdb) bt
+#0  0x00007ffff632312d in poll () at ../sysdeps/unix/syscall-template.S:81
+#1  0x00007ffff6949fe4 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#2  0x00007ffff694a30a in g_main_loop_run ()
+   from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#3  0x00007ffff78c8447 in gtk_main ()
+   from /usr/lib/x86_64-linux-gnu/libgtk-x11-2.0.so.0
+#4  0x0000000000419584 in main (argc=1, argv=0x7fffffffe4a8) at main.c:60
+</pre>
+これは， main が gtk_main を呼び出し，それが
+g_main_loop_run を呼び出し，それが何かよくわからない関数 (??と表示されている．
+関数は /lib/x86_64-linux-gnu/libglib-2.0.so.0 
+というライブラリ中にあることはわかる)を呼び出し，それが poll という
+関数を呼び出していることを示している．
+</p>
+<p>ここから，
+<pre>
+(gdb) up
+</pre>
+コマンドによって，今いる位置の関数呼び出し元を調べることが出来る．
+upコマンドを適切な回数繰り返し実行するとやがて，
+自分がコンパイルした関数にたどり着く．今の場合，
+4回upコマンドを実行すれば， main関数が，gtk_main を
+呼び出す行を表示してくれる(これは，表示する場所を
+変更しているだけで，プログラムの実行が進んだり，
+戻ったりしているわけではない)．
+<pre>
+(上の状態からupを4回実行した時のEmacs内の表示)
+
+    create_window();
+
+=>  gtk_main();
+    debug("main() returning");
+    return 0;
+</pre>
+運が良ければこのようにして，
+segmentation faultと直接関連の有りそうな，
+ソースコード上の位置を発見することができる．
+少なくとも，「segmentation faultの直前」
+で何が起きていたのかを知ることができる．
+もちろんこの状態で p で指揮や変数の値を表示したり
+もできるし，必要ならば，その少し前にブレークポイントを
+設定して再実行，などということができる．
+</p>
+<p>
+ただしもちろん，segmentation faultで落ちた際の呼び出し元
+に，直すべき場所があるとは限らない．
+ここで説明したのはあくまで，「最初の手がかり」を得る方法．
+例えて言うならば，殺人事件が起きた時，
+被害者がその直前にどこで何をしていたのかを探る方法である．
+</p>
+
+<p>segmentation faultではないが，プログラムが実行時エラーを吐いて
+終了，ということもよくある．assertion failureというのもその一種で，
+それは元はといえば，
+<pre>
+assert(x == y);
+</pre>
+のような文を書くだけで，実行時にx == yが成り立っていなければ，
+エラーを表示して終了してくれるというものである．
+assertion failureであろうと，その他のお手製のエラーメッセージであろうと，
+最終的には，_exit関数，abort関数などを呼んで終了する．
+よって，それらにブレークポイントを設定してから実行すれば，
+プロセスがいなくなる直前を捉えることができる．
+それをとらえたあとの要領は，segmentation faultの追跡と同じである．
+</p>
+</div>
+
+
+<a name=no_debug_symbols_in_mac> </a>
+<h2>Macのgdbでデバッグシンボルが読み込まれない件</h2>
+
+<h3>デバッグシンボルが見えない理由</h3>
+<div>
+<p>MozcをMacOSでビルドしているチームでの出来事．
+  build_mozc.pyを使ってデバッグ用のコンパイルをするも，
+    gdbで実行可能ファイル(MozcRenderer)を実行すると，
+    no debug symbols... と言われる．
+  コンパイルはgcc/g++ではなくclang++という，LLVMという
+    コンパイラツールチェインの中のコマンドで行われている．
+</p>
+
+<p>
+  解決策というか，回避策を先に書いておくと，gdbの代わりに，
+  lldbという，LLVMツールチェインの中に入っているデバッガを使えば良い．
+</p>
+<p>
+  ここから先はいつものように，「この答えに至るプロセスが大事」
+  という考えのもと，どうやってそこに至ったかを記録する．
+</p>
+<p>
+  まず最初になすべきことは，実際にビルドが行われているコマンドラインを
+  直視することである．今回はよくあるconfigure; make ではなく，
+  gyp とうツールが使われている．どうであろうともまずは，コマンドラインに，
+  -g, -O0 など，自分が指定したオプションが行き渡っていることを確かめるのが
+  先決．今回実行されたコマンドを見てみると確かに，-O0, -g が渡っていたが，
+  一点，疑う可能性のある点として，.c を .o にコンパイルするときは，
+  -O0 -g がわたっているが，リンク(最後に実行可能ファイルを生成するところ)
+  時には，-g がついていない，ということがわかった．
+</p>
+<p>
+  この時点でそれが問題だと確信できるわけでは全くないが
+  (自分の経験上は，リンク時に-gをつける必要は，大概の場合，ない)，
+  よくわからないことが起きているときは，とにかく万全を期すことができれば
+  それに越したことはない．ということで，リンク時にも -g をつけることにしたい．
+</p>
+<p>
+  この時の作業の仕方としてふた通りある．
+  <ol>
+    <li>リンク時のコマンドを手動で打って，まずはそこに手動で-gを追加</li>
+    <li>gypでリンク時のオプションに-gを追加する方法を見つけ，それを試す</li>
+  </ol>
+  ビルド全体には長時間かかることがあるので，基本的には1.を試すべきである．
+  あまり，ビルドツールをブラックボックスと思わず，所詮はコマンドをたくさん
+  実行しているだけなのだから，トラブルがあればそのコマンドを実際に打ってみる，
+  という姿勢がまずは大事．
+  だが残念なことにこの方法でリンクをすると，実行可能ファイルをgdb
+  にかけた時に，さらに謎なエラーが出てしまう(この辺，記憶だけを元に書いていて，
+  かつ自分の環境がMacOSではないので正確に現象を記述できない)．
+  こういう時の原因は，コマンドを実行するときに，ビルドツール経由だと，
+  環境変数がセットされているとか，その手のケースが多いのだが，
+  結局この方法は一時中断した．
+</p>
+
+<p>次に，2.の方法として，gyp経由で，リンク時の
+オプションに-gを追加するという方針で試みる．
+gypの設定ファイルの中から関連しそうなところを探す
+  (そもそも設定ファイルをいじる以外の方法がないのかもよく知らない)
+も，あまり安全にいじれそうな気がしない．
+</p>
+
+<p>両者とも行き詰まったところで頭を冷やす．
+これまでにわかっていることは，
+<ul>
+  <li>コンパイル時 (.c -> .o を生成するところ)まででは, -O0 -g が付いている</li>
+  <li>リンク時 (.o やその他のライブラリ -> 実行可能ファイルを生成するところ)
+    では, -g が付いていない</li>
+  <li>結果として，gdbが symbol not found というメッセージを出す</li>
+</ul>
+ということなので，こういう場合，「単純なケースに立ちかえる」という作戦が，
+活路を開くことがある．そこで，単純なCのプログラム a.c を作り，それを，
+<pre>
+$ clang++ -g -c a.c
+$ clang++ a.o
+</pre>
+とし，無事 gdb がそのシンボル情報を読めるのかを調べてみる．
+するとなんということか，
+こんな単純なケースでもうまく行かないということがわかった．
+そしてなんと，リンク時に -g を付けてもなお，ダメである．
+<pre>
+$ clang++ -g -c a.c
+$ clang++ -g a.o
+</pre>
+ここまで単純化すると，そもそもclang++が吐いたバイナリが
+gdbでデバッグできていないのではないか，ということに気づくことができる．
+</p>
+<!--<p>こういう単純なケースでも問題が出るということがわかると，
+「Google先生」作戦が使える．今回は，-->
+</p>
+</div>
+
+<h3>デバッグシンボルが消える理由</h3>
+<div>
+<p>
+Mozcのチームから，OS XでデバッグビルドのMozcをインストールしても，
+起動中のプロセスにlldbでアタッチした際にアセンブリしか表示されないという報告を受けたため，
+その原因を調査した．
+結論からいうと，Mozcのgyp設定ファイルがデバッグビルドであったとしても
+stripコマンドでシンボル情報を削除していたのが原因であった．
+以下は，それが判明するまでの記録である．
+</p>
+<p>
+デバッグシンボルが読み込まれないという問題を一つ取っても，複数の原因で起きる可能性がある．
+</p>
+<ol>
+    <li>オブジェクトファイルにシンボル情報がない．コンパイル時にきちんと"-g -O0"を付けてビルドされなかった場合がこれに相当．</li>
+    <li>実行可能ファイルにシンボル情報がない．リンク時に削除された場合がこれに相当．</li>
+    <li>デバッガがシンボル情報を認識できない．gdbではダメで，lldbだと上手くいくといった場合がこれに相当．</li>
+</ol>
+<p>
+問題解決に際して，これらの可能性を一つ一つ消去法でつぶしていくのが有力な方法である．
+少なくともどの段階で既に問題が生じているかは，
+中間生成ファイルを調べることで明らかになる．
+例えばOS Xの場合は，dsymutilというツールを利用することで，
+デバッグシンボルの情報を格納した*.dSYMというディレクトリを生成できる．
+この際にデバッグシンボルがない場合は警告を出すという挙動をするので，
+これを利用する．
+</p>
+<pre>
+$ cd src/out_mac/Debug/Mozc.app/Contents/MacOS
+$ dsymutil Mozc
+warning: no debug symbols in executable (-arch x86_64)
+$
+</pre>
+<p>
+逆に，正常にデバッグシンボルが存在する場合は，何もメッセージが出ない．
+</p>
+<pre>
+$ clang++ -c a.cpp -g -O0
+$ clang++ a.o
+$ dsymutil a.out
+$ 
+</pre>
+<p>
+上のMozcの実行ファイルはデバッグ情報を持っていないと分かったので，
+次にコンパイル時とリンク時のどちらで削除されたかを考える．
+コンパイル時にきちんと"-g -O0"が付いているかは，
+実行しているコマンドを確認すれば分かる．
+Mozcのビルドでは(ほぼ全ての)コマンドが表示されているので，
+clang++に渡している引数を確認することは容易である．
+実際，コンパイル時には正常に"-g -O0"が渡っていることが分かった．
+</p>
+<p>
+そこで，リンク時があやしいと考えて，
+実行可能ファイルだけを削除することでわざとリンクだけを発生させてみることを試みた．
+そして，その際のコマンドを眺めると，
+リンクのコマンドが呼ばれた後にstripコマンドを呼び出していることが判明した．
+</p>
+</div>
+
+<a name=cmake> </a>
+<h2>CMake (configureじゃなくて)について</h2>
+<div>
+ソースをビルドするのに
+<pre>
+$ ./configure [オプション...]
+$ make
+$ make install
+</pre>
+でいっちょう上がりという風になっているソフトが多いですが,
+最近は, <a href="https://cmake.org/">CMake</a>というものを使っているものもよくあります. こちらに遭遇したときの最小手順.
+
+<font color="red" size=-1>
+  (ちょっと嘘をついていたようなので10/8微修正しています)
+</font>
+
+<pre>
+$ cmake . # <font size="-1"><i>ソースは'.'にあるよ, という意味</i></font>
+# <font size="-1"><i><font color="blue">CMakeCache.txt というファイルが出来るので必要に応じて修正</font></i></font>
+$ cmake . # <font size="-1"><i>CMakeCache.txtを修正したらまたこれをやる</i></font>
+$ make VERBOSE=1 # <font size="-1"><i>VERBOSE=1は必須ではないがコマンドラインを表示してくれるので推奨</i></font>
+$ make install
+</pre>
+
+<ul>
+  <li>CMakeという名前から make の変わりかと思いきやそうではなくどちらかというと, configure の変わりです.</li>
+  <li>設定可能なオプションが <tt>CMakeCache.txt</tt> というファイルに書かれており, それをいじることで色々な設定が可能. これは慣れるとわかりやすいです</li>
+  <li>特にいつも使う有用なオプションは以下
+    <ul>
+      <li><tt><font color=blue>CMAKE_INSTALL_PREFIX:PATH</font>=/home/tau/doss/Remmina/inst</tt></li>
+      <li><tt><font color=blue>CMAKE_BUILD_TYPE:STRING</font>=DEBUG</tt></li>
+      <li><tt><font color=blue>CMAKE_CXX_FLAGS_DEBUG:STRING</font>=-g -O0</tt></li>
+      <li><tt><font color=blue>CMAKE_C_FLAGS_DEBUG:STRING</font>=-g -O0</tt></li>
+    </ul>
+  </li>
+  <li>同じ設定はcmakeのコマンドラインで,
+<pre>
+$ cmake -DCMAKE_INSTALL_PREFIX:PATH=/home/tau/doss/Remmina/inst
+</pre>
+みたいにすることも可能. ただし長いコマンドラインを入れるよりは,
+<tt>CMakeCache.txt</tt>をいじるほうがむしろ気持ちが良い.
+  </li>
+</ul>
+
+</div>
+
+<a name=libitrace> </a>
+<h2>(本邦初公開w) yet another 追跡ツール libitrace</h2>
+<h3>イントロ</h3>
+<div>
+  <p>
+    Linuxでは実行された関数を記録, 表示してくれる<a href="https://github.com/namhyung/uftrace">uftrace</a>というツールがあることを紹介しましたが, ややこしいプログラムと組み合わせると不幸にして動かないということがままあるようです.
+  </p>
+  <p>その原因を追求する代わりにもう少し機能を落としたプログラムを,
+    自作しているので本邦初公開w します.
+    <a href="https://doss-gitlab.eidos.ic.i.u-tokyo.ac.jp/tau/libitrace"
+       target="_blank"> 
+      libitrace</a> と命名しています.
+    使い方は上記リンクで表示されるREADME.md を見てください.
+    当初開発したあと uftrace を見つけて, 出る幕なしと思っていましたが,
+    uftraceが失敗するケースが,
+    わりとあるので思ったよりも出番があるのかも知れません.
+  </p>
+</div>
+
+<h3>MuseScoreに適用してみた</h3>
+<div>
+  <p>
+  uftraceでMuseScoreをトレースすると失敗してしまう
+  ということがわかり, その理由もわからない
+  (下記<a href="#uftrace_musescore_note">補足</a>参照)ので,
+  uftrace押しした罪滅ぼしにlibitraceを適用してみました.
+  libitraceのビルドは終わっているとします.
+  </p>
+
+  <p>
+    手順 (唯一のポイントは <tt>-finstrument-functions</tt> というコンパイル時フラグ. <tt>-pg</tt> の代わり):
+  </p>
+<pre>
+$ cd MuseScore 
+$ cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CXX_FLAGS_DEBUG="-O0 -g -finstrument-functions" -DCMAKE_C_FLAGS_DEBUG="-O0 -g -finstrument-functions" -DCMAKE_INSTALL_PREFIX:PATH=/home/tau/tau_doss_2019/04musescore/MuseScore/inst --build=bld .
+$ make VERBOSE=1
+$ make install VERBOSE=1
+</pre>
+
+<p>
+確認:
+</p>
+<pre>
+$ cd inst/bin
+$ ls
+mscore*  musescore@  QtWebEngineProcess
+</pre>
+  
+<p>
+libitraceで実行(/path/to/libitrace.so は libitraceをビルドした時に出来ている .so ファイルへのパスとしてください):
+</p>
+<pre>
+$ LD_PRELOAD=/path/to/libitrace.so ITRACE_INIT_STATUS=0 ./mscore
+</pre>
+  <p>
+ この状態ではまだ記録は開始されていません.
+  mscoreが立ち上がってキー入力を受け付ける状態になったら記録を開始するために,
+  別の端末から, 同じフォルダに行って以下を実行
+ (itrace_log_XXXX.log は同フォルダにあるログファイルですので見つけて,
+ 適切な名前に置き換えてください)
+</p>
+<pre>
+$ cd inst/bin
+$ /path/to/itrace.py start itrace_log_XXXX.log
+</pre>
+<p>
+  この状態で記録したい動作を実行. 例えば キー入力を1文字行う ('a' を押すとか).
+  なるべく記録を純粋にするために余計なことをせずにすぐに以下を実行
+</p>
+<pre>
+$ /path/to/itrace.py stop itrace_log_XXXX.log
+</pre>
+  <p>これで記録が終了. 以下で表示します.
+  </p>
+<pre>
+$ /path/to/itrace.py show itrace_log_XXXX.log
+path /home/tau/tau_doss_2019/04musescore/MuseScore/inst/bin/mscore
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/include/freetype/internal/ftcalc.h
+  fun   187   292 FT_MulFix_x86_64
+  fun   187  8073 FT_MulFix_x86_64
+   ...
+</pre>
+<p>読み方
+<ul>
+  <li><font color="blue"><tt>path</tt> <i>P</i></font> : <i>P</i>が実行可能ファイルや共有ライブラリ名</li>
+  <li><font color="blue"><tt>src</tt> <i>S</i></font> : <i>S</i>がソースファイル名</li>
+  <li><font color="blue"><tt>fun</tt> <i>L C F</i></font> : <i>F</i> が関数名. <i>L</i> は行番号, <i>C</i>は実行回数</li>
+</ul>
+例えば最初の3行で,
+<pre>
+path /home/tau/tau_doss_2019/04musescore/MuseScore/inst/bin/mscore
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/include/freetype/internal/ftcalc.h
+  fun   187   292 FT_MulFix_x86_64
+</pre>
+<tt>/home/tau/tau_doss_2019/04musescore/MuseScore/inst/bin/mscore</tt>
+という実行可能ファイルを生成するのにソースファイル
+<tt>/home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/include/freetype/internal/ftcalc.h</tt>
+が使われその187行目にある<tt>FT_MulFix_x86_64</tt>
+という関数が292回呼び出された, という意味になります.
+</p>
+
+  <p>
+    罪滅ぼしに mscore を立ち上げて 'a' を一回だけ入力した際の
+    <a href="mscore_press_a.txt" target="_blank">結果</a>です.
+    また, mscore を立ち上げてショートカットを編集して,
+    OKボタンを押した瞬間(編集を終えたあと記録 start して,
+    OKを押して, 直後にstop)の
+    <a href="mscore_change_shortcut_ok.txt" target="_blank">結果</a>です.
+    これでそれらしい関数がわかるか? ケースバイケースでしょうが,
+    キーを一回押しただけですから,
+    実行回数が少ない関数, 基本は一回しか実行されていないもの,
+    に目をつけるべきでしょう.
+  </p>
+
+  <p>
+    ただしコンパイル時のログを見ていると,
+    <tt>CMAKE_{C,CXX}_FLAGS_DEBUG="-O0 -g -finstrument-functions"</tt>
+    でcmakeに渡したオプションがすべてのコンパイルコマンドに渡っていない
+    形跡があり, 見たいところが全て取れているのか不安です.
+    多数あるサブフォルダ内のファイルまで指定したオプションが浸透していない形跡があります(これは解決可能と期待される. 解決したらもう一度やってみます).
+    <font color="red">10/8 16:28 加筆</font> そのとおりでした.
+    本質的な対処かどうかはわかりませんが,
+    <tt>CMAKE_{C,CXX}_FLAGS="-O0 -g -finstrument-functions"</tt>
+    とすれば良いようです. 再コンパイルして取り直した結果がこちら
+    (<a href="mscore_press_a_2.txt" target="_blank">'a'を押した時</a>,
+    <a href="mscore_change_shortcut_ok_2.txt" target="_blank">ショートカットを変更したあとOKを押した時</a>).
+    明らかに今度は多すぎて目では終えないという問題がありますが,
+    呼び出し回数が1回のものに限定するとか, この後の料理の仕方は
+    あると思われます.
+  </p>
+    
+</div>
+
+<a name="uftrace_musescore_note"> </a>
+<h3>uftrace + MuseScore補足</h3>
+<div>
+  uftrace + MuseScore が動かない件. 現象は, uftrace
+  が内部で使っている shm_open で, 共有メモリオブジェクトを「作成」
+  する際shm_openが No such file or directory を返して
+  終了するから, とまではわかっていますが, なぜそのようなことがおこるのか,
+  謎です. 共有オブジェクトを作るケースなので, このようなエラーが返されるのは,
+  親ディレクトリが存在しない場合だけですが, straceでみても親ディレクトリ
+  (/dev/shm) は正しそうで, 実際同じプログラムで,
+  何度も shm_open を呼び出しますが他の呼び出しは成功しています.
+  謎です.
+</div>
+
+
+
+</body>
+</html>
+

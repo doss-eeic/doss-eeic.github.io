@@ -1,0 +1,242 @@
+path /home/tau/tau_doss_2019/04musescore/MuseScore/inst/bin/mscore
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/include/freetype/internal/ftcalc.h
+  fun   187   632 FT_MulFix_x86_64
+  fun   187  1462 FT_MulFix_x86_64
+  fun   187  8611 FT_MulFix_x86_64
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/autofit/afcjk.c
+  fun   587    66 af_cjk_metrics_scale_dim
+  fun   681    33 af_cjk_metrics_scale
+  fun   705    66 af_cjk_hints_compute_segments
+  fun   749    66 af_cjk_hints_link_segments
+  fun   910    66 af_cjk_hints_compute_edges
+  fun  1176    66 af_cjk_hints_detect_features
+  fun  1197    66 af_cjk_hints_compute_blue_edges
+  fun  1285    33 af_cjk_hints_init
+  fun  1416   117 af_cjk_compute_stem_width
+  fun  1561    54 af_cjk_align_serif_edge
+  fun  1590   117 af_hint_normal_stem
+  fun  1715    66 af_cjk_hint_edges
+  fun  2094    66 af_cjk_align_edge_points
+  fun  2188    33 af_cjk_hints_apply
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/autofit/afglobal.c
+  fun   423    46 af_face_globals_get_metrics
+  fun   489    33 af_face_globals_is_digit
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/autofit/afhints.c
+  fun    41   479 af_axis_hints_new_segment
+  fun   104   446 af_axis_hints_new_edge
+  fun   481  2288 af_direction_compute
+  fun   530    46 af_glyph_hints_init
+  fun   539    46 af_glyph_hints_done
+  fun   588    46 af_glyph_hints_rescale
+  fun   600    46 af_glyph_hints_reload
+  fun   998    46 af_glyph_hints_save
+  fun  1033    13 af_glyph_hints_align_edge_points
+  fun  1108    79 af_glyph_hints_align_strong_points
+  fun  1265    18 af_iup_shift
+  fun  1293   608 af_iup_interp
+  fun  1359    79 af_glyph_hints_align_weak_points
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/autofit/aflatin.c
+  fun   897    26 af_latin_metrics_scale_dim
+  fun  1142    13 af_latin_metrics_scale
+  fun  1166    79 af_latin_hints_compute_segments
+  fun  1413    13 af_latin_hints_link_segments
+  fun  1549    13 af_latin_hints_compute_edges
+  fun  1845    13 af_latin_hints_detect_features
+  fun  1866    13 af_latin_hints_compute_blue_edges
+  fun  1979    13 af_latin_hints_init
+  fun  2120    19 af_latin_compute_stem_width
+  fun  2283    14 af_latin_align_linked_edge
+  fun  2330    13 af_latin_hint_edges
+  fun  2846    13 af_latin_hints_apply
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/autofit/afloader.c
+  fun    32    46 af_loader_init
+  fun    45    46 af_loader_reset
+  fun    72    46 af_loader_done
+  fun    90    46 af_loader_load_g
+  fun   337    46 af_loader_load_glyph
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/autofit/afmodule.c
+  fun   330    46 af_autofitter_load_glyph
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/base/ftcalc.c
+  fun   176   220 FT_MulDiv
+  fun   233  1462 FT_MulFix
+  fun   254   923 FT_DivFix
+  fun   662     7 FT_Matrix_Multiply
+  fun   965   112 ft_corner_is_flat
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/base/ftgloadr.c
+  fun    89    50 FT_GlyphLoader_Rewind
+  fun   144    54 FT_GlyphLoader_Adjust_Points
+  fun   187    54 FT_GlyphLoader_Adjust_Subglyphs
+  fun   283     4 FT_GlyphLoader_CheckSubGlyphs
+  fun   313    54 FT_GlyphLoader_Prepare
+  fun   329    54 FT_GlyphLoader_Add
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/base/ftobjs.c
+  fun    74    11 ft_service_list_lookup
+  fun   289    96 ft_glyphslot_free_bitmap
+  fun   339    96 ft_glyphslot_clear
+  fun   497    14 FT_Set_Transform
+  fun   550     4 ft_glyphslot_grid_fit_metrics
+  fun   596    96 FT_Load_Glyph
+  fun  2646     3 ft_recompute_scaled_metrics
+  fun  2727     3 FT_Request_Metrics
+  fun  2901     3 FT_Request_Size
+  fun  2977     3 FT_Set_Char_Size
+  fun  3375  5300 FT_Get_Char_Index
+  fun  3737     2 FT_Get_Sfnt_Table
+  fun  3761     2 FT_Load_Sfnt_Table
+  fun  3889     8 FT_Lookup_Renderer
+  fun  3929     7 ft_lookup_glyph_renderer
+  fun  4110     1 FT_Render_Glyph_Internal
+  fun  4208     1 FT_Render_Glyph
+  fun  4395     5 FT_Get_Module
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/base/ftoutln.c
+  fun    54     7 FT_Outline_Decompose
+  fun   358    50 FT_Outline_Check
+  fun   477   143 FT_Outline_Get_CBox
+  fun   528    17 FT_Outline_Translate
+  fun   614     6 FT_Outline_Render
+  fun   661     6 FT_Outline_Get_Bitmap
+  fun   687   332 FT_Vector_Transform
+  fun   710    13 FT_Outline_Transform
+  fun  1040    46 FT_Outline_Get_Orientation
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/base/ftstream.c
+  fun    59   212 FT_Stream_Seek
+  fun   104   106 FT_Stream_Pos
+  fun   123     1 FT_Stream_ReadAt
+  fun   236    54 FT_Stream_EnterFrame
+  fun   315    54 FT_Stream_ExitFrame
+  fun   491   108 FT_Stream_ReadUShort
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/base/ftsystem.c
+  fun    71    40 ft_alloc
+  fun   127    41 ft_free
+  fun   205   144 ft_ansi_stream_io
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/base/ftutil.c
+  fun    53    19 ft_mem_alloc
+  fun    69    40 ft_mem_qalloc
+  fun    98    18 ft_mem_realloc
+  fun   120    18 ft_mem_qrealloc
+  fun   170    67 ft_mem_free
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/raster/ftraster.c
+  fun  3135     6 ft_black_render
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/raster/ftrend1.c
+  fun    64     7 ft_raster1_transform
+  fun   104     1 ft_raster1_render
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/sfnt/sfdriver.c
+  fun    72     2 get_sfnt_table
+  fun   429     5 sfnt_get_interface
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/sfnt/ttcmap.c
+  fun  1172  2780 tt_cmap4_char_map_binary
+  fun  1406  2780 tt_cmap4_char_index
+  fun  2299  2520 tt_cmap12_char_map_binary
+  fun  2395  2520 tt_cmap12_char_index
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/sfnt/ttload.c
+  fun    58    52 tt_face_lookup_table
+  fun   130    50 tt_face_goto_table
+  fun   545     2 tt_face_load_any
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/sfnt/ttmtx.c
+  fun   210    54 tt_face_get_metrics
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/smooth/ftgrays.c
+  fun   496     7 gray_init_cells
+  fun   516     7 gray_compute_cbox
+  fun   560   251 gray_find_cell
+  fun   599   255 gray_record_cell
+  fun   618   277 gray_set_cell
+  fun   665     8 gray_start_cell
+  fun   692   261 gray_render_scanline
+  fun   787   192 gray_render_line
+  fun   916    60 gray_split_conic
+  fun   937    86 gray_render_conic
+  fun  1151     8 gray_move_to
+  fun  1174    46 gray_line_to
+  fun  1184    86 gray_conic_to
+  fun  1206    62 gray_render_span
+  fun  1257   235 gray_hline
+  fun  1385     7 gray_sweep
+  fun  1760     7 gray_convert_glyph_inner
+  fun  1784     7 gray_convert_glyph
+  fun  1922     7 gray_raster_render
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/smooth/ftsmooth.c
+  fun   104     2 ft_smooth_render_generic
+  fun   386     1 ft_smooth_render
+  fun   401     1 ft_smooth_render_lcd
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/truetype/ttdriver.c
+  fun   284     3 tt_size_request
+  fun   351    50 tt_glyph_load
+  fun   469     6 tt_get_interface
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/truetype/ttgload.c
+  fun    77    54 TT_Get_HMetrics
+  fun    96    54 TT_Get_VMetrics
+  fun   122    54 tt_get_metrics
+  fun   184    54 tt_get_metrics_incr_overrides
+  fun   264    54 TT_Access_Glyph_Frame
+  fun   287    54 TT_Forget_Glyph_Frame
+  fun   297    54 TT_Load_Glyph_Header
+  fun   325    52 TT_Load_Simple_Glyph
+  fun   555     2 TT_Load_Composite_Glyph
+  fun   706     4 tt_prepare_zone
+  fun   732     4 TT_Hint_Glyph
+  fun   849    52 TT_Process_Simple_Glyph
+  fun  1000     4 TT_Process_Composite_Component
+  fun  1383    54 load_truetype_glyph
+  fun  1913    50 compute_glyph_metrics
+  fun  2154    50 tt_loader_init
+  fun  2436    50 TT_Load_Glyph
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/truetype/ttinterp.c
+  fun   140     6 TT_Goto_CodeRange
+  fun   186     6 TT_Set_CodeRange
+  fun   211     2 TT_Clear_CodeRange
+  fun   358    16 Update_Max
+  fun   400     6 TT_Load_Context
+  fun   501     2 TT_Save_Context
+  fun   542     4 TT_Run_Context
+  fun  1518   646 Current_Ppem
+  fun  1540   518 Read_CVT
+  fun  1557   496 Write_CVT
+  fun  1606     4 GetShortIns
+  fun  1634  1288 Ins_Goto_CodeRange
+  fun  1783    14 Direct_Move_X
+  fun  1801    16 Direct_Move_Y
+  fun  1911    28 Round_To_Grid
+  fun  2220     6 Compute_Round
+  fun  2405    28 Project_x
+  fun  2433    32 Project_y
+  fun  2452    14 Compute_Funcs
+  fun  2622   646 Ins_MPPEM
+  fun  2655   488 Ins_DUP
+  fun  2668   784 Ins_POP
+  fun  2726   488 Ins_LT
+  fun  2765   148 Ins_GTEQ
+  fun  2778    10 Ins_EQ
+  fun  2845     4 Ins_OR
+  fun  2871     8 Ins_ADD
+  fun  3066   496 Ins_WCVTP
+  fun  3112   496 Ins_RCVT
+  fun  3260     8 Ins_CINDEX
+  fun  3325  1054 SkipCode
+  fun  3359   642 Ins_IF
+  fun  3435   488 Ins_EIF
+  fun  3802   644 Ins_ENDF
+  fun  3852   644 Ins_CALL
+  fun  4104    14 Ins_NPUSHB
+  fun  4163   506 Ins_PUSHB
+  fun  4189     4 Ins_PUSHW
+  fun  4284     8 Ins_SxyTCA
+  fun  4493     8 Ins_SRP0
+  fun  4549     2 Ins_SCVTCI
+  fun  5200     2 Ins_SCANCTRL
+  fun  5247     2 Ins_SCANTYPE
+  fun  5369     2 Compute_Point_Displacement
+  fun  5430     2 Move_Zp2_Point
+  fun  5474     2 Ins_SHP
+  fun  6024     6 Ins_MDRP
+  fun  6162    22 Ins_MIRP
+  fun  6389     2 Ins_ALIGNRP
+  fun  6799    32 _iup_worker_interpolate
+  fun  6899     8 Ins_IUP
+  fun  7505     6 TT_RunIns
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/truetype/ttobjs.c
+  fun   884     2 tt_size_run_prep
+  fun  1094     2 tt_size_ready_bytecode
+  fun  1213     3 tt_size_reset
+ src /home/tau/tau_doss_2019/04musescore/MuseScore/thirdparty/freetype/src/truetype/ttpload.c
+  fun   184    54 tt_face_get_location
+  fun   589     4 tt_face_get_device_metrics
