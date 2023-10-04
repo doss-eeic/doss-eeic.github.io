@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="kanso.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path3834"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="106.93295"
+     inkscape:cy="608.53389"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="930"
+     inkscape:window-height="650"
+     inkscape:window-x="80"
+     inkscape:window-y="37"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="レイヤー 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="arc"
+       style="fill:#e3dbdb;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path3003"
+       sodipodi:cx="304.05591"
+       sodipodi:cy="406.87473"
+       sodipodi:rx="217.1828"
+       sodipodi:ry="217.1828"
+       d="m 521.22933,408.89347 a 217.1828,217.1828 0 1 1 0.004,-3.48948"
+       sodipodi:start="0.0092952571"
+       sodipodi:end="6.2764134"
+       sodipodi:open="true"
+       transform="matrix(1.1062429,0,0,1.1062429,-9.0702624,-19.994028)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ff8080;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path3005"
+       sodipodi:cx="482.85291"
+       sodipodi:cy="222.0168"
+       sodipodi:rx="64.649765"
+       sodipodi:ry="64.649765"
+       d="m 547.49988,222.61773 a 64.649765,64.649765 0 1 1 0.001,-1.03873"
+       sodipodi:start="0.0092952571"
+       sodipodi:end="6.2764134"
+       sodipodi:open="true" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="113.13708"
+       y="409.90518"
+       id="text3007"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3009"
+         x="113.13708"
+         y="409.90518"
+         style="font-size:32px">基本(configure, make gdb, ...)</tspan><tspan
+         sodipodi:role="line"
+         x="113.13708"
+         y="449.90518"
+         id="tspan3011"
+         style="font-size:32px">そのソフト固有の学習期間</tspan><tspan
+         sodipodi:role="line"
+         x="113.13708"
+         y="489.90518"
+         id="tspan3013"
+         style="font-size:32px">そしてトラブル...</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3015"
+       y="134.55495"
+       x="451.72592"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:32px"
+         id="tspan3021"
+         y="134.55495"
+         x="451.72592"
+         sodipodi:role="line">できたこと</tspan></text>
+  </g>
+</svg>

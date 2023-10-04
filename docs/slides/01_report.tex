@@ -1,0 +1,259 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Szeged} 
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{大規模ソフトウェアを手探る \\ レポートについて}
+\institute{}
+\author{田浦}
+\date{}
+
+\AtBeginSubsection[] % Do nothing for \section*
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{この課題の提出物}
+\begin{itemize}
+\item いじったコード $\rightarrow$ gitlab
+\item 最終回発表資料 $\rightarrow$ gitlab
+\item \aka{レポート} $\rightarrow$ gitlabからリンク, ITC-LMSに(形式的な)提出
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{レポートについて}
+\begin{itemize}
+\item<1-> 「なにを書いていいのかわからない」という疑問が湧きそう
+\item<2-> 読者が我々だと思うからいけない
+\item<3-> 想定読者: 世の中の80億の人たち\ldots 
+  \begin{itemize}
+  \item の中で，同じソフトをふといじりたいと思った人, 
+  \item または，その中でそのソフトの中身を知りたいと思った人, 
+  \item または，その中で一般にソフトの中身の調べ方やいじり方を覚えたいと思った人, 
+  \end{itemize}
+\item<4-> その人たちに向けて本当に役に立つ情報を提供しよう!
+\item<5-> $\Rightarrow$ そうだ，\aka{ブログ書こう}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{ブログ形式のレポート}
+\begin{itemize}
+
+\item<1-> 世の中には，「○○をやってみた」という系
+  のブログが世の中にあふれている
+
+\item<2-> 大部分は「インストールしてみた」「使って
+  みた」の類で，この課題でやる内容と比べると，
+  表面的だが，それでも同じソフトをインストール
+  してハマった人とかには，有用な情報（今回，そ
+  のような記事のお世話にならなかった人はいるだ
+  ろうか?）
+
+\item<3-> 想定読者が限定されていることをあまり気に
+  せずに(0.0001\%でも，母集団が80億なら8000人)，
+  「同じことを経験する人に役に立つこと」を書き
+  記そう(または将来の自分に)
+
+\item<4-> 少なくとも，田浦とTAにしか読まれな
+  いPDFファイルに，やったことを書き連ねるより
+  やる気になりませんか??
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{役に立つ記事の書き方}
+
+\begin{itemize}
+\item 要点・目的を絞る
+  \begin{itemize}
+    \iffalse    
+  \item Libreoffice Calcの関数名補完機能を作ってみた
+  \item inkscapeに中線機能入れてみた
+  \item Pythonに ++ 入れてみた
+    \fi
+    \iffalse
+  \item jsにパイプラインオペレータ入れてみた
+  \item Chromeにあやしい履歴の非表示機能入れてみた
+  \item fishにwaitコマンド入れてみた
+  \item \ldots
+    \fi
+    \iffalse
+  \item CodiMDのPDF出力機能を数式に対応させてみた
+  \item MuseScoreのキーボードショートカットを◯◯してみた
+  \item VSCodeのread onlyモードをイケてる感じにしてみた
+  \item inkscapeで「全レイヤに表示されるオブジェクト」を追加してみた
+  \item Remminaで逆方向接続(サーバ$\rightarrow$クライアント)できるようにしてみた
+  \item VimでJupyterみたいなことができるようにしてみた
+  \item \ldots
+    \fi
+  \item Linuxカーネルを拡張するときのノウハウ
+  \item Python処理系に◯◯を追加してみた
+  \item 動画編集ソフトOpenShotに◯◯を追加してみた
+  \item inkscapeに◯◯を追加してみた
+  \item \ldots
+  \end{itemize}
+
+\item 他の人が真似できるだけの情報を，「ありのまま」書く
+  \begin{itemize}
+  \item download先，バージョン，ビルド方法
+  \end{itemize}
+(長くなり過ぎない限り)「コマンドやログをそのまま」載せるのがよい
+
+\item ググって得た情報などは，その情報源へのリンクをつける
+(出典明記)
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{役に立つ記事の書き方}
+\begin{itemize}
+\item 「通りすがりの人」を読者だと思って書く
+  (何度も聞いてる教員の人にしか通じない話をしない; 
+  コミュ力?)
+
+\item 結果的にこういじればできた, おしまい, 
+ではなく, \ao{どうやってその情報へ至ったか}, も書く
+
+\item 課題の過程で得た色々なノウハウを, 
+できるなら(そのソフト固有の断片知識ではなく)
+一般的に有用なノウハウ, スキルとして書く
+
+\item 課題を始める前の自分へ, なに(注: 答よりもやり方)を教えたらいいかを想像しながら書くといい
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{より形式的なこと}
+\begin{itemize}
+\item<1-> どこに書くか? $\Rightarrow$ お気に入りがある人は自由
+\item<2-> 世に公開するだけの内容がないんですが\ldots 
+$\Rightarrow$ gitlab の wiki機能でもよいことにする
+\item<3-> だが，課題で当初やろうとしたことに限らず，
+  自分が今回経験したことで，
+  「同じ問題に遭遇した人に役立つ内容」
+  は何らか切り出せるのではないかと思う．
+  その内容を公開すればよい．
+
+\item<4-> サンプルブログ，前のタームのレポートも参考に
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+
+

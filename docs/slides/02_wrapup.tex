@@ -1,0 +1,363 @@
+% multiprocess
+
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Szeged} 
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{結びに変えて}
+\institute{}
+\author{田浦 \\ 秀島, 小林}
+\date{}
+
+\AtBeginSubsection[] % Do nothing for \section*
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item あっという間(?)に終わりです\ldots
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[height=0.8\textheight]{out/pdf/svg/goal.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{この演習で得てほしかったもの}
+\begin{itemize}
+\item<1-> 中規模以上のソフトで常識的なこと
+  \ao{(分割コンパイル, ライブラリ, 各種ビルドツール, configure, make, \ldots)}
+\item<2-> ソフトの中身を自信を持って追跡する方法\ao{(gdb, pdb, \ldots)}
+\item<3-> トラブルのあれこれの対処方法\ao{(原理をその場で学習．Google先生)}
+\item<4-> 暗中模索でわからなくなったら奥底まで調べるぞ(``get to the bottom of it'')
+  という\ao{根性}
+\item<5-> 最低限の知識を身につけたあとは，
+「やってみればなんとかなる」という精神・負けない\ao{根性}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{\ldots だが持ったかも知れない感想}
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item<1-> 少しの拡張を施すのに苦労が多すぎ?
+\item<2-> {\scriptsize きっとそれは，}再利用可能な初期投資
+  \begin{itemize}
+  \item<3-> どんなソフトでも共通の事柄
+    \ao{(次のソフトはもっとさっといじれる)}
+  \item<4-> 一旦あるソフトに精通すれば，
+    そのソフトの拡張は\ao{加速度的に容易になる}
+  \item<5-> \ao{10の拡張を施すのに必要な労力は，
+    1の拡張を施すのに必要な労力の10倍ではない}
+  \end{itemize}
+\end{itemize}
+
+\end{column}
+
+\begin{column}{0.35\textwidth}
+\begin{center}
+\only<1-5>{\includegraphics[width=\textwidth]{out/pdf/svg/kanso.pdf}}%
+\only<6->{\includegraphics[width=\textwidth]{out/pdf/svg/kanso2.pdf}}
+\end{center}
+\end{column}
+\end{columns}
+
+\begin{itemize}
+\item<6-> 研究の場合，
+\ao{目標は最初からもっと高めかつ自由な発想なのでその心配は
+（きっと）ない}
+\begin{itemize}
+\item 既存ソフトの利用はあくまで手段．目的ではない
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{研究とソフトウェアいじり・作り}
+\begin{itemize}
+\item<1-> 世の中のソフトウェアには，
+  もともとは一研究者(グループ)の研究成果であったものも多い
+  \begin{itemize}
+  \item \ao{LLVM, postgresql, BSD (OS), Cilk, MPI, Hadoop, \ldots}
+  \end{itemize}
+
+\item<2-> 研究をする時に既存のソフトを利用ないし拡張していることは，
+  枚挙に暇がない
+  \begin{itemize}
+  \item コンパイラの新しい最適化手法の研究 \ao{$\rightarrow$ LLVM, GCC, \ldots}
+  \item ネットワークの新しい機能 \ao{$\rightarrow$ BSD, Linux, \ldots}
+  \item 新しいファイルシステム, OSの新機能, 高速化 $\rightarrow$ 
+    \ao{Linux OS, BSD, \ldots}
+  \item データベースの高速化研究 $\rightarrow$ 
+    \ao{postgresql, mysql, \ldots}
+  \item \ldots
+  \end{itemize}
+
+\item<3-> アイデアが主役，動機の源泉．
+  そのアイデアを「しっかり実現」するために，既存ソフトを借りる(こともある)
+\end{itemize}
+\end{frame}
+
+\iffalse
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{田浦研でも\ldots}
+\begin{itemize}
+\item<1-> 拡張機能を利用した拡張:
+  \begin{itemize}
+  \item LLVM: 強力なベクトル化機能
+  \item Linux OS: 不揮発メモリを有効利用できるファイルシステム
+  \item \ldots
+  \end{itemize}
+
+\item<2-> 一から:
+  \begin{itemize}
+  \item 超軽量スレッドライブラリ
+  \item ノード間で, 擬似的にメモリ共有をするライブラリ
+  \item 並列分散シェル, make
+  \end{itemize}
+\end{itemize}
+\end{frame}
+  
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{田浦研でも\ldots}
+\begin{itemize}
+\item ソース修正:
+  \begin{itemize}
+  \item javasscript 最適化
+  \item Chainer 性能解析とマルチコア・メニィコアCPU上の高速化
+  \item 並列GC (ゴミ集め; Boehm GC library)
+  \item C/C++に並列化機能を追加 (今のOpenMPの走り; EDG C/C++ frontend)
+  \item 通信に迅速に反応するLinuxスケジューラ
+  \end{itemize}
+\item<2-> 一から:
+  \begin{itemize}
+  \item 超軽量スレッドライブラリ
+  \item ノード間で, 擬似的にメモリ共有をするライブラリ
+  \item 並列分散シェル, make
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{以下はあるあるです}
+\begin{itemize}
+\item ソースをいじるつもりが\ldots
+
+  \begin{itemize}
+  \item<2-> すでにそういう機能が実装されていた
+    (マニュアルに書いてないだけだった),
+    またはそれにかすった機能実装されかけていた
+    
+  \item<3-> 「拡張機能(プラグイン, アドオン)」の枠組みがあって,
+    その拡張するのにソースをいじる必要はなかった
+
+  \item<4-> 「拡張機能」はjavascriptとかLispとか,
+    高級言語で書かれていて, 数行いじるだけで機能が出来てしまった
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{以下はあるあるです}
+\begin{itemize}
+\item 拡張機能の例
+  \begin{itemize}
+  \item ブラウザ: javascript
+  \item Office: Visual Basic
+  \item Emacs: Emacs Lisp
+  \item VSCode, Vim : なんかありましたよね
+  \item Linux (OS): Kernel Module
+  \item LLVM (コンパイラ): パスの追加
+  \item SQLite (データベース): virtual table
+  \end{itemize}
+
+\item それでも中身をしっかり探れる能力は中身をいじる場合と同じく重要
+  \begin{itemize}
+  \item プラグインであっても大規模になれば真面目に追跡する必要がある
+  \item 本格的な拡張機能は一体で追跡・デバッグする必要あり
+  \item etc.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}
+\frametitle{いろいろないじり方・作り方}
+\begin{itemize}
+
+\item ちなみに，実際にソースコードに手を出さな
+  くてはいけないケースは，意外と少ない
+
+\item というよりも，人に使わせるにはいじらず済ませられたほうがよい
+
+  \begin{itemize}
+    \item 拡張機能を利用(LLVMパス, SQLite virtual table, 
+      Linux OS kernel module, \ldots)
+    \item コマンドとして利用
+  \end{itemize}
+
+\item それでも中身をしっかり探れる能力は中身をいじる場合と同じく重要
+  \begin{itemize}
+  \item 本格的な拡張機能は一体でデバッグする必要あり
+  \item ファイル形式
+  \item ドキュメント化されていない機能
+  \item etc.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{ちなみに}
+  \begin{itemize}
+  \item 10日間しかないので, \ldots
+  \item 題材議論重要, でもそれにずっと時間をかけられないのである程度で
+    見切り発車も致し方なし
+  \item コントリビュート(コミット)できたらすばらしい,
+    だがそれなしにやる意味がない, というものでもない
+  \item 自分自身の経験値アップが第一目標
+  \item でもそれを一人でやり切れる意思の強さは普通の人にはない
+  \item なのでこんな「演習」があってもいいのでは
+  \end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%% 
+
+    
+\begin{frame}
+  \begin{itemize}
+  \item 以上が，この演習をやろうと思い立った人の「思い」
+    (「正当化」)
+  \item 成功しているか否かはみなさんの評価・感想を待ちたいので，
+    感想その他, フィードバック, よろしくお願いします．
+  \end{itemize}
+\end{frame}
+
+\end{document}
+
+
+

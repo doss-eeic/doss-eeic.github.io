@@ -1,0 +1,491 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Szeged} 
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{大規模ソフトウェアを手探る}
+\institute{}
+\author{田浦 \\ 細川 (田浦研B4), 佐々木 (田浦研B4) }
+\date{}
+
+\AtBeginSubsection[] % Do nothing for \section*
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\iffalse
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{この課題の目標}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+  \begin{itemize}
+  \item 「演習レベルの小さなプログラムが作れること」と，
+    「実用規模のプログラムが作れること」の
+    ギャップを埋める(ための知識と経験を得る)
+  \item ささやかでも，ソフトをどう改良するかについて，
+    アイデアを出しあう(whatとhow)
+  \end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[height=0.8\textheight]{out/pdf/svg/goal.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{演習レベル vs. 実用ソフト}
+\begin{itemize}
+\item 全く違うものか? $\rightarrow$ NO 
+  (別に，特別な工場が必要な訳ではない\ldots)
+
+\item しかし，
+  \mura{演習をこなしていくだけでは，足りないものは確かにある}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{違い}
+\begin{itemize}
+\item 表面的
+{\small
+\begin{tabular}{|p{2.5cm}|p{2.5cm}|p{4.5cm}|}\hline
+項目 & 演習レベル & 実用ソフト \\\hline
+ソースファイル & 1-数ファイル & 
+多数ファイル/ディレクトリ \\
+ビルド方法 & gcc一回 & makeその他自動化ツール \\
+依存項目 & OS機能$+$標準ライブラリ関数
+& OS機能$+$多数の外部ライブラリ \\
+移植性 & 不要 & 要 (ifdef, configure, ...) \\
+拡張性 & 不要 & 要 \\
+汎用性 & そこまで不要 & 要 (コマンドライン, 設定ファイル, 環境変数, \ldots) \\\hline
+\end{tabular}}
+
+\item 質的:
+ある程度以上の規模のソフトは，
+\mura{「全てを隅々まで把握して」
+  一行一行を書くわけではない}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{鍵となる「スキル」}
+\begin{itemize}
+\item<1-> 全容がよくわからないソフトウェアの概要を把握し，
+  拡張・変更できるようになる
+\item<2-> $\leftarrow$ そのために，
+  \ao{ソースファイル中で修正が必要な場所}を突き止める
+\item<3-> $\leftarrow$ そのためのツール
+  \begin{itemize}
+  \item 初級: ソース検索(grepとか) ($\leftarrow$ これ「だけ」ってのは卒業したい\ldots)
+  \item 中級: \ao{クロスリファレンスツール(gloalsとか)}
+  \item 中級: \ao{デバッガ (gdb, lldb)}
+  \item 中級: \ao{プロファイラ, トレーサ (uftrace)}
+  \end{itemize}
+
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{付随する「基礎知識」}
+\begin{itemize}
+\item<1-> 多くのソフトをソースからビルドする，
+  決まりきったやり方
+  (make, configure, その他の，\mura{ビルドの自動化}ツール)
+\item<2-> 多数のファイルからなるソフトはどう書くのか
+  (C言語，\mura{分割コンパイル}の基本)
+\item<3-> 実用ソフトなら常識的なソースの書きかたあれこれ
+  \begin{itemize}
+  \item<4-> \mura{コマンドライン引数，設定ファイル}など，
+    プログラムを汎用的にするための書き方
+  \item<5-> \mura{\tt \#ifdef}など，
+    単一ソースを何通りにもコンパイルできるようにするための
+    C言語の頻出処理
+  \item<6-> その他，後々の修正がしやすいように，
+    大きなプログラムがよくやっている技法
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{これを身につけることの意義}
+\begin{itemize}
+\item ソフトウェアの研究では，
+  \mura{成果をソフトウェアとして発信}することが重要
+
+\item しかし大きなソフトウェアを一から作ることは，
+  困難な場合が多い
+
+\item $\rightarrow$ 既存のソフトウェアの拡張として
+  作ることが多い
+
+\item 一から作る場合でも,
+  成果を実用的なソフトウェアとして発信する際，
+  常識的なお作法を守っておくことは重要
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{課題全体のロードマップ}
+\begin{enumerate}
+\item デバッガでのソフトウェアの動作追跡手法を練習(本日)
+\item チームを作る // 手探るソフトを決める
+\item 役にたたなくてもいいから変更する案を決める(ミニ発表，議論)
+\item 案に従って変更してみる(適宜，進捗発表)
+\item なるべくやる気の起きる($\approx$役に立つ)
+  変更目標を議論して決める
+\item 目標に向かって実行
+\item 最終発表
+\end{enumerate}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{オススメの心構え}
+\begin{itemize}
+\item<1-> この課題では，きっと，
+  各班ごとにずいぶん\mura{違うことがチャレンジになる}
+\item<2-> 大事なのは「知らなくてもナントカなる」という\mura{気合}
+\item<3-> 全てを事前に知っておくなどということは\mura{不可能}
+\item<4-> ましてや，\mura{「教えておく」のは無理}．
+わからないことの答えが教科書に書いてあるというのは
+無理だし無意味
+\item<5-> 作業を効率的にするために，
+  後々有効な方法やツールを腰を据えて学ぶ
+  (その場しのぎで終わらせない), \mura{将来のためのレベルアップを目指す姿勢}
+\item<6-> やる気のわく面白い変更・拡張の
+  \mura{アイデアをチームで議論し，クラスでも議論}する．
+  電車の中や寝ながらも\mura{何をしたいか考える}
+\item<7-> だが時間的な制約もあるので
+  \mura{ある程度で妥協\&決心}も必要(そこで萎えない)
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{オススメの心構え(2)}
+  \mura{オレ(私)はそんなに強くないし\ldots} という人へ
+  \begin{itemize}
+  \item<2-> いわゆる「強い」という印象 $\approx$ プログラムが書ける,
+    バイトで稼いだり何やら本格的な開発が出来る, \ldots
+  \item<3-> 正しいプログラムが書けるかどうか, そのためのきちんとした
+    論理的・数学的説明が出来るか, という以外の部分は,
+    それに比べれば\mura{「表面的・経験すればどうにかなる話」}
+  \item<4-> バイト代は稼げなくても, オープソースソフトの開発に加わる,
+    その手前の経験をこの演習でやる(その過程でツールや,
+    スキルを身につける)ことで, 身につく話
+  \item<5-> 個々の場面で行き当たりばったり, 答えを知れば良しとせず,
+    \mura{今後使えるスキルや道具を手に入れよう}, という心構え
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{今日の残り時間の課題}
+\begin{itemize}
+\item gnuplotを以下のように変更する
+\item キーワード``plot''を省略可能にする．例:
+\begin{lstlisting}
+gnuplot> sin(x)
+\end{lstlisting}
+だけで
+\begin{lstlisting}
+gnuplot> plot sin(x)
+\end{lstlisting}
+の動作をするようにする
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{代案}
+\begin{itemize}
+\item gnuplotを以下のように変更する
+\item 巨大データを間引く機能
+\begin{lstlisting}
+gnuplot> plot "hoge.dat" max_samples 10000
+\end{lstlisting}
+と書くと，"hoge.dat" に1億個の点が含まれていても，
+10000だけを等確率で選び出し，表示する(メモリと時間の節約)．
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{そのために練習して欲しい過程}
+\begin{itemize}
+\item gnuplotのソースファイルをダウンロード
+\item gnuplotを，デバッグシンボル有り({\tt -g})，
+  最適化ゼロ({\tt -O0})でビルド(configure, make)
+\item gdbで動作追跡
+\item 気が向いたら\texttt{htags --suggest}でソース一覧
+\item ここまでは教科書に懇切丁寧なガイドあり
+\item (Linux) uftraceを使ってトレースもしてみて(ホームページ$\rightarrow$
+  拙著: ブログ記事 参照)
+\item その他教科書の付録には
+  \begin{itemize}
+  \item 分割コンパイルのための規則
+  \item makeってなにさ
+  \item configureについて少し
+  \end{itemize}
+\item あとは臨機応変で!
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \begin{itemize}
+  \item その他独自案を考えてくれてもいいですが，
+    今日の目的はあくまでソースからビルド，gdbで追いかける練習，
+    ということなので，ハマる可能性のあることに挑戦しなくてもいいです
+  \item ソフト・環境ごとに異なる地雷があるので，まずは穏便にgnuplot
+    (こちらでお手軽なことを確認済み)をオススメ
+  \item メインディッシュは次回以降，自分で決める
+  \end{itemize}
+\end{frame}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{我々のアクションアイテム?}
+
+\begin{enumerate}
+\item {\tiny 路頭に迷わないための} 候補ソフト案
+\item {\tiny 路頭に迷わないための} 候補変更案
+\item 実際にビルドしてみる
+\item 道中，遭遇した問題の共有
+\item 一般的に，何を予備知識・調査技法として持っておけば突破できるか?
+  \begin{enumerate}
+  \item 例: 共有ライブラリのパス({\tt LD\_LIBRARYPATH}や{\tt -Wl,-R})
+  \item 例: gcc -E でマクロがどう展開されているか, 
+    includeはどのファイルを読んでいるか
+  \item コンパイル時間短縮のために，Makefileを読み解く方法?
+  \item configure で失敗した時のシェルスクリプトの読み方?
+  \end{enumerate}
+\item そのような知見を我々が収集し，一般的に役に立つものは教えておくとか
+  (教科書の拡充ないし，htmlでの補足説明)
+\end{enumerate}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{{\tiny 路頭に迷わないための}候補ソフト具体案}
+\begin{itemize}
+\item gcc
+\item LLVM
+\item Python
+\item JavaScript
+\item mruby
+\item sqlite
+\item Maria DB
+\item postgresql
+\item Linux
+\item FreeBSD
+\item gnumeric
+\item inkscape
+\item Chrome
+\item Firefox
+\item vlc
+\item sublime
+\item nautilus
+\item evince
+\item mikutter
+\item lightdm
+\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{{\tiny 路頭に迷わないための}レベル0課題案}
+\begin{itemize}
+\item gcc
+\item LLVM
+\item Python
+\item JavaScript
+  \begin{itemize}
+  \item 適当に console オブジェクトとかのメソッドを追加
+  \end{itemize}
+\item mruby
+\item sqlite
+  \begin{itemize}
+  \item ``start transaction'' で beginの代わりになる
+  \item (level 1) dump で他の形式に
+  \end{itemize}
+\item Maria DB
+  \begin{itemize}
+  \item ``.quit'' で終わる
+  \end{itemize}
+\item postgresql
+  \begin{itemize}
+  \item ``.quit'' で終わる
+  \end{itemize}
+\item Linux
+  \begin{itemize}
+  \item システムコール一個追加
+  \item fd からファイル名を返す; パイプのバッファの大きさ
+  \end{itemize}
+% \item FreeBSD
+\item Mozc
+  \begin{itemize}
+  \item 変な候補を常に表示
+  \end{itemize}
+\item gnumeric
+  \begin{itemize}
+  \item 組込み関数一個追加({\tt =sin}的な)
+  \end{itemize}
+\item inkscape
+  \begin{itemize}
+  \item アイコンの形を変える，図形の種類を増やす
+  \end{itemize}
+\item Chrome
+  \begin{itemize}
+  \item ポップアップの表示の仕方を変える
+  \end{itemize}
+\item Firefox
+  \begin{itemize}
+  \item web開発ツールの表示の仕方を変える(KBじゃなくて，とか); 遅いのを赤くする
+  \end{itemize}
+\item vlc
+  \begin{itemize}
+  \item raw形式で音声を取り出せ
+  \end{itemize}
+\item nautilus
+\item evince
+\item mikutter
+\item lightdm
+\end{itemize}
+\end{frame}
+
+
+
+
+
+\end{document}
+
+
+

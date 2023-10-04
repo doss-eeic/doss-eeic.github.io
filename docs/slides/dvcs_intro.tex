@@ -1,0 +1,343 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\usepackage{hhline}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Szeged}
+\setbeamertemplate{headline}{}
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar split shadow tree smoothtree
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usecolortheme{seahorse}
+\usecolortheme{seagull}
+%% special purpose
+% default structure sidebartab
+%% complete
+% albatross beetle crane dove fly seagull
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+\definecolor{bg-dark}{rgb}{0.6784313725490196, 0.8156862745098039, 0.5333333333333333}
+\definecolor{bg-darker}{rgb}{0.5686274509803921, 0.6745098039215687, 0.3686274509803922}
+\definecolor{bg-light}{rgb}{0.9490196078431372, 0.984313725490196, 0.9372549019607843}
+
+\mode<presentation>
+ {
+ \setbeamercolor*{palette secondary}{use=structure,fg=black,bg=bg-dark}
+ \setbeamercolor*{palette tertiary}{use=structure,fg=black,bg=bg-darker}
+ }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{structurebold}
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+\setbeamersize{description width=0.57cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{
+language = C,
+ backgroundcolor=\color{bg-light},
+% numbers = left,
+% numberstyle = {\tiny \emph},
+% numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = single,
+%frameround = ffft,
+%framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{bg-darker}},
+rulesepcolor = {\color{bg-darker}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\secname\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+\usebackgroundtemplate{%
+  \includegraphics[width=\paperwidth,height=\paperheight]{images/bg.png}}
+
+\title{複数人での開発の方法}
+\author{TA: 藤澤 (B4)}
+\date{2017/10/24}
+
+\begin{document}
+\maketitle
+
+\section{目的}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{目的}
+
+とりあえずこの講義で目的とする範囲
+
+\begin{itemize}
+\item １つのソースコードを対象に{\Large 複数人}で{\Large 同時}に開発したい
+\item 全員の成果を結合し、{\Large 共有}したい
+\item そのための余計な手間は避けたい
+\end{itemize}
+\end{frame}
+
+\section{実現方法}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{目的の分解 (1/3)}
+
+目的をより細かく見ると
+
+\begin{itemize}
+\item 手元であるファイルを{\Large 変更}する
+\item その{\Large 変更}を他の人と{\Large 共有}する \\
+ = 相手の{\Large 変更}が手元に{\Large 反映}される
+\end{itemize}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/purpose-1.png}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{目的の分解 (2/3)}
+
+{\Large 変更}とは何か
+
+\begin{center}
+「元の状態」から「何」を「どう」変えたか
+\end{center}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/purpose-2.png}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{目的の分解 (3/3)}
+
+{\Large 共有}とは何か
+
+\begin{center}
+「変更」を相手に伝えて、相手側で「再現」させる
+\end{center}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/purpose-3.png}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{例 - お互いに変更しあう (1/3)}
+
+\begin{center}
+それぞれバラバラに変更しても
+\end{center}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/2-clients-1.png}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{例 - お互いに変更しあう (2/3)}
+
+\begin{center}
+変更を伝えれば
+\end{center}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/2-clients-2.png}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{例 - お互いに変更しあう (3/3)}
+
+\begin{center}
+両方の変更が正しく反映される
+\end{center}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/2-clients-3.png}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{大勢で変更しあう}
+
+\begin{center}
+大勢になったら、全員がお互いにやりとりしてられない
+\end{center}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/many-clients-1.png}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{中間の置き場の導入}
+
+\begin{center}
+中間の置き場に変更を貯めて、各自そこから取ってくる
+\end{center}
+
+\begin{center}
+  \includegraphics[width=1\hsize]{images/many-clients-2.png}
+\end{center}
+\end{frame}
+
+\section{ツールによる実現}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{使えそうなツール}
+
+世の中にはこういう事を実現するための\\
+いろんなツールがありますが、今回は
+
+\begin{itemize}
+\item Git
+\item GitLab
+\end{itemize}
+
+これを見てみます
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{使えそうなツール - Git}
+
+{\Large Git とは}
+
+\begin{itemize}
+\item 分散バージョン管理システム
+\item 機能/特徴
+  \begin{itemize}
+  \item バージョン管理 $\Leftarrow$ 「変更」の管理
+  \item スナップショットベース {\scriptsize (変更ベースとはやや違うけどオッケー)}
+  \item 分散型 $\Leftarrow$ 「共有」
+  \item その他いろいろ
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{使えそうなツール - GitLab}
+
+{\Large GitLab とは}
+
+\begin{itemize}
+\item ソフトウェア開発支援環境
+\item 機能/特徴
+  \begin{itemize}
+  \item Git ベースのソースコード管理
+  \item プロジェクト(=リポジトリ)管理 $\Leftarrow$ 「中間の置き場」
+  \item ユーザ/グループ管理
+  \item Issue 管理
+  \item マージリクエストによるコードレビュー
+  \item その他いろいろ
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{実践}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[containsverbatim]
+\frametitle{実践}
+
+\begin{center}
+実際にやってみよう
+
+\vspace{5mm}
+
+{\small \url{https://doss.eidos.ic.i.u-tokyo.ac.jp/html/git.html}}
+\end{center}
+\end{frame}
+
+\end{document}
