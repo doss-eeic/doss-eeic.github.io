@@ -445,9 +445,10 @@ sqlite> <u>select x + y from foo;</u>
     </a>
     <li>変更案説明
       sqlite3コマンドラインから, PythonやC言語で定義されたユーザ定義関数をロードできるようにする. イメージ図
+      (詳細はC, Python API呼び出しに容易に変換できるよう仕様を決めれば良い)
 <pre>
-sqlite> load_udf fun.py # Python
-sqlite> load_udf fun.so # C
+sqlite> load_udf fun.py ...
+sqlite> load_udf fun.so ...
 </pre>      
     </li>
 
