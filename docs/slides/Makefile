@@ -12,7 +12,7 @@ bibtex := bibtex
 run_bibtex_and_latex_twice:=n
 
 # tex files
-tex := $(wildcard 0?_*.tex)
+tex := $(wildcard 01_*.tex)
 # svg files
 svg_svg := $(wildcard svg/*.svg)
 # layered svg files
