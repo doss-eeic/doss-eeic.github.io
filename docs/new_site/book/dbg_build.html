@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Claude Code - 大規模ソフトウェアを手探る 2.0 (2025年版)</title>
+        <title>開発・デバッグ用のビルド - 大規模ソフトウェアを手探る 2.0 (2025年版)</title>
 
 
         <!-- Custom HTML head -->
@@ -176,17 +176,28 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="claude-code"><a class="header" href="#claude-code">Claude Code</a></h1>
+                        <h1 id="開発デバッグ用のビルド"><a class="header" href="#開発デバッグ用のビルド">開発・デバッグ用のビルド</a></h1>
+<ul>
+<li>tarballダウンロードにせよ, git cloneにせよ, 結果的にはソースコードが一式収められたディレクトリが手に入る</li>
+<li>次のステップはそれをビルドすることである</li>
+<li>その際, 開発・修正用にビルド, インストールするため, 以下に注意する
+<ul>
+<li><strong>インストール先のディレクトリを指定する</strong> --- 普段自分が使っているコマンドなどが収められた本番用 <code>/usr/local/bin</code> ではない場所にインストールする</li>
+<li><strong>デバッグ用オプション (<code>-g</code>)</strong> をつけてコンパイルする --- 大雑把には各命令がソースコードのどの場所 (ファイル名や行番号) から生成されたか, 各変数がどこに格納されているか, などを記録した情報 --- <strong>デバッグシンボル</strong> --- を生成する. これがないとデバッガが現在の実行位置をソースコード上の位置として表示することができなくなる.</li>
+<li>(必須ではないが) <strong>最適化をしないオプション(<code>-O0</code>)</strong> を指定する --- 最適化をすると様々なコードの再配置が行われ, 実際の命令とソースコードの対応がわかりにくくなる. デバッガ上で実行していると, ソースコードの順番と異なる順番で実行されたり, 変数の値が表示できなかったりするなど,分析がしにくくなる</li>
+</ul>
+</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="coding_ai.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="download_source.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="codex.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="autotools_cmake.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -196,11 +207,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="coding_ai.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="download_source.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="codex.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="autotools_cmake.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

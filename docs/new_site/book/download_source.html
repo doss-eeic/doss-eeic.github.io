@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>ソースコード入手〜デバッグ用ビルド - 大規模ソフトウェアを手探る 2.0 (2025年版)</title>
+        <title>ソースコードを入手 - 大規模ソフトウェアを手探る 2.0 (2025年版)</title>
 
 
         <!-- Custom HTML head -->
@@ -29,6 +29,7 @@
         <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/numbered.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -175,7 +176,75 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="ソースコード入手デバッグ用ビルド"><a class="header" href="#ソースコード入手デバッグ用ビルド">ソースコード入手〜デバッグ用ビルド</a></h1>
+                        <h1 id="ソースコードのダウンロード"><a class="header" href="#ソースコードのダウンロード">ソースコードのダウンロード</a></h1>
+<h2 id="tarball"><a class="header" href="#tarball">tarball</a></h2>
+<ul>
+<li>"tarball"は多数のファイルを収めたディレクトリ一式を, tarというコマンドで一つのファイルにまとめ (Windowsでzipに馴染みのある人はそれのUnix版だと思えば良い), 通常はそれを gzip, bzip2 などの圧縮ファイルで圧縮したものである.</li>
+<li>そのためtarballのファイル名は通常, xyz.tar.gz (gzipの場合) または xyz.tar.gz2 (bzip2の場合)</li>
+<li>その昔は, ソースコードの配布はビルドに必要なファイルをすべて収めたディレクトリ --- <strong>ソースツリー</strong> --- をtarballの形式にしてダウンロードささせるだけ, というパターンが多かった</li>
+<li>tarball が無事入手できたら, 以下のコマンドで解凍するとディレクトリ構造が復元される</li>
+</ul>
+<pre><code class="language-bash">$ tar xf xyz.tar.bz2
+</code></pre>
+<ul>
+<li>慣習上, <strong>通常は</strong>これで <code>xyz</code> という名前の, 全てのファイルを含んだディレクトリができるが必ずそうなるとは限らない (あくまでtarballを作った人の名前付けに依存する) し, 場合によっては複数のファイルを解凍した場所にぶちまける行儀の悪いtarballもある</li>
+<li>したがって安全のため, 作業は空のディレクトリを作って行うのがよい</li>
+</ul>
+<pre><code class="language-bash">$ mkdir empty
+$ # empty/ の中に xyz.tar.bz2 を入れる
+$ cd empty
+$ tar xvf xyz.tar.bz2
+</code></pre>
+<ul>
+<li><code>xvf</code>の
+<ul>
+<li><code>x</code> ... 解凍 (extract)</li>
+<li><code>v</code> ... 進捗表示 (verbose) : ファイルが解凍されるたびにその名前を表示する</li>
+<li><code>f</code> ... ファイル指定 : xyz.tar.bz2 が解凍の対象であることを指定</li>
+</ul>
+</li>
+</ul>
+<h3 id="練習"><a class="header" href="#練習">練習</a></h3>
+<ul>
+<li>GNU hello というプログラムの tarball をダウンロードしてみよ</li>
+<li>空フォルダを作りそこでそれを解凍してみよ</li>
+</ul>
+<ul>
+<li>検索で見つけることを推奨するが見つからないときのため, 一応 <a href="https://www.gnu.org/software/hello/">ここ</a></li>
+</ul>
+<h2 id="github"><a class="header" href="#github">github</a></h2>
+<ul>
+<li>C/C++に限らず殆どの言語で, 多くのオープンソースプロジェクトのソースコードが <a href="https://github.com/">github</a> から提供されている</li>
+<li>ソフトの名前がわかっていればGoogleで "ソフト名 github" などとすれば github 上の, そのソフトの着地ページが見つかることだろう</li>
+<li>github上で, あるプロジェクトのソースコードを収めた実体をそのプロジェクトの「レポジトリ」と呼ぶ</li>
+<li>そのレポジトリを開発用マシンに, コピー (clone) することでソースコードを含んだディレクトリがまるごとダウンロードできる</li>
+<li>着地ページが見つかったら, 同ページの Code という緑のボタンをおすとレポジトリをcloneするための URL もしくはコマンドが表示される</li>
+<li>URLは</li>
+</ul>
+<pre><code>git@github.com:xyz/xyz.git
+</code></pre>
+<p>もしくは</p>
+<pre><code>https://github.com/xyz/xyz.git
+</code></pre>
+<p>のような文字列</p>
+<ul>
+<li>これをcloneするコマンドは <code>git clone レポジトリのURL</code></li>
+</ul>
+<pre><code>$ git clone git@github.com:xyz/xyz.git
+</code></pre>
+<p>もしくは</p>
+<pre><code>$ git clone https://github.com/xyz/xyz.git
+</code></pre>
+<p><code>git</code> コマンドが見つからなければ, Ubuntuであれば以下のようにしてインストールする</p>
+<pre><code>$ sudo apt install git
+</code></pre>
+<h3 id="練習-1"><a class="header" href="#練習-1">練習</a></h3>
+<ul>
+<li><code>curl</code> という, (主に) webページをブラウザを使わず, コマンドラインでアクセスするツールのgit レポジトリを発見し, <code>git clone</code> してみよ</li>
+</ul>
+<ul>
+<li>見つからなかったときは<a href="https://github.com/curl/curl">ここ</a></li>
+</ul>
 
                     </main>
 
@@ -185,7 +254,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="autotools_cmake.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="dbg_build.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -199,7 +268,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="autotools_cmake.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="dbg_build.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

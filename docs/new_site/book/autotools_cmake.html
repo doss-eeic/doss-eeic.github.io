@@ -29,6 +29,7 @@
         <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/numbered.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -176,12 +177,310 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="cc--autotoolscmake-編"><a class="header" href="#cc--autotoolscmake-編">C/C++ + autotools/cmake 編</a></h1>
+<ul>
+<li>主にCやC++で書かれたソースコードのビルド方法</li>
+<li>C, C++は昔から開発言語の主流であり, 歴史も深い</li>
+<li>そのためビルドの慣習もいくつかあり, 古い方式と新しい方式が混在している</li>
+<li>ビルドするためにはそのソフト用のビルド手順を読むのが基本である</li>
+<li>... と述べた上で, ほとんどのソフトが従っている, よくあるパターンをいくつか説明しておく</li>
+</ul>
+<h2 id="configure-make-make-install"><a class="header" href="#configure-make-make-install">configure; make; make install</a></h2>
+<h3 id="基本"><a class="header" href="#基本">基本</a></h3>
+<ul>
+<li>tarballで入手したソースツリーには多くの場合, <code>configure</code> という名前のファイル (実体はシェルスクリプト) が含まれる</li>
+<li>そのソフトを <em>本番用ディレクトリ (<code>/usr/local</code> など)にインストールする場合 (今はこちらはやらない) の</em> よくある手順は以下</li>
+</ul>
+<pre><code># 注: 以下は本番ディレクトリにインストールするとき; 今はこちらは使わない
+$ cd ソースツリーのトップディレクトリ
+$ ./configure
+$ make
+$ sudo make install
+</code></pre>
+<ul>
+<li><code>./configure</code> は
+<ul>
+<li>その環境で無事ビルドが可能かをチェックする --- 例えば <code>numa_available</code> という関数を使うのであればそれが使えるかをチェックする</li>
+<li><code>config.h</code> を生成する. ここには <code>configure</code> で判明した環境固有の情報 --- この関数が使えるとか使えないとか --- が書き込まれている</li>
+<li><code>Makefile</code> を生成する. 次の <code>make</code> コマンドで使われる</li>
+</ul>
+</li>
+<li><code>make</code> は <code>Makefile</code> に書かれた命令を読み込んで実際のビルド (コンパイルやリンク) を行う. つまりここで, <code>gcc</code>, <code>g++</code> などのコマンドが実行される</li>
+<li><code>make install</code> は最終的な生成物 --- 実行可能ファイル (いわゆるコマンド) やライブラリ --- を所定の場所 (コマンドは<code>/usr/local/bin</code>, ライブラリは<code>/usr/local/lib</code> が典型) にコピーする. それらのディレクトリに書き込み権限がないといけないのでここだけ <code>sudo</code> (root権限つき) で実行するのが普通</li>
+</ul>
+<h3 id="開発デバッグ用の-configure"><a class="header" href="#開発デバッグ用の-configure">開発・デバッグ用の configure</a></h3>
+<p>ここで我々が行う開発・デバッグ用の configureでは</p>
+<ul>
+<li>インストール先ディレクトリの指定</li>
+<li>デバッグオプションの指定</li>
+<li>最適化なしオプションの指定
+を行うので, 我々がよく使うテンプレートは以下である</li>
+</ul>
+<pre><code># 開発・デバッグ用のビルド・インストール
+$ cd ソースツリーのトップディレクトリ
+$ mkdir inst  # インストール先ディレクトリを作る
+$ ./configure --prefix=ソースツリーのトップディレクトリ/inst CFLAGS="-O0 -g" CXXFLAGS="-O0 -g"
+$ make
+$ make install
+</code></pre>
+<ul>
+<li>ポイントは<code>configure</code>に与えた以下のオプション
+<ul>
+<li><code>--prefix=</code><em>dir</em> : インストール先のディレクトリを<em>dir</em>にする</li>
+<li><code>CFLAGS="-O0 -g"</code> : Cコンパイラ (<code>gcc</code>や<code>clang</code>) を起動するときのオプションを指定する</li>
+<li><code>CXXFLAGS="-O0 -g"</code> : C++コンパイラ (<code>g++</code>や<code>clang++</code>) を起動するときのオプションを指定する</li>
+</ul>
+</li>
+<li>これらの情報が生成される<code>Makefile</code> や <code>config.h</code> の中に焼き込まれ, <code>make</code> コマンド, ひいては生成されるプログラムの動作に影響を与える</li>
+<li><em>注意: <code>configure</code> スクリプトはソフトごとに異なる</em>
+<ul>
+<li>すべてのソフトに共通した<code>configure</code>という唯一無二のコマンドがあるわけではない</li>
+<li>これはソフトごとにビルドに必要なコマンドもライブラリ(関数)も異なるので当然といえば当然である</li>
+<li><code>--prefix</code>などのオプションはほぼ全ての<code>configure</code>が受け付けている</li>
+<li><code>CFLAGS=, CXXFLAGS=</code> なども概ね受け付けているものの, それでうまく行くと信じ込まないほうが良い (確かめ方は以下)</li>
+</ul>
+</li>
+<li>自分が手にした <code>configure</code> が何をサポートしているかは,</li>
+</ul>
+<pre><code>$ ./configure --help
+</code></pre>
+<p>で確かめられる</p>
+<h3 id="make"><a class="header" href="#make">make</a></h3>
+<ul>
+<li><code>./configure</code>後に<code>make</code>コマンドを実行すると<code>gcc</code>, <code>g++</code>などが (普通は数多く) 実行され, うまくすれば成功する</li>
+<li><code>make</code> コマンドは一般的にはどのようなコマンドが実行されるかを表示してくれるので, <code>CFLAGS</code> や <code>CXXFLAGS</code> で指定したオプションが渡っているかに注目せよ</li>
+<li>しかし, コマンドラインを垂れ流すのが汚いと思うからなのか, それを隠す<code>Makefile</code>もある</li>
+<li>そのような場合にはそれを露出させるオプションがないかを探ることに価値がある</li>
+<li>典型的には</li>
+</ul>
+<pre><code>$ make VERBOSE=1
+$ make V=1
+</code></pre>
+<ul>
+<li>この過程でエラーがおきたらそれはじっくりと腰を据えた調査が必要になる</li>
+<li>しっかりと,
+<ul>
+<li>どのディレクトリで実行したどのコマンドがエラーを起こしているのか (だからそれを表示させることが重要!)を見極める</li>
+<li>同じエラーを手動で再現する</li>
+<li>その上でエラーメッセージやその場所を見てじっくり原因を探る
+のが重要</li>
+</ul>
+</li>
+<li>エラーの理由についてはありとあらゆる可能性があるとしか言えないが, おそらく他の環境 (OS, ディストリビューションやそのバージョン) ではコンパイル成功したものだから, 非常に初歩的なエラーということは稀</li>
+<li>依存しているライブラリが更新されてインタフェースが変更された (ソースコードは少し前のバージョンを前提に書かれている), みたいなことが典型である</li>
+</ul>
+<h3 id="make-install"><a class="header" href="#make-install">make install</a></h3>
+<ul>
+<li><code>--prefix</code> で指定したディレクトリ下に最終生成物をインストールする</li>
+<li><code>--prefix=</code><em>D</em> としたのであれば <em>D</em><code>/bin</code>, <em>D</em><code>/lib</code>, などのディレクトリができ, コマンドは_D_<code>/bin</code>の下に生成されているはず</li>
+</ul>
+<h3 id="configure-を再実行したくなったとき"><a class="header" href="#configure-を再実行したくなったとき">configure を再実行したくなったとき</a></h3>
+<ul>
+<li><code>./configure</code> を実行すると <code>config.cache</code> というファイルが生成される</li>
+<li>以降の実行ではこれを参照して一部のコマンド実行をスキップする</li>
+<li>このせいで環境を修正したにもかかわらずエラーがで続けることがあるので, 万全を期したければ <code>config.cache</code> を消す</li>
+</ul>
+<pre><code>$ rm config.cache
+$ ./configure
+</code></pre>
+<ul>
+<li>もっとも<code>./configure</code> からやり直す, その際に万全を期したいのであれば tarball の展開からやり直すのが一番確実</li>
+</ul>
+<h3 id="練習"><a class="header" href="#練習">練習</a></h3>
+<ul>
+<li>GNU hello のtarballをダウンロードした人は,</li>
+</ul>
+<h2 id="autotools"><a class="header" href="#autotools">autotools</a></h2>
+<ul>
+<li>上記で tarball には <code>configure</code> が含まれておりその場合は述べた手順でビルドができる (ことが多い) と述べた</li>
+<li>一方 <code>git clone</code> してできたディレクトリはさにあらずで, <code>configure</code> を生成するというステップから行う想定である場合が多い</li>
+<li>それは, <code>configure</code> 自身が非常にややこしいスクリプトであって, 手動で書くものではなく, 別のファイル (<code>configure.ac</code>) からツール (<code>autoconf</code>) を使って生成しており, git のレポジトリは通常, ツールで生成されたものは含まないよう管理されているという方針による</li>
+<li>実は tarball に同梱されているファイルには <code>configure</code> 以外にもそのような, ツールで生成されているもの(<code>Makefile.in</code> など) があり, 生成方法もややこしい</li>
+<li>処世術としては,
+<ul>
+<li><code>configure</code> が含まれておらず代わりに <code>configure.ac</code> が含まれていたら,</li>
+<li>以下のコマンドでもろもろのファイルを生成する</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ autoreconf -i
+</code></pre>
+<ul>
+<li><code>configure, Makefile.in</code> が生成されていることを確認</li>
+</ul>
+<ul>
+<li>その後の手順は前節 (configure; make; make install) で述べたものと同じ</li>
+</ul>
+<h2 id="cmake"><a class="header" href="#cmake">CMake</a></h2>
+<h3 id="基本-1"><a class="header" href="#基本-1">基本</a></h3>
+<ul>
+<li>
+<p><code>configure</code> (autotools) があまりにもややこしいからか, それに変わるものとして CMake があり, 最近はそれが多い印象</p>
+</li>
+<li>
+<p><code>make</code> と似た名前なので <code>make</code> の代替のように見えるがそれは誤解で, あくまで <code>configure</code> のステップ (<code>Makefile</code> を生成するまで) の代替であり, 実際のコンパイルは <code>make</code> で行う</p>
+</li>
+<li>
+<p>CMakeでもconfigureでもどちらでもビルドできるようになっているプロジェクトもある</p>
+</li>
+<li>
+<p>CMake でのビルドを想定しているソースツリーでは, (普通はトップレベルに) <code>CMakeLists.txt</code>というファイルが存在している</p>
+</li>
+<li>
+<p>最低限, configureとの以下のような対応を覚えれば足りる</p>
+</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>configure</th><th>CMake</th></tr></thead><tbody>
+<tr><td><code>--prefix=</code><em>D</em></td><td><code>-DCMAKE_INSTALL_PREFIX=</code><em>D</em></td></tr>
+<tr><td><code>CFLAGS="-O0 -g"</code></td><td><code>-DCMAKE_C_FLAGS="-O0 -g"</code></td></tr>
+<tr><td><code>CXXFLAGS="-O0 -g"</code></td><td><code>-DCMAKE_CXX_FLAGS="-O0 -g"</code></td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>
+<p>実は <code>cmake</code> はもう少し気が利いており, <code>-DCMAKE_BUILD_TYPE=Debug</code> というオプションを指定するだけで, 普通は "-O0 -g" フラグを指定してくれる</p>
+</li>
+<li>
+<p>CMake は慣例として, 「生成物でソースツリーを汚さない (ソースと生成物は別ディレクトリ)」という方針が貫かれており, build途中のファイルが全て入ったディレクトリ (e.g., <code>build</code>) を作ってそこで実行するのが普通である</p>
+</li>
+<li>
+<p>なお<code>cmake</code>が生成する<code>Makefile</code>はコマンドラインを表示しない (まるでそうすることが美しいと思っているかのような, 進捗表示だけを行う) が, <code>make VERBOSE=1</code> とすることで表示してくれるので開発をしたいならそれを推奨する</p>
+</li>
+<li>
+<p>以上より, 開発・デバッグ用の典型的なビルド手順は以下</p>
+</li>
+</ul>
+<pre><code>$ cd ソースツリーのトップディレクトリ
+$ mkdir build inst # 生成物置き場(build), 最終青果物置き場(inst) を作成
+$ cd build
+$ cmake -DCMAKE_INSTALL_PREFIX=ソースツリーのトップディレクトリ/inst -DCMAKE_BUILD_TYPE=Debug ..
+$ make VERBOSE=1
+$ make install
+</code></pre>
+<ul>
+<li>
+<p>注: cmake の最後の引数 (<code>..</code>) は <code>CMakeLists.txt</code> の存在するディレクトリを指定している</p>
+</li>
+<li>
+<p>cmake では一般に, <code>-D変数=値</code> という形でオプションを指定するが, おびただしいオプションがあり名前も長い上, どのようなオプションがあるのかがわかりにくい</p>
+</li>
+<li>
+<p>cmakeを実行すると変数の設定が<code>CMakeCache.txt</code>というファイルから読み込まれるとともに, 施した設定が同じファイルに書かれるので, 以下のようなやり方が実践的である</p>
+</li>
+</ul>
+<pre><code>$ cmake ..
+$ # CMakeCahce.txt をエディタで変更する (CMAKE_BUILD_TYPE, CMAKE_INSTALL_PREFIX)
+$ cmake ..      # もう一度cmake .. を実行
+$ make VERBOSE=1
+$ make install
+</code></pre>
+<h3 id="cmakeを再実行したくなったら"><a class="header" href="#cmakeを再実行したくなったら">cmakeを再実行したくなったら</a></h3>
+<ul>
+<li>cmake実行中にエラーがでて, 環境を修正したにもかかわらずエラーがで続ける場合, <code>CMakeCache.txt</code> を消してから再実行する</li>
+</ul>
+<pre><code>$ rm CMakeCache.txt
+$ cmake .. 
+</code></pre>
+<ul>
+<li>この場合も, 初期状態に戻すことに万全を期したければ, ソースツリーごと一旦消去してやり直すのも一考する</li>
+</ul>
+<h3 id="練習-1"><a class="header" href="#練習-1">練習</a></h3>
+<ul>
+<li>CMakeでビルドすることを想定した小さなプロジェクトとして <a href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a> を開発・デバッグ用にビルド, インストールして実行してみよ</li>
+</ul>
+<h2 id="コードを修正した後の再ビルド"><a class="header" href="#コードを修正した後の再ビルド">コードを修正した後の再ビルド</a></h2>
+<ul>
+<li>ソースコードの一部を修正してもう一度ビルドする場合は <code>make</code> と <code>make install</code> をやり直せば良い</li>
+</ul>
+<pre><code>$ make 
+$ make install
+</code></pre>
+<ul>
+<li>つまり <code>./configure</code> や <code>cmake</code> の再実行は通常は不要</li>
+<li><code>make</code> はビルドを完了するのに必要なコマンド (修正があったファイルやそれに影響を受けるファイルのコンパイル) だけを実行してくれるので初回のビルドに比べて普通は高速に終わる</li>
+<li>しかし人生においては, 時として全てをやり直したくなるときもある</li>
+<li>その場合は <code>make clean</code> とする</li>
+</ul>
+<pre><code>$ make clean
+$ make 
+$ make install
+</code></pre>
+<h2 id="configurecmake時のエラー対策"><a class="header" href="#configurecmake時のエラー対策">configure/cmake時のエラー対策</a></h2>
+<ul>
+<li><code>./configure</code> や <code>cmake</code> 時にはエラーや警告が出ることがある</li>
+<li>その環境ではビルドができない, ということを早めに検出して, その環境の何が問題なのかを指摘することが主な役割である</li>
+<li>典型的なエラー
+<ul>
+<li>ツール (コマンド) がない. 例えば gcc/g++ などのC/C++コンパイラがない</li>
+<li>ライブラリがない. 典型的にはそのライブラリがあれば存在しているはずのヘッダファイル (<code>xxxx.h</code>) や共有ライブラリファイル (<code>libxxx.so</code>) がない</li>
+</ul>
+</li>
+<li>それらの多くは必要なソフトをパッケージ管理ソフト (Ubuntuであれば <code>apt</code>) でインストールすることで解決する. 例えば<code>gcc</code>であれば,</li>
+</ul>
+<pre><code>$ sudo apt install gcc
+</code></pre>
+<ul>
+<li>入れるべきパッケージ名を調べる完璧な方法はない (OS (Linux? Mac? BSD?) が違ったり, 同じOSでもディストリビューション (Ubuntu? Arch? Fedora?) が異なればそれによってもパッケージ名が異なる可能性があるためある程度致し方ない)</li>
+</ul>
+<h3 id="必要なパッケージ名を探り当てるいくつかの方法"><a class="header" href="#必要なパッケージ名を探り当てるいくつかの方法">必要なパッケージ名を探り当てるいくつかの方法</a></h3>
+<h4 id="コマンドがないと言われた場合"><a class="header" href="#コマンドがないと言われた場合">「コマンドがない」と言われた場合</a></h4>
+<ul>
+<li>コマンド名=パッケージ名となっていることは結構多い</li>
+</ul>
+<pre><code>$ g++
+g++: command not found
+$ sudo apt install g++
+</code></pre>
+<ul>
+<li>Ubuntuのデスクトップ環境では, シェルにコマンドを打ち込んでそのコマンドがない場合, 必要なパッケージ名を教えてくれる</li>
+</ul>
+<pre><code>$ g++
+Command 'g++' not found, but can be installed with:
+sudo apt install g++
+</code></pre>
+<ul>
+<li>教えてくれない場合, <code>command-not-found</code> というパッケージをインストールすると教えてくれるようになる</li>
+</ul>
+<pre><code>$ sudo apt install command-not-found
+$ sudo apt update
+</code></pre>
+<ul>
+<li>このあと改めて再ログインが必要になるかもしれない</li>
+</ul>
+<h4 id="ライブラリ-必要な関数が入ったパッケージがないと言われた場合"><a class="header" href="#ライブラリ-必要な関数が入ったパッケージがないと言われた場合">ライブラリ (必要な関数が入ったパッケージ)がないと言われた場合</a></h4>
+<ul>
+<li>Ubuntuのライブラリのパッケージ名は <code>libXXX-dev</code> という名前のパッケージ名になっていることが多い</li>
+<li>例えばライブラリ <code>gmp</code> がないと言われたら,</li>
+</ul>
+<pre><code>$ sudo apt install libgmp-dev
+</code></pre>
+<p>をやってみる価値はある. ただしやや当てずっぽうがすぎるという嫌いはある</p>
+<h4 id="汎用的なパッケージ検索方法1-apt-sesarch"><a class="header" href="#汎用的なパッケージ検索方法1-apt-sesarch">汎用的なパッケージ検索方法1 apt sesarch</a></h4>
+<ul>
+<li>Ubuntu であれば <code>apt search キーワード</code> でそのキーワードがパッケージ名や記述に含まれるパッケージを列挙してくれるので, あるパッケージ名が存在することやその簡単な説明を確認できるため, <code>apt install</code> を試みる前に試すことを推奨する</li>
+</ul>
+<pre><code>$ apt search libgmp-dev
+$ apt search libgmp-dev | less  # ページめくりで表示
+$ apt search libgmp-dev | grep -A1 -B1 arithmetic  # arithmeticが出現する行とその前後1行を表示
+</code></pre>
+<h4 id="汎用的なパッケージ検索方法2-apt-file-sesarch"><a class="header" href="#汎用的なパッケージ検索方法2-apt-file-sesarch">汎用的なパッケージ検索方法2 apt-file sesarch</a></h4>
+<ul>
+<li>Ubuntu には <code>apt-file</code> というコマンドがありファイル名を与えるとそれが含まれるパッケージ名を教えてくれる</li>
+</ul>
+<pre><code>$ apt-file search gmp.h
+$ apt-file search /gmp.h  # igmp.h などが引っかかってほしくない場合
+</code></pre>
+<ul>
+<li><code>apt-file</code>をインストール, セットアップする手順は以下</li>
+</ul>
+<pre><code>$ sudo apt apt-file
+$ sudo apt-file update
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="get_code_and_dbg_build.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="dbg_build.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
@@ -195,7 +494,7 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="get_code_and_dbg_build.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="dbg_build.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 

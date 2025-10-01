@@ -3,3 +3,5 @@ authors = ["田浦健次朗"]
 language = "ja"
 src = "src"
 title = "大規模ソフトウェアを手探る 2.0 (2025年版)"
+[output.html]
+additional-css = ["theme/numbered.css"]

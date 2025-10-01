@@ -1,9 +1,9 @@
 # Summary
 
-
 - [前口上 (心の準備)](./preface.md)
-- [(任意) 開発用仮想環境構築](./vm.md)
-- [ソースコード入手〜デバッグ用ビルド](./get_code_and_dbg_build.md)
+- [(任意) 開発用の仮想環境の構築](./vm.md)
+- [ソースコードを入手](./download_source.md)
+- [開発・デバッグ用のビルド](./dbg_build.md)
   - [C/C++ + autotools/cmake 編](./autotools_cmake.md)
   - [Python + venv + pip 編](./python_venv_pip.md)
   - [Javascript (node.js) + nvm + npm 編](./js_nvm_npm.md)

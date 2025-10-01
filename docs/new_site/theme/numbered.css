@@ -1,0 +1,24 @@
+.content { counter-reset: h1; }
+
+.content h1 {
+  counter-reset: h2;
+  counter-increment: h1;
+}
+.content h1::before {
+  content: counter(h1) " ";
+}
+
+.content h2 {
+  counter-reset: h3;
+  counter-increment: h2;
+}
+.content h2::before {
+  content: counter(h1) "." counter(h2) " ";
+}
+
+.content h3 {
+  counter-increment: h3;
+}
+.content h3::before {
+  content: counter(h1) "." counter(h2) "." counter(h3) " ";
+}

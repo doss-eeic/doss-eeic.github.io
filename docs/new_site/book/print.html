@@ -30,6 +30,7 @@
         <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/numbered.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -227,10 +228,629 @@
 <li>2024年度までの web site</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="任意-開発用仮想環境の構築"><a class="header" href="#任意-開発用仮想環境の構築">(任意) 開発用仮想環境の構築</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="ソースコード入手デバッグ用ビルド"><a class="header" href="#ソースコード入手デバッグ用ビルド">ソースコード入手〜デバッグ用ビルド</a></h1>
+<ul>
+<li>開発のために仮想マシンを使って, その中にLinux (Ubuntu) 環境を構築しそこで開発をすることを推奨する</li>
+<li>理由:
+<ul>
+<li>開発やビルドのために必要なツール, ライブラリなどをインストールするにあたり自分の環境を汚さずに済む</li>
+<li>多くのソフトはLinux上で開発されており, 環境に依存したトラブルに時間を消費する可能性が低い</li>
+<li>上記の系として, チームの全員が同じ環境 (OSとそのバージョン) を使って開発ができる</li>
+</ul>
+</li>
+<li>具体的なやり方は, オペレーティングシステムの講義でも使っている <a href="https://taura.github.io/operating-systems/html/install_vm_and_linux.html">仮想マシン, Linuxのインストール</a> のページを参照</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ソースコードのダウンロード"><a class="header" href="#ソースコードのダウンロード">ソースコードのダウンロード</a></h1>
+<h2 id="tarball"><a class="header" href="#tarball">tarball</a></h2>
+<ul>
+<li>"tarball"は多数のファイルを収めたディレクトリ一式を, tarというコマンドで一つのファイルにまとめ (Windowsでzipに馴染みのある人はそれのUnix版だと思えば良い), 通常はそれを gzip, bzip2 などの圧縮ファイルで圧縮したものである.</li>
+<li>そのためtarballのファイル名は通常, xyz.tar.gz (gzipの場合) または xyz.tar.gz2 (bzip2の場合)</li>
+<li>その昔は, ソースコードの配布はビルドに必要なファイルをすべて収めたディレクトリ --- <strong>ソースツリー</strong> --- をtarballの形式にしてダウンロードささせるだけ, というパターンが多かった</li>
+<li>tarball が無事入手できたら, 以下のコマンドで解凍するとディレクトリ構造が復元される</li>
+</ul>
+<pre><code class="language-bash">$ tar xf xyz.tar.bz2
+</code></pre>
+<ul>
+<li>慣習上, <strong>通常は</strong>これで <code>xyz</code> という名前の, 全てのファイルを含んだディレクトリができるが必ずそうなるとは限らない (あくまでtarballを作った人の名前付けに依存する) し, 場合によっては複数のファイルを解凍した場所にぶちまける行儀の悪いtarballもある</li>
+<li>したがって安全のため, 作業は空のディレクトリを作って行うのがよい</li>
+</ul>
+<pre><code class="language-bash">$ mkdir empty
+$ # empty/ の中に xyz.tar.bz2 を入れる
+$ cd empty
+$ tar xvf xyz.tar.bz2
+</code></pre>
+<ul>
+<li><code>xvf</code>の
+<ul>
+<li><code>x</code> ... 解凍 (extract)</li>
+<li><code>v</code> ... 進捗表示 (verbose) : ファイルが解凍されるたびにその名前を表示する</li>
+<li><code>f</code> ... ファイル指定 : xyz.tar.bz2 が解凍の対象であることを指定</li>
+</ul>
+</li>
+</ul>
+<h3 id="練習"><a class="header" href="#練習">練習</a></h3>
+<ul>
+<li>GNU hello というプログラムの tarball をダウンロードしてみよ</li>
+<li>空フォルダを作りそこでそれを解凍してみよ</li>
+</ul>
+<ul>
+<li>検索で見つけることを推奨するが見つからないときのため, 一応 <a href="https://www.gnu.org/software/hello/">ここ</a></li>
+</ul>
+<h2 id="github"><a class="header" href="#github">github</a></h2>
+<ul>
+<li>C/C++に限らず殆どの言語で, 多くのオープンソースプロジェクトのソースコードが <a href="https://github.com/">github</a> から提供されている</li>
+<li>ソフトの名前がわかっていればGoogleで "ソフト名 github" などとすれば github 上の, そのソフトの着地ページが見つかることだろう</li>
+<li>github上で, あるプロジェクトのソースコードを収めた実体をそのプロジェクトの「レポジトリ」と呼ぶ</li>
+<li>そのレポジトリを開発用マシンに, コピー (clone) することでソースコードを含んだディレクトリがまるごとダウンロードできる</li>
+<li>着地ページが見つかったら, 同ページの Code という緑のボタンをおすとレポジトリをcloneするための URL もしくはコマンドが表示される</li>
+<li>URLは</li>
+</ul>
+<pre><code>git@github.com:xyz/xyz.git
+</code></pre>
+<p>もしくは</p>
+<pre><code>https://github.com/xyz/xyz.git
+</code></pre>
+<p>のような文字列</p>
+<ul>
+<li>これをcloneするコマンドは <code>git clone レポジトリのURL</code></li>
+</ul>
+<pre><code>$ git clone git@github.com:xyz/xyz.git
+</code></pre>
+<p>もしくは</p>
+<pre><code>$ git clone https://github.com/xyz/xyz.git
+</code></pre>
+<p><code>git</code> コマンドが見つからなければ, Ubuntuであれば以下のようにしてインストールする</p>
+<pre><code>$ sudo apt install git
+</code></pre>
+<h3 id="練習-1"><a class="header" href="#練習-1">練習</a></h3>
+<ul>
+<li><code>curl</code> という, (主に) webページをブラウザを使わず, コマンドラインでアクセスするツールのgit レポジトリを発見し, <code>git clone</code> してみよ</li>
+</ul>
+<ul>
+<li>見つからなかったときは<a href="https://github.com/curl/curl">ここ</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="開発デバッグ用のビルド"><a class="header" href="#開発デバッグ用のビルド">開発・デバッグ用のビルド</a></h1>
+<ul>
+<li>tarballダウンロードにせよ, git cloneにせよ, 結果的にはソースコードが一式収められたディレクトリが手に入る</li>
+<li>次のステップはそれをビルドすることである</li>
+<li>その際, 開発・修正用にビルド, インストールするため, 以下に注意する
+<ul>
+<li><strong>インストール先のディレクトリを指定する</strong> --- 普段自分が使っているコマンドなどが収められた本番用 <code>/usr/local/bin</code> ではない場所にインストールする</li>
+<li><strong>デバッグ用オプション (<code>-g</code>)</strong> をつけてコンパイルする --- 大雑把には各命令がソースコードのどの場所 (ファイル名や行番号) から生成されたか, 各変数がどこに格納されているか, などを記録した情報 --- <strong>デバッグシンボル</strong> --- を生成する. これがないとデバッガが現在の実行位置をソースコード上の位置として表示することができなくなる.</li>
+<li>(必須ではないが) <strong>最適化をしないオプション(<code>-O0</code>)</strong> を指定する --- 最適化をすると様々なコードの再配置が行われ, 実際の命令とソースコードの対応がわかりにくくなる. デバッガ上で実行していると, ソースコードの順番と異なる順番で実行されたり, 変数の値が表示できなかったりするなど,分析がしにくくなる</li>
+</ul>
+</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cc--autotoolscmake-編"><a class="header" href="#cc--autotoolscmake-編">C/C++ + autotools/cmake 編</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python + venv + pip 編</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">Javascript (node.js) + nvm + npm 編</a></h1>
+<ul>
+<li>主にCやC++で書かれたソースコードのビルド方法</li>
+<li>C, C++は昔から開発言語の主流であり, 歴史も深い</li>
+<li>そのためビルドの慣習もいくつかあり, 古い方式と新しい方式が混在している</li>
+<li>ビルドするためにはそのソフト用のビルド手順を読むのが基本である</li>
+<li>... と述べた上で, ほとんどのソフトが従っている, よくあるパターンをいくつか説明しておく</li>
+</ul>
+<h2 id="configure-make-make-install"><a class="header" href="#configure-make-make-install">configure; make; make install</a></h2>
+<h3 id="基本"><a class="header" href="#基本">基本</a></h3>
+<ul>
+<li>tarballで入手したソースツリーには多くの場合, <code>configure</code> という名前のファイル (実体はシェルスクリプト) が含まれる</li>
+<li>そのソフトを <em>本番用ディレクトリ (<code>/usr/local</code> など)にインストールする場合 (今はこちらはやらない) の</em> よくある手順は以下</li>
+</ul>
+<pre><code># 注: 以下は本番ディレクトリにインストールするとき; 今はこちらは使わない
+$ cd ソースツリーのトップディレクトリ
+$ ./configure
+$ make
+$ sudo make install
+</code></pre>
+<ul>
+<li><code>./configure</code> は
+<ul>
+<li>その環境で無事ビルドが可能かをチェックする --- 例えば <code>numa_available</code> という関数を使うのであればそれが使えるかをチェックする</li>
+<li><code>config.h</code> を生成する. ここには <code>configure</code> で判明した環境固有の情報 --- この関数が使えるとか使えないとか --- が書き込まれている</li>
+<li><code>Makefile</code> を生成する. 次の <code>make</code> コマンドで使われる</li>
+</ul>
+</li>
+<li><code>make</code> は <code>Makefile</code> に書かれた命令を読み込んで実際のビルド (コンパイルやリンク) を行う. つまりここで, <code>gcc</code>, <code>g++</code> などのコマンドが実行される</li>
+<li><code>make install</code> は最終的な生成物 --- 実行可能ファイル (いわゆるコマンド) やライブラリ --- を所定の場所 (コマンドは<code>/usr/local/bin</code>, ライブラリは<code>/usr/local/lib</code> が典型) にコピーする. それらのディレクトリに書き込み権限がないといけないのでここだけ <code>sudo</code> (root権限つき) で実行するのが普通</li>
+</ul>
+<h3 id="開発デバッグ用の-configure"><a class="header" href="#開発デバッグ用の-configure">開発・デバッグ用の configure</a></h3>
+<p>ここで我々が行う開発・デバッグ用の configureでは</p>
+<ul>
+<li>インストール先ディレクトリの指定</li>
+<li>デバッグオプションの指定</li>
+<li>最適化なしオプションの指定
+を行うので, 我々がよく使うテンプレートは以下である</li>
+</ul>
+<pre><code># 開発・デバッグ用のビルド・インストール
+$ cd ソースツリーのトップディレクトリ
+$ mkdir inst  # インストール先ディレクトリを作る
+$ ./configure --prefix=ソースツリーのトップディレクトリ/inst CFLAGS="-O0 -g" CXXFLAGS="-O0 -g"
+$ make
+$ make install
+</code></pre>
+<ul>
+<li>ポイントは<code>configure</code>に与えた以下のオプション
+<ul>
+<li><code>--prefix=</code><em>dir</em> : インストール先のディレクトリを<em>dir</em>にする</li>
+<li><code>CFLAGS="-O0 -g"</code> : Cコンパイラ (<code>gcc</code>や<code>clang</code>) を起動するときのオプションを指定する</li>
+<li><code>CXXFLAGS="-O0 -g"</code> : C++コンパイラ (<code>g++</code>や<code>clang++</code>) を起動するときのオプションを指定する</li>
+</ul>
+</li>
+<li>これらの情報が生成される<code>Makefile</code> や <code>config.h</code> の中に焼き込まれ, <code>make</code> コマンド, ひいては生成されるプログラムの動作に影響を与える</li>
+<li><em>注意: <code>configure</code> スクリプトはソフトごとに異なる</em>
+<ul>
+<li>すべてのソフトに共通した<code>configure</code>という唯一無二のコマンドがあるわけではない</li>
+<li>これはソフトごとにビルドに必要なコマンドもライブラリ(関数)も異なるので当然といえば当然である</li>
+<li><code>--prefix</code>などのオプションはほぼ全ての<code>configure</code>が受け付けている</li>
+<li><code>CFLAGS=, CXXFLAGS=</code> なども概ね受け付けているものの, それでうまく行くと信じ込まないほうが良い (確かめ方は以下)</li>
+</ul>
+</li>
+<li>自分が手にした <code>configure</code> が何をサポートしているかは,</li>
+</ul>
+<pre><code>$ ./configure --help
+</code></pre>
+<p>で確かめられる</p>
+<h3 id="make"><a class="header" href="#make">make</a></h3>
+<ul>
+<li><code>./configure</code>後に<code>make</code>コマンドを実行すると<code>gcc</code>, <code>g++</code>などが (普通は数多く) 実行され, うまくすれば成功する</li>
+<li><code>make</code> コマンドは一般的にはどのようなコマンドが実行されるかを表示してくれるので, <code>CFLAGS</code> や <code>CXXFLAGS</code> で指定したオプションが渡っているかに注目せよ</li>
+<li>しかし, コマンドラインを垂れ流すのが汚いと思うからなのか, それを隠す<code>Makefile</code>もある</li>
+<li>そのような場合にはそれを露出させるオプションがないかを探ることに価値がある</li>
+<li>典型的には</li>
+</ul>
+<pre><code>$ make VERBOSE=1
+$ make V=1
+</code></pre>
+<ul>
+<li>この過程でエラーがおきたらそれはじっくりと腰を据えた調査が必要になる</li>
+<li>しっかりと,
+<ul>
+<li>どのディレクトリで実行したどのコマンドがエラーを起こしているのか (だからそれを表示させることが重要!)を見極める</li>
+<li>同じエラーを手動で再現する</li>
+<li>その上でエラーメッセージやその場所を見てじっくり原因を探る
+のが重要</li>
+</ul>
+</li>
+<li>エラーの理由についてはありとあらゆる可能性があるとしか言えないが, おそらく他の環境 (OS, ディストリビューションやそのバージョン) ではコンパイル成功したものだから, 非常に初歩的なエラーということは稀</li>
+<li>依存しているライブラリが更新されてインタフェースが変更された (ソースコードは少し前のバージョンを前提に書かれている), みたいなことが典型である</li>
+</ul>
+<h3 id="make-install"><a class="header" href="#make-install">make install</a></h3>
+<ul>
+<li><code>--prefix</code> で指定したディレクトリ下に最終生成物をインストールする</li>
+<li><code>--prefix=</code><em>D</em> としたのであれば <em>D</em><code>/bin</code>, <em>D</em><code>/lib</code>, などのディレクトリができ, コマンドは_D_<code>/bin</code>の下に生成されているはず</li>
+</ul>
+<h3 id="configure-を再実行したくなったとき"><a class="header" href="#configure-を再実行したくなったとき">configure を再実行したくなったとき</a></h3>
+<ul>
+<li><code>./configure</code> を実行すると <code>config.cache</code> というファイルが生成される</li>
+<li>以降の実行ではこれを参照して一部のコマンド実行をスキップする</li>
+<li>このせいで環境を修正したにもかかわらずエラーがで続けることがあるので, 万全を期したければ <code>config.cache</code> を消す</li>
+</ul>
+<pre><code>$ rm config.cache
+$ ./configure
+</code></pre>
+<ul>
+<li>もっとも<code>./configure</code> からやり直す, その際に万全を期したいのであれば tarball の展開からやり直すのが一番確実</li>
+</ul>
+<h3 id="練習-2"><a class="header" href="#練習-2">練習</a></h3>
+<ul>
+<li>GNU hello のtarballをダウンロードした人は,</li>
+</ul>
+<h2 id="autotools"><a class="header" href="#autotools">autotools</a></h2>
+<ul>
+<li>上記で tarball には <code>configure</code> が含まれておりその場合は述べた手順でビルドができる (ことが多い) と述べた</li>
+<li>一方 <code>git clone</code> してできたディレクトリはさにあらずで, <code>configure</code> を生成するというステップから行う想定である場合が多い</li>
+<li>それは, <code>configure</code> 自身が非常にややこしいスクリプトであって, 手動で書くものではなく, 別のファイル (<code>configure.ac</code>) からツール (<code>autoconf</code>) を使って生成しており, git のレポジトリは通常, ツールで生成されたものは含まないよう管理されているという方針による</li>
+<li>実は tarball に同梱されているファイルには <code>configure</code> 以外にもそのような, ツールで生成されているもの(<code>Makefile.in</code> など) があり, 生成方法もややこしい</li>
+<li>処世術としては,
+<ul>
+<li><code>configure</code> が含まれておらず代わりに <code>configure.ac</code> が含まれていたら,</li>
+<li>以下のコマンドでもろもろのファイルを生成する</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ autoreconf -i
+</code></pre>
+<ul>
+<li><code>configure, Makefile.in</code> が生成されていることを確認</li>
+</ul>
+<ul>
+<li>その後の手順は前節 (configure; make; make install) で述べたものと同じ</li>
+</ul>
+<h2 id="cmake"><a class="header" href="#cmake">CMake</a></h2>
+<h3 id="基本-1"><a class="header" href="#基本-1">基本</a></h3>
+<ul>
+<li>
+<p><code>configure</code> (autotools) があまりにもややこしいからか, それに変わるものとして CMake があり, 最近はそれが多い印象</p>
+</li>
+<li>
+<p><code>make</code> と似た名前なので <code>make</code> の代替のように見えるがそれは誤解で, あくまで <code>configure</code> のステップ (<code>Makefile</code> を生成するまで) の代替であり, 実際のコンパイルは <code>make</code> で行う</p>
+</li>
+<li>
+<p>CMakeでもconfigureでもどちらでもビルドできるようになっているプロジェクトもある</p>
+</li>
+<li>
+<p>CMake でのビルドを想定しているソースツリーでは, (普通はトップレベルに) <code>CMakeLists.txt</code>というファイルが存在している</p>
+</li>
+<li>
+<p>最低限, configureとの以下のような対応を覚えれば足りる</p>
+</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>configure</th><th>CMake</th></tr></thead><tbody>
+<tr><td><code>--prefix=</code><em>D</em></td><td><code>-DCMAKE_INSTALL_PREFIX=</code><em>D</em></td></tr>
+<tr><td><code>CFLAGS="-O0 -g"</code></td><td><code>-DCMAKE_C_FLAGS="-O0 -g"</code></td></tr>
+<tr><td><code>CXXFLAGS="-O0 -g"</code></td><td><code>-DCMAKE_CXX_FLAGS="-O0 -g"</code></td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>
+<p>実は <code>cmake</code> はもう少し気が利いており, <code>-DCMAKE_BUILD_TYPE=Debug</code> というオプションを指定するだけで, 普通は "-O0 -g" フラグを指定してくれる</p>
+</li>
+<li>
+<p>CMake は慣例として, 「生成物でソースツリーを汚さない (ソースと生成物は別ディレクトリ)」という方針が貫かれており, build途中のファイルが全て入ったディレクトリ (e.g., <code>build</code>) を作ってそこで実行するのが普通である</p>
+</li>
+<li>
+<p>なお<code>cmake</code>が生成する<code>Makefile</code>はコマンドラインを表示しない (まるでそうすることが美しいと思っているかのような, 進捗表示だけを行う) が, <code>make VERBOSE=1</code> とすることで表示してくれるので開発をしたいならそれを推奨する</p>
+</li>
+<li>
+<p>以上より, 開発・デバッグ用の典型的なビルド手順は以下</p>
+</li>
+</ul>
+<pre><code>$ cd ソースツリーのトップディレクトリ
+$ mkdir build inst # 生成物置き場(build), 最終青果物置き場(inst) を作成
+$ cd build
+$ cmake -DCMAKE_INSTALL_PREFIX=ソースツリーのトップディレクトリ/inst -DCMAKE_BUILD_TYPE=Debug ..
+$ make VERBOSE=1
+$ make install
+</code></pre>
+<ul>
+<li>
+<p>注: cmake の最後の引数 (<code>..</code>) は <code>CMakeLists.txt</code> の存在するディレクトリを指定している</p>
+</li>
+<li>
+<p>cmake では一般に, <code>-D変数=値</code> という形でオプションを指定するが, おびただしいオプションがあり名前も長い上, どのようなオプションがあるのかがわかりにくい</p>
+</li>
+<li>
+<p>cmakeを実行すると変数の設定が<code>CMakeCache.txt</code>というファイルから読み込まれるとともに, 施した設定が同じファイルに書かれるので, 以下のようなやり方が実践的である</p>
+</li>
+</ul>
+<pre><code>$ cmake ..
+$ # CMakeCahce.txt をエディタで変更する (CMAKE_BUILD_TYPE, CMAKE_INSTALL_PREFIX)
+$ cmake ..      # もう一度cmake .. を実行
+$ make VERBOSE=1
+$ make install
+</code></pre>
+<h3 id="cmakeを再実行したくなったら"><a class="header" href="#cmakeを再実行したくなったら">cmakeを再実行したくなったら</a></h3>
+<ul>
+<li>cmake実行中にエラーがでて, 環境を修正したにもかかわらずエラーがで続ける場合, <code>CMakeCache.txt</code> を消してから再実行する</li>
+</ul>
+<pre><code>$ rm CMakeCache.txt
+$ cmake .. 
+</code></pre>
+<ul>
+<li>この場合も, 初期状態に戻すことに万全を期したければ, ソースツリーごと一旦消去してやり直すのも一考する</li>
+</ul>
+<h3 id="練習-3"><a class="header" href="#練習-3">練習</a></h3>
+<ul>
+<li>CMakeでビルドすることを想定した小さなプロジェクトとして <a href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a> を開発・デバッグ用にビルド, インストールして実行してみよ</li>
+</ul>
+<h2 id="コードを修正した後の再ビルド"><a class="header" href="#コードを修正した後の再ビルド">コードを修正した後の再ビルド</a></h2>
+<ul>
+<li>ソースコードの一部を修正してもう一度ビルドする場合は <code>make</code> と <code>make install</code> をやり直せば良い</li>
+</ul>
+<pre><code>$ make 
+$ make install
+</code></pre>
+<ul>
+<li>つまり <code>./configure</code> や <code>cmake</code> の再実行は通常は不要</li>
+<li><code>make</code> はビルドを完了するのに必要なコマンド (修正があったファイルやそれに影響を受けるファイルのコンパイル) だけを実行してくれるので初回のビルドに比べて普通は高速に終わる</li>
+<li>しかし人生においては, 時として全てをやり直したくなるときもある</li>
+<li>その場合は <code>make clean</code> とする</li>
+</ul>
+<pre><code>$ make clean
+$ make 
+$ make install
+</code></pre>
+<h2 id="configurecmake時のエラー対策"><a class="header" href="#configurecmake時のエラー対策">configure/cmake時のエラー対策</a></h2>
+<ul>
+<li><code>./configure</code> や <code>cmake</code> 時にはエラーや警告が出ることがある</li>
+<li>その環境ではビルドができない, ということを早めに検出して, その環境の何が問題なのかを指摘することが主な役割である</li>
+<li>典型的なエラー
+<ul>
+<li>ツール (コマンド) がない. 例えば gcc/g++ などのC/C++コンパイラがない</li>
+<li>ライブラリがない. 典型的にはそのライブラリがあれば存在しているはずのヘッダファイル (<code>xxxx.h</code>) や共有ライブラリファイル (<code>libxxx.so</code>) がない</li>
+</ul>
+</li>
+<li>それらの多くは必要なソフトをパッケージ管理ソフト (Ubuntuであれば <code>apt</code>) でインストールすることで解決する. 例えば<code>gcc</code>であれば,</li>
+</ul>
+<pre><code>$ sudo apt install gcc
+</code></pre>
+<ul>
+<li>入れるべきパッケージ名を調べる完璧な方法はない (OS (Linux? Mac? BSD?) が違ったり, 同じOSでもディストリビューション (Ubuntu? Arch? Fedora?) が異なればそれによってもパッケージ名が異なる可能性があるためある程度致し方ない)</li>
+</ul>
+<h3 id="必要なパッケージ名を探り当てるいくつかの方法"><a class="header" href="#必要なパッケージ名を探り当てるいくつかの方法">必要なパッケージ名を探り当てるいくつかの方法</a></h3>
+<h4 id="コマンドがないと言われた場合"><a class="header" href="#コマンドがないと言われた場合">「コマンドがない」と言われた場合</a></h4>
+<ul>
+<li>コマンド名=パッケージ名となっていることは結構多い</li>
+</ul>
+<pre><code>$ g++
+g++: command not found
+$ sudo apt install g++
+</code></pre>
+<ul>
+<li>Ubuntuのデスクトップ環境では, シェルにコマンドを打ち込んでそのコマンドがない場合, 必要なパッケージ名を教えてくれる</li>
+</ul>
+<pre><code>$ g++
+Command 'g++' not found, but can be installed with:
+sudo apt install g++
+</code></pre>
+<ul>
+<li>教えてくれない場合, <code>command-not-found</code> というパッケージをインストールすると教えてくれるようになる</li>
+</ul>
+<pre><code>$ sudo apt install command-not-found
+$ sudo apt update
+</code></pre>
+<ul>
+<li>このあと改めて再ログインが必要になるかもしれない</li>
+</ul>
+<h4 id="ライブラリ-必要な関数が入ったパッケージがないと言われた場合"><a class="header" href="#ライブラリ-必要な関数が入ったパッケージがないと言われた場合">ライブラリ (必要な関数が入ったパッケージ)がないと言われた場合</a></h4>
+<ul>
+<li>Ubuntuのライブラリのパッケージ名は <code>libXXX-dev</code> という名前のパッケージ名になっていることが多い</li>
+<li>例えばライブラリ <code>gmp</code> がないと言われたら,</li>
+</ul>
+<pre><code>$ sudo apt install libgmp-dev
+</code></pre>
+<p>をやってみる価値はある. ただしやや当てずっぽうがすぎるという嫌いはある</p>
+<h4 id="汎用的なパッケージ検索方法1-apt-sesarch"><a class="header" href="#汎用的なパッケージ検索方法1-apt-sesarch">汎用的なパッケージ検索方法1 apt sesarch</a></h4>
+<ul>
+<li>Ubuntu であれば <code>apt search キーワード</code> でそのキーワードがパッケージ名や記述に含まれるパッケージを列挙してくれるので, あるパッケージ名が存在することやその簡単な説明を確認できるため, <code>apt install</code> を試みる前に試すことを推奨する</li>
+</ul>
+<pre><code>$ apt search libgmp-dev
+$ apt search libgmp-dev | less  # ページめくりで表示
+$ apt search libgmp-dev | grep -A1 -B1 arithmetic  # arithmeticが出現する行とその前後1行を表示
+</code></pre>
+<h4 id="汎用的なパッケージ検索方法2-apt-file-sesarch"><a class="header" href="#汎用的なパッケージ検索方法2-apt-file-sesarch">汎用的なパッケージ検索方法2 apt-file sesarch</a></h4>
+<ul>
+<li>Ubuntu には <code>apt-file</code> というコマンドがありファイル名を与えるとそれが含まれるパッケージ名を教えてくれる</li>
+</ul>
+<pre><code>$ apt-file search gmp.h
+$ apt-file search /gmp.h  # igmp.h などが引っかかってほしくない場合
+</code></pre>
+<ul>
+<li><code>apt-file</code>をインストール, セットアップする手順は以下</li>
+</ul>
+<pre><code>$ sudo apt apt-file
+$ sudo apt-file update
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python : venv + pip 編</a></h1>
+<h2 id="基本-2"><a class="header" href="#基本-2">基本</a></h2>
+<ul>
+<li>Pythonで書かれたソフトウェアは <code>pip</code> というソフトウェア (Ubuntu の <code>apt</code> の Python版だと思えば良い) でインストールできることが多い</li>
+<li>ただし最近の <code>pip</code> は全ユーザ共通のディレクトリ (<code>/usr/local</code>など) へのインストールを非推奨 (最近は禁止に近い) としており, 個人のディレクトリへ, それも venv (仮想環境. 仮想マシンと紛らわしいが, つまりは目的に応じて複数の Python 環境を持てる仕組み) というものを組み合わせて指定した環境へインストールすることを前提にしている</li>
+<li>Pythonプログラムは通常「ビルド」という手順は不要で, <code>pip</code>もソースコード (.py) をインストールするので原理的には <code>pip</code> でソースコードを入手可能だが, 通常は git でダウンロードする</li>
+<li>git でソースコードをダウンロードした場合も <code>pip</code> を使ってそのソースコードを適切な場所に配置するため結局 <code>pip</code> が必要となる</li>
+<li>そこで以下では venv, pip, ビルド手順, の順に説明する</li>
+</ul>
+<h2 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h2>
+<ul>
+<li>Pythonの<code>venv</code>は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
+<li>最初に, システム共通の <code>python</code> コマンド (<code>python3</code> という名前の場合もある) が使える状態を前提とする</li>
+</ul>
+<pre><code>$ which python
+/usr/bin/python   # システム共通の python
+</code></pre>
+<ul>
+<li>ここで以下</li>
+</ul>
+<pre><code>$ python -m venv my_env
+</code></pre>
+<p>を実行すると,</p>
+<ul>
+<li><code>my_env</code> というフォルダが作られ, まっさらなPython環境がその下に作られる. 続けて</li>
+<li>ここで以下</li>
+</ul>
+<pre><code>$ . my_env/bin/activate
+</code></pre>
+<p>を実行すると, <code>my_env</code>下のPython環境が使われるようになる</p>
+<ul>
+<li>具体的には以下のように, <code>my_env</code>下の<code>python</code>コマンドや<code>pip</code>コマンドが使われるようになる</li>
+</ul>
+<pre><code>$ which python
+/ ... /my_env/bin/python   # 絶対パス名
+$ which pip
+/ ... /my_env/bin/pip      # 絶対パス名
+</code></pre>
+<ul>
+<li>仕組みは単純で, <code>PATH</code>という環境変数で, <code>my_env/bin</code>ディレクトリが先に検索されるようにしているだけである</li>
+</ul>
+<pre><code>$ echo $PATH
+</code></pre>
+<ul>
+<li>この<code>pip</code>コマンドはパッケージを <code>my_env</code> 下にインストールするし, <code>python</code>コマンドは <code>import</code> 文を実行する際に <code>my_env</code> 下でモジュールを探す</li>
+<li><code>my_env</code> ディレクトリを消せばそのPython仮想環境は跡形もなく消える</li>
+</ul>
+<h3 id="余談-venvディレクトリの場所と名前"><a class="header" href="#余談-venvディレクトリの場所と名前">余談: venvディレクトリの場所と名前</a></h3>
+<ul>
+<li>venv でディレクトリ (上記の <code>my_env</code>) を作る際にどこになんという名前で作るのが良いのだろう? 世の中では主に2つの流儀があるようである
+<ul>
+<li>プロジェクトに特化したディレクトリを, ソースツリー内に決まった名前 (e.g., <code>.venv</code>)で作る (<code>venv</code> という名前は避けておくのが無難だろう)</li>
+<li>ホームディレクトリ直下に <code>~/.venvs</code> のようなディレクトリを作りその下に集める
+なおどちらの場合も, <code>.</code> から始めることが世の中の慣習になっているようだが, 積極的な理由があるのか不明</li>
+</ul>
+</li>
+</ul>
+<h2 id="pip--pythonのパッケージインストーラ"><a class="header" href="#pip--pythonのパッケージインストーラ">pip : Pythonのパッケージインストーラ</a></h2>
+<ul>
+<li>pip であるPythonパッケージを見つけたら</li>
+</ul>
+<pre><code>pip install パッケージ名
+</code></pre>
+<p>でインストール可能</p>
+<ul>
+<li>ファイルは実行した<code>pip</code>コマンドと同じPython環境内に配置される</li>
+</ul>
+<h3 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h3>
+<ul>
+<li>かつては <code>pip search 文字列</code> というコマンドで検索できていたがあるときからその機能が廃止され, https://pypi.org/ から探せということになった (理解不能)</li>
+</ul>
+<h2 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h2>
+<ul>
+<li>通常はそのプロジェクトの github レポジトリが存在しているので git clone する (やり方は<a href="download_source.html">ソースコードのダウンロード</a> を参照</li>
+<li>ソースツリーのトップレベルに <code>pyproject.toml</code>, <code>setup.py</code>, <code>setup.cfg</code> のどれかが見つかったら</li>
+</ul>
+<pre><code>$ pip install -e .
+</code></pre>
+<p>とすれば, ビルド(と言っても Pythonであればコンパイルは不要)及び, ファイルの配置が行われる</p>
+<ul>
+<li>なお, <code>-e</code> (editable) オプションをつけると, ファイルのコピーは行われず, ソースツリー中のファイルがそのまま参照される
+<ul>
+<li>本来インストールされる場所からソースツリー中にシンボリックリンク・ショートカットのようなものができるとイメージすればよい</li>
+</ul>
+</li>
+<li>ソースコードを修正すればそれがそのまま反映されるので, 開発するのに便利</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">JavaScript (Node.js) : nvm + npm 編</a></h1>
+<h2 id="基本-3"><a class="header" href="#基本-3">基本</a></h2>
+<ul>
+<li>JavaScript はもともとWebブラウザの中で, ページの表現をリッチにするためのプログラミング言語だったが, 単体の JavaScript 実行処理系として切り出されたのが Node.js</li>
+<li>つまり Node.js = 普通の (ブラウザと無関係な) JavaScript の実行環境
+<ul>
+<li>Python プログラムを実行するためにPython処理系 (<code>python</code> コマンド)があるのと同じように JavaScript に対して Node.js (<code>node</code>コマンド) がある</li>
+</ul>
+</li>
+<li><code>Node.js</code> というとまるでそれ自身がJavaScriptのプログラムのようだがそうではない (このネーミングセンスは理解不能)</li>
+<li>JavaScript で書かれたソフトウェアは npm (Node Package Manager) という仕組みで配布・インストールされることが多い
+<ul>
+<li>つまりPython にとっての pip が JavaScript にとってはnpm</li>
+</ul>
+</li>
+<li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的</li>
+<li>そこで以下では nvm, npm, ビルド手順, の順に説明する</li>
+</ul>
+<h2 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h2>
+<ul>
+<li><code>nvm</code>コマンド自身は<a href="https://github.com/nvm-sh/nvm">公式レポジトリ</a> の指示にしたがって最新版を入れる</li>
+<li>2025/09/30 時点での指示は以下</li>
+</ul>
+<pre><code>$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+</code></pre>
+<ul>
+<li>実行すると以下のように, シェルのスタートアップファイル(<code>~/.bashrc</code>)を「勝手に設定を書き加えたからね」と報告して勝手に書き換えるので一応確認しておく</li>
+<li>問題なければ一度ログアウトしてログインし直す</li>
+</ul>
+<pre><code>$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 16631  100 16631    0     0   291k      0 --:--:-- --:--:-- --:--:--  300k
+=&gt; Downloading nvm from git to '/home/tau/.nvm'
+=&gt; Cloning into '/home/tau/.nvm'...
+remote: Enumerating objects: 383, done.
+remote: Counting objects: 100% (383/383), done.
+remote: Compressing objects: 100% (326/326), done.
+remote: Total 383 (delta 43), reused 179 (delta 29), pack-reused 0 (from 0)
+Receiving objects: 100% (383/383), 391.78 KiB | 4.84 MiB/s, done.
+Resolving deltas: 100% (43/43), done.
+* (HEAD detached at FETCH_HEAD)
+  master
+=&gt; Compressing and cleaning up git repository
+
+=&gt; Appending nvm source string to /home/tau/.bashrc
+=&gt; Appending bash_completion source string to /home/tau/.bashrc
+=&gt; Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] &amp;&amp; \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] &amp;&amp; \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+</code></pre>
+<ul>
+<li><code>nvm</code>コマンドが実行されるかを確認</li>
+</ul>
+<pre><code>$ nvm --help
+</code></pre>
+<h2 id="nodejs-node-のインストールと切り替え"><a class="header" href="#nodejs-node-のインストールと切り替え">Node.js (<code>node</code>) のインストールと切り替え</a></h2>
+<h3 id="node-のインストール--nvm-install"><a class="header" href="#node-のインストール--nvm-install"><code>node</code> のインストール = nvm install</a></h3>
+<ul>
+<li><code>nvm</code>コマンドがインストールできたら</li>
+</ul>
+<pre><code>$ nvm install node
+</code></pre>
+<p>とすると最新版の<code>node</code>, <code>npm</code>がインストールされる</p>
+<ul>
+<li>確認</li>
+</ul>
+<pre><code>$ which node
+/home/tau/.nvm/versions/node/v24.9.0/bin/node
+$ which npm
+/home/tau/.nvm/versions/node/v24.9.0/bin/npm
+</code></pre>
+<ul>
+<li>特定バージョン(例: 20)をインストールしたければ,</li>
+</ul>
+<pre><code>$ nvm install 20
+</code></pre>
+<p>のようにする</p>
+<h3 id="node-の切り替え--nvm-use"><a class="header" href="#node-の切り替え--nvm-use"><code>node</code> の切り替え = nvm use</a></h3>
+<ul>
+<li>複数のバージョンをインストールしたら</li>
+</ul>
+<pre><code>$ nvm use node
+$ nvm use 20
+</code></pre>
+<p>などで, 使う<code>node</code>のバージョンを切り替えられる</p>
+<pre><code>$ which node
+$ node -v
+</code></pre>
+<p>などで確認</p>
+<h2 id="npm"><a class="header" href="#npm">npm</a></h2>
+<h3 id="ディレクトリごとのインストール"><a class="header" href="#ディレクトリごとのインストール">ディレクトリごとのインストール</a></h3>
+<ul>
+<li>npm は, node パッケージを管理するツールであり, パッケージをインストールするには</li>
+</ul>
+<pre><code>$ npm install パッケージ名
+</code></pre>
+<p>とする</p>
+<ul>
+<li>これで, 指定したパッケージとともに, それが依存する他のパッケージもインストールされる</li>
+<li>ファイルは, カレントディレクトリに <code>node_modules</code> というディレクトリがなければ作られその下にインストールされる</li>
+<li>つまり, <code>npm</code>を実行したディレクトリごとに「別の環境 (Pythonのvenv相当のもの)」が作られるということになる</li>
+<li>インストールされたパッケージ, それが依存しているパッケージは <code>package.json</code>, <code>package-lock.json</code> というファイルに記録される</li>
+</ul>
+<h3 id="グローバルなインストール-この演習では不要"><a class="header" href="#グローバルなインストール-この演習では不要">グローバルなインストール (この演習では不要)</a></h3>
+<ul>
+<li>普段から使うようなソフトは</li>
+</ul>
+<pre><code>$ npm install -g パッケージ名
+</code></pre>
+<p>で, 共通のディレクトリにインストールすることも可能</p>
+<ul>
+<li>グローバルと言っても, <code>nvm</code> を使って導入した <code>npm</code> の場合, あくまでユーザのホームディレクトリの下 (<code>~/.nvm</code>) にインストールされる</li>
+</ul>
+<h2 id="ビルド-1"><a class="header" href="#ビルド-1">ビルド</a></h2>
+<ul>
+<li>Python同様, 多くのプロジェクトは github にレポジトリがある</li>
+<li>ソースツリーを入手したら通常そのトップディレクトリに <code>package.json</code> がある</li>
+<li>そこで</li>
+</ul>
+<pre><code>$ npm install .
+</code></pre>
+<p>を実行すると, ソースツリー及びそれが依存しているパッケージ (<code>package.json</code>, <code>package-lock.json</code> から読み込まれる) がインストールされる</p>
+<ul>
+<li>別のやり方として,</li>
+</ul>
+<pre><code>$ npm install
+$ npm link
+</code></pre>
+<p>とすると, はじめのコマンドでは以前するパッケージだけがインストールされ, 2つ目のコマンドではソースツリー中のファイルへのリンクがインストールされる</p>
+<ul>
+<li>この方法だとその後ソースツリー中のソースコードを変更すればそれがひとりでに反映される</li>
+<li><code>pip</code>の <code>pip install -e .</code>と似た効果を持つ</li>
+</ul>
+<h2 id="パッケージの検索-1"><a class="header" href="#パッケージの検索-1">パッケージの検索</a></h2>
+<ul>
+<li><code>npm search</code>コマンドで検索することもできる</li>
+</ul>
+<pre><code>npm search キーワード
+</code></pre>
+<ul>
+<li><a href="https://www.npmjs.com/">npm</a> ホームページで検索することもできる</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rust--cargo-編"><a class="header" href="#rust--cargo-編">Rust + cargo 編</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ソースコードを検索する"><a class="header" href="#ソースコードを検索する">ソースコードを検索する</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="grep"><a class="header" href="#grep">grep</a></h1>

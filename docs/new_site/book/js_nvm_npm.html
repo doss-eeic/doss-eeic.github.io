@@ -29,6 +29,7 @@
         <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/numbered.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -175,7 +176,151 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">Javascript (node.js) + nvm + npm 編</a></h1>
+                        <h1 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">JavaScript (Node.js) : nvm + npm 編</a></h1>
+<h2 id="基本"><a class="header" href="#基本">基本</a></h2>
+<ul>
+<li>JavaScript はもともとWebブラウザの中で, ページの表現をリッチにするためのプログラミング言語だったが, 単体の JavaScript 実行処理系として切り出されたのが Node.js</li>
+<li>つまり Node.js = 普通の (ブラウザと無関係な) JavaScript の実行環境
+<ul>
+<li>Python プログラムを実行するためにPython処理系 (<code>python</code> コマンド)があるのと同じように JavaScript に対して Node.js (<code>node</code>コマンド) がある</li>
+</ul>
+</li>
+<li><code>Node.js</code> というとまるでそれ自身がJavaScriptのプログラムのようだがそうではない (このネーミングセンスは理解不能)</li>
+<li>JavaScript で書かれたソフトウェアは npm (Node Package Manager) という仕組みで配布・インストールされることが多い
+<ul>
+<li>つまりPython にとっての pip が JavaScript にとってはnpm</li>
+</ul>
+</li>
+<li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的</li>
+<li>そこで以下では nvm, npm, ビルド手順, の順に説明する</li>
+</ul>
+<h2 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h2>
+<ul>
+<li><code>nvm</code>コマンド自身は<a href="https://github.com/nvm-sh/nvm">公式レポジトリ</a> の指示にしたがって最新版を入れる</li>
+<li>2025/09/30 時点での指示は以下</li>
+</ul>
+<pre><code>$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+</code></pre>
+<ul>
+<li>実行すると以下のように, シェルのスタートアップファイル(<code>~/.bashrc</code>)を「勝手に設定を書き加えたからね」と報告して勝手に書き換えるので一応確認しておく</li>
+<li>問題なければ一度ログアウトしてログインし直す</li>
+</ul>
+<pre><code>$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 16631  100 16631    0     0   291k      0 --:--:-- --:--:-- --:--:--  300k
+=&gt; Downloading nvm from git to '/home/tau/.nvm'
+=&gt; Cloning into '/home/tau/.nvm'...
+remote: Enumerating objects: 383, done.
+remote: Counting objects: 100% (383/383), done.
+remote: Compressing objects: 100% (326/326), done.
+remote: Total 383 (delta 43), reused 179 (delta 29), pack-reused 0 (from 0)
+Receiving objects: 100% (383/383), 391.78 KiB | 4.84 MiB/s, done.
+Resolving deltas: 100% (43/43), done.
+* (HEAD detached at FETCH_HEAD)
+  master
+=&gt; Compressing and cleaning up git repository
+
+=&gt; Appending nvm source string to /home/tau/.bashrc
+=&gt; Appending bash_completion source string to /home/tau/.bashrc
+=&gt; Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] &amp;&amp; \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] &amp;&amp; \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+</code></pre>
+<ul>
+<li><code>nvm</code>コマンドが実行されるかを確認</li>
+</ul>
+<pre><code>$ nvm --help
+</code></pre>
+<h2 id="nodejs-node-のインストールと切り替え"><a class="header" href="#nodejs-node-のインストールと切り替え">Node.js (<code>node</code>) のインストールと切り替え</a></h2>
+<h3 id="node-のインストール--nvm-install"><a class="header" href="#node-のインストール--nvm-install"><code>node</code> のインストール = nvm install</a></h3>
+<ul>
+<li><code>nvm</code>コマンドがインストールできたら</li>
+</ul>
+<pre><code>$ nvm install node
+</code></pre>
+<p>とすると最新版の<code>node</code>, <code>npm</code>がインストールされる</p>
+<ul>
+<li>確認</li>
+</ul>
+<pre><code>$ which node
+/home/tau/.nvm/versions/node/v24.9.0/bin/node
+$ which npm
+/home/tau/.nvm/versions/node/v24.9.0/bin/npm
+</code></pre>
+<ul>
+<li>特定バージョン(例: 20)をインストールしたければ,</li>
+</ul>
+<pre><code>$ nvm install 20
+</code></pre>
+<p>のようにする</p>
+<h3 id="node-の切り替え--nvm-use"><a class="header" href="#node-の切り替え--nvm-use"><code>node</code> の切り替え = nvm use</a></h3>
+<ul>
+<li>複数のバージョンをインストールしたら</li>
+</ul>
+<pre><code>$ nvm use node
+$ nvm use 20
+</code></pre>
+<p>などで, 使う<code>node</code>のバージョンを切り替えられる</p>
+<pre><code>$ which node
+$ node -v
+</code></pre>
+<p>などで確認</p>
+<h2 id="npm"><a class="header" href="#npm">npm</a></h2>
+<h3 id="ディレクトリごとのインストール"><a class="header" href="#ディレクトリごとのインストール">ディレクトリごとのインストール</a></h3>
+<ul>
+<li>npm は, node パッケージを管理するツールであり, パッケージをインストールするには</li>
+</ul>
+<pre><code>$ npm install パッケージ名
+</code></pre>
+<p>とする</p>
+<ul>
+<li>これで, 指定したパッケージとともに, それが依存する他のパッケージもインストールされる</li>
+<li>ファイルは, カレントディレクトリに <code>node_modules</code> というディレクトリがなければ作られその下にインストールされる</li>
+<li>つまり, <code>npm</code>を実行したディレクトリごとに「別の環境 (Pythonのvenv相当のもの)」が作られるということになる</li>
+<li>インストールされたパッケージ, それが依存しているパッケージは <code>package.json</code>, <code>package-lock.json</code> というファイルに記録される</li>
+</ul>
+<h3 id="グローバルなインストール-この演習では不要"><a class="header" href="#グローバルなインストール-この演習では不要">グローバルなインストール (この演習では不要)</a></h3>
+<ul>
+<li>普段から使うようなソフトは</li>
+</ul>
+<pre><code>$ npm install -g パッケージ名
+</code></pre>
+<p>で, 共通のディレクトリにインストールすることも可能</p>
+<ul>
+<li>グローバルと言っても, <code>nvm</code> を使って導入した <code>npm</code> の場合, あくまでユーザのホームディレクトリの下 (<code>~/.nvm</code>) にインストールされる</li>
+</ul>
+<h2 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h2>
+<ul>
+<li>Python同様, 多くのプロジェクトは github にレポジトリがある</li>
+<li>ソースツリーを入手したら通常そのトップディレクトリに <code>package.json</code> がある</li>
+<li>そこで</li>
+</ul>
+<pre><code>$ npm install .
+</code></pre>
+<p>を実行すると, ソースツリー及びそれが依存しているパッケージ (<code>package.json</code>, <code>package-lock.json</code> から読み込まれる) がインストールされる</p>
+<ul>
+<li>別のやり方として,</li>
+</ul>
+<pre><code>$ npm install
+$ npm link
+</code></pre>
+<p>とすると, はじめのコマンドでは以前するパッケージだけがインストールされ, 2つ目のコマンドではソースツリー中のファイルへのリンクがインストールされる</p>
+<ul>
+<li>この方法だとその後ソースツリー中のソースコードを変更すればそれがひとりでに反映される</li>
+<li><code>pip</code>の <code>pip install -e .</code>と似た効果を持つ</li>
+</ul>
+<h2 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h2>
+<ul>
+<li><code>npm search</code>コマンドで検索することもできる</li>
+</ul>
+<pre><code>npm search キーワード
+</code></pre>
+<ul>
+<li><a href="https://www.npmjs.com/">npm</a> ホームページで検索することもできる</li>
+</ul>
 
                     </main>
 
