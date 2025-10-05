@@ -184,7 +184,9 @@
 <li>Pythonプログラムは通常「ビルド」という手順は不要で, <code>pip</code>もソースコード (.py) をインストールするので原理的には <code>pip</code> でソースコードを入手可能だが, 通常は git でダウンロードする</li>
 <li>git でソースコードをダウンロードした場合も <code>pip</code> を使ってそのソースコードを適切な場所に配置するため結局 <code>pip</code> が必要となる</li>
 <li>そこで以下では venv, pip, ビルド手順, の順に説明する</li>
+<li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kls-rZkyvZc?si=rrMb9q5xkj7gOCMB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 <h2 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h2>
 <ul>
 <li>Pythonの<code>venv</code>は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
@@ -245,7 +247,7 @@ $ which pip
 </ul>
 <h3 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h3>
 <ul>
-<li>かつては <code>pip search 文字列</code> というコマンドで検索できていたがあるときからその機能が廃止され, https://pypi.org/ から探せということになった (理解不能)</li>
+<li>かつては <code>pip search 文字列</code> というコマンドで検索できていたがあるときからその機能が廃止され, <a href="https://pypi.org/">https://pypi.org/</a> から探せということになった (理解不能)</li>
 </ul>
 <h2 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h2>
 <ul>
@@ -262,6 +264,12 @@ $ which pip
 </ul>
 </li>
 <li>ソースコードを修正すればそれがそのまま反映されるので, 開発するのに便利</li>
+</ul>
+<h2 id="練習"><a class="header" href="#練習">練習</a></h2>
+<ul>
+<li>Pythonのライブラリ <code>art</code> のgithubレポジトリを見つけ,</li>
+<li>コードをダウンロード (git clone),</li>
+<li><code>pip install -e</code> で開発用インストールを行ってみよ</li>
 </ul>
 
                     </main>

@@ -179,13 +179,14 @@
                         <h1 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">JavaScript (Node.js) : nvm + npm 編</a></h1>
 <h2 id="基本"><a class="header" href="#基本">基本</a></h2>
 <ul>
-<li>JavaScript はもともとWebブラウザの中で, ページの表現をリッチにするためのプログラミング言語だったが, 単体の JavaScript 実行処理系として切り出されたのが Node.js</li>
+<li>JavaScript はもともとWebページの一部として書いて, 動的なページを作るためのプログラミング言語だった</li>
+<li>したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが Node.js</li>
 <li>つまり Node.js = 普通の (ブラウザと無関係な) JavaScript の実行環境
 <ul>
 <li>Python プログラムを実行するためにPython処理系 (<code>python</code> コマンド)があるのと同じように JavaScript に対して Node.js (<code>node</code>コマンド) がある</li>
+<li><code>Node.js</code> というとまるでそれ自身がJavaScriptのプログラムのようだがそうではない (このネーミングは理解不能)</li>
 </ul>
 </li>
-<li><code>Node.js</code> というとまるでそれ自身がJavaScriptのプログラムのようだがそうではない (このネーミングセンスは理解不能)</li>
 <li>JavaScript で書かれたソフトウェアは npm (Node Package Manager) という仕組みで配布・インストールされることが多い
 <ul>
 <li>つまりPython にとっての pip が JavaScript にとってはnpm</li>
@@ -193,7 +194,9 @@
 </li>
 <li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的</li>
 <li>そこで以下では nvm, npm, ビルド手順, の順に説明する</li>
+<li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XTL8mTJnKng?si=Q2YTc52JqA3144-d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 <h2 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h2>
 <ul>
 <li><code>nvm</code>コマンド自身は<a href="https://github.com/nvm-sh/nvm">公式レポジトリ</a> の指示にしたがって最新版を入れる</li>
@@ -203,23 +206,13 @@
 </code></pre>
 <ul>
 <li>実行すると以下のように, シェルのスタートアップファイル(<code>~/.bashrc</code>)を「勝手に設定を書き加えたからね」と報告して勝手に書き換えるので一応確認しておく</li>
-<li>問題なければ一度ログアウトしてログインし直す</li>
 </ul>
 <pre><code>$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 16631  100 16631    0     0   291k      0 --:--:-- --:--:-- --:--:--  300k
-=&gt; Downloading nvm from git to '/home/tau/.nvm'
-=&gt; Cloning into '/home/tau/.nvm'...
-remote: Enumerating objects: 383, done.
-remote: Counting objects: 100% (383/383), done.
-remote: Compressing objects: 100% (326/326), done.
-remote: Total 383 (delta 43), reused 179 (delta 29), pack-reused 0 (from 0)
-Receiving objects: 100% (383/383), 391.78 KiB | 4.84 MiB/s, done.
-Resolving deltas: 100% (43/43), done.
-* (HEAD detached at FETCH_HEAD)
-  master
-=&gt; Compressing and cleaning up git repository
+
+   ... &lt;省略&gt; ...
 
 =&gt; Appending nvm source string to /home/tau/.bashrc
 =&gt; Appending bash_completion source string to /home/tau/.bashrc
@@ -230,19 +223,34 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] &amp;&amp; \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 </code></pre>
 <ul>
+<li>注:
+<ul>
+<li><code>~/.bashrc</code> はログイン時に自動的に実行されるものではない (対話的シェルを起動したときに実行される)</li>
+<li>bash を使っている場合, ログインしたときに自動的に実行されるようにするには同じ内容を,  <code>~/.bash_profile</code> にも書かなければならない</li>
+<li>bash以外のシェル (zsh, fishなど) を使っている人はメッセージを見ながら適切に設定してください</li>
+</ul>
+</li>
+<li>問題なければ一度ログアウトしてログインし直す</li>
 <li><code>nvm</code>コマンドが実行されるかを確認</li>
 </ul>
 <pre><code>$ nvm --help
 </code></pre>
 <h2 id="nodejs-node-のインストールと切り替え"><a class="header" href="#nodejs-node-のインストールと切り替え">Node.js (<code>node</code>) のインストールと切り替え</a></h2>
-<h3 id="node-のインストール--nvm-install"><a class="header" href="#node-のインストール--nvm-install"><code>node</code> のインストール = nvm install</a></h3>
+<h3 id="nodenpm-のインストール--nvm-install"><a class="header" href="#nodenpm-のインストール--nvm-install"><code>node</code>/<code>npm</code> のインストール = nvm install</a></h3>
 <ul>
-<li><code>nvm</code>コマンドがインストールできたら</li>
+<li><code>nvm</code>コマンドがインストールできたら<code>nvm install ...</code> で<code>node</code>/<code>npm</code> をインストールできる</li>
 </ul>
 <pre><code>$ nvm install node
 </code></pre>
 <p>とすると最新版の<code>node</code>, <code>npm</code>がインストールされる</p>
 <ul>
+<li>特定バージョン(例: 20)をインストールしたければ,</li>
+</ul>
+<pre><code>$ nvm install 20
+</code></pre>
+<p>のようにする</p>
+<ul>
+<li>インストール先は <code>~/.nvm</code> の下, バージョンごとのディレクトリ</li>
 <li>確認</li>
 </ul>
 <pre><code>$ which node
@@ -250,26 +258,28 @@ export NVM_DIR="$HOME/.nvm"
 $ which npm
 /home/tau/.nvm/versions/node/v24.9.0/bin/npm
 </code></pre>
+<h3 id="nodenpm-の切り替え--nvm-use"><a class="header" href="#nodenpm-の切り替え--nvm-use"><code>node</code>/<code>npm</code> の切り替え = nvm use</a></h3>
 <ul>
-<li>特定バージョン(例: 20)をインストールしたければ,</li>
-</ul>
-<pre><code>$ nvm install 20
-</code></pre>
-<p>のようにする</p>
-<h3 id="node-の切り替え--nvm-use"><a class="header" href="#node-の切り替え--nvm-use"><code>node</code> の切り替え = nvm use</a></h3>
-<ul>
-<li>複数のバージョンをインストールしたら</li>
+<li><code>nvm</code>で複数のバージョンの<code>node</code>/<code>npm</code>をインストールしたら <code>nvm use ...</code> で, 利用する<code>node</code>/<code>npm</code>のバージョンを切り替えられる</li>
 </ul>
 <pre><code>$ nvm use node
-$ nvm use 20
 </code></pre>
-<p>などで, 使う<code>node</code>のバージョンを切り替えられる</p>
-<pre><code>$ which node
-$ node -v
+<p>は最新版を使う指定</p>
+<ul>
+<li>バージョンを指定したい場合は</li>
+</ul>
+<pre><code>$ nvm use 20
 </code></pre>
-<p>などで確認</p>
-<h2 id="npm"><a class="header" href="#npm">npm</a></h2>
-<h3 id="ディレクトリごとのインストール"><a class="header" href="#ディレクトリごとのインストール">ディレクトリごとのインストール</a></h3>
+<p>など</p>
+<ul>
+<li><code>node</code>, <code>npm</code> が起動できることと, バージョンを確認</li>
+</ul>
+<pre><code>$ node -v
+v24.9.0
+$ npm -v
+11.6.0
+</code></pre>
+<h2 id="npm-概論"><a class="header" href="#npm-概論">npm 概論</a></h2>
 <ul>
 <li>npm は, node パッケージを管理するツールであり, パッケージをインストールするには</li>
 </ul>
@@ -277,41 +287,123 @@ $ node -v
 </code></pre>
 <p>とする</p>
 <ul>
-<li>これで, 指定したパッケージとともに, それが依存する他のパッケージもインストールされる</li>
-<li>ファイルは, カレントディレクトリに <code>node_modules</code> というディレクトリがなければ作られその下にインストールされる</li>
+<li>これで, <strong>指定したパッケージ</strong> +  <strong>それが依存する他のパッケージ</strong> もインストールされる</li>
+<li>ファイルはカレントディレクトリ下の <code>node_modules</code> というディレクトリにインストールされる (存在していなければ作られる)</li>
 <li>つまり, <code>npm</code>を実行したディレクトリごとに「別の環境 (Pythonのvenv相当のもの)」が作られるということになる</li>
 <li>インストールされたパッケージ, それが依存しているパッケージは <code>package.json</code>, <code>package-lock.json</code> というファイルに記録される</li>
 </ul>
-<h3 id="グローバルなインストール-この演習では不要"><a class="header" href="#グローバルなインストール-この演習では不要">グローバルなインストール (この演習では不要)</a></h3>
+<h3 id="例"><a class="header" href="#例">例</a></h3>
 <ul>
-<li>普段から使うようなソフトは</li>
+<li><a href="https://www.npmjs.com/package/cowsay/v/1.4.0">cowsay</a> は牛がセリフを喋っているアスキー画を生成してくれる他愛のないコマンド</li>
+</ul>
+<pre><code>$ npm install cowsay
+
+added 41 packages in 2s
+
+3 packages are looking for funding
+  run `npm fund` for details
+$ ls
+node_modules/  package.json  package-lock.json
+</code></pre>
+<ul>
+<li>コマンド (実行可能ファイル) は<code>node_modules/.bin</code> 下にインストールされる</li>
+</ul>
+<pre><code>$ ls node_modules/.bin
+cowsay@  cowthink@
+$ node_modules/.bin/cowsay "I am sleepy"
+ _____________
+&lt; I am sleepy &gt;
+ -------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+</code></pre>
+<ul>
+<li>ライブラリとして使う場合は<a href="https://www.npmjs.com/package/cowsay/v/1.4.0">ホームページ</a>を参考にJavaScriptを書き, <code>node</code>コマンドで実行</li>
+<li>例えば以下のようなファイル <code>a.js</code> を, <code>npm install cowsay</code> を実行したディレクトリ (<code>node_modules</code> があるディレクトリ) に作り,</li>
+</ul>
+<pre><code>var cowsay = require("cowsay");
+
+console.log(cowsay.say({
+	text : "I'm a moooodule",
+	e : "oO",
+	T : "U "
+}));
+</code></pre>
+<ul>
+<li>以下で実行</li>
+</ul>
+<pre><code>$ node a.js
+</code></pre>
+<h3 id="参考-グローバルなインストール-この演習では不要"><a class="header" href="#参考-グローバルなインストール-この演習では不要">参考: グローバルなインストール (この演習では不要)</a></h3>
+<ul>
+<li><code>node_modules</code> の下に全てがインストールされるという仕様は, 環境がひとりでに隔離される(開発のためのファイルが普段使う環境を汚さない), 気軽にやり直せる (<code>node_modules</code>を削除すれば良い) という意味では便利だが, 普段から色々なところで使うソフトを入れる場合には不便でもある</li>
+<li><code>-g</code> を使うと, グローバルなディレクトリにインストールされる</li>
 </ul>
 <pre><code>$ npm install -g パッケージ名
 </code></pre>
-<p>で, 共通のディレクトリにインストールすることも可能</p>
 <ul>
-<li>グローバルと言っても, <code>nvm</code> を使って導入した <code>npm</code> の場合, あくまでユーザのホームディレクトリの下 (<code>~/.nvm</code>) にインストールされる</li>
+<li>「グローバルなディレクトリ」とは, <code>nvm</code> を使って導入した <code>npm</code> の場合, あくまでユーザのホームディレクトリの下 (<code>~/.nvm</code>) の下であって, 全ユーザ共通ということではない</li>
 </ul>
-<h2 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h2>
+<h2 id="ソースコードのダウンロード"><a class="header" href="#ソースコードのダウンロード">ソースコードのダウンロード</a></h2>
 <ul>
 <li>Python同様, 多くのプロジェクトは github にレポジトリがある</li>
-<li>ソースツリーを入手したら通常そのトップディレクトリに <code>package.json</code> がある</li>
-<li>そこで</li>
+<li>git clone でソースツリーを入手したら, 通常そのトップディレクトリに <code>package.json</code> がある</li>
+<li>ソースツリーに入って<code>npm install</code> (<strong>引数なし</strong>)を実行すると, <strong>依存しているパッケージだけ</strong> (<code>package.json</code>, <code>package-lock.json</code> から読み込まれる) が, <code>node_modules</code>へインストールされる</li>
+<li>例:</li>
 </ul>
-<pre><code>$ npm install .
+<pre><code>$ git clone git@github.com:piuccio/cowsay.git
+$ cd cowsay
+$ npm install
 </code></pre>
-<p>を実行すると, ソースツリー及びそれが依存しているパッケージ (<code>package.json</code>, <code>package-lock.json</code> から読み込まれる) がインストールされる</p>
 <ul>
-<li>別のやり方として,</li>
+<li><code>npm install パッケージ名</code> としたときと異なり, <strong>本体</strong> (<code>cowsay</code> <strong>自身</strong>)はインストールされないことに注意</li>
 </ul>
-<pre><code>$ npm install
-$ npm link
+<h2 id="開発用のビルド"><a class="header" href="#開発用のビルド">開発用のビルド</a></h2>
+<ul>
+<li>一般にJavaScript処理系 (<code>node</code> やブラウザ) はソースファイルを直接実行できるため, 特別なビルドのステップは不要な場合が多い</li>
+<li>必要なパッケージもあり, そのような場合は, <code>npm install</code>のあと,</li>
+</ul>
+<pre><code>$ npm run build
 </code></pre>
-<p>とすると, はじめのコマンドでは以前するパッケージだけがインストールされ, 2つ目のコマンドではソースツリー中のファイルへのリンクがインストールされる</p>
+<p>を実行する</p>
 <ul>
-<li>この方法だとその後ソースツリー中のソースコードを変更すればそれがひとりでに反映される</li>
-<li><code>pip</code>の <code>pip install -e .</code>と似た効果を持つ</li>
+<li>これが必要か否かは, <code>package.json</code>の <code>"scripts"</code> という属性の中に, <code>"build"</code> という属性があるかで判断する (<code>npm run build</code> は <code>package.json</code> -&gt; "scripts" -&gt; "build" に書かれているコマンドを実行する)</li>
+<li>この状態で, パッケージを使う準備がほぼ整っているが, 上述した動作 (<strong>ソースツリー内で</strong> <code>npm install</code> <strong>を実行してもそのパッケージ自身はインストールされない</strong>) のためやや注意が必要</li>
 </ul>
+<p>(a) <code>node_modules/.bin</code> 下にコマンドがインストールされないため, コマンドの動作を追跡したければそのソースファイルを突き止める必要がある</p>
+<ul>
+<li>それは <code>package.json</code> の <code>"bin"</code> という属性を見るとわかる</li>
+</ul>
+<pre><code>  "bin": {
+    "cowsay": "./cli.js",
+    "cowthink": "./cli.js"
+  },
+</code></pre>
+<ul>
+<li><code>:</code> の左側がインストールされた後のコマンド名, 右側がそのソースコード(ソースツリーのトップディレクトリからの相対パス)</li>
+<li>これを見て, ソースツリー直下の<code>cli.js</code> が <code>cowsay</code> コマンドの実体であるとわかる</li>
+</ul>
+<p>(b) <code>node_modules/</code> 下にインストールされないため, ライブラリとして使いながらデバッグする場合も, <code>require(パッケージ名)</code> ではダメで, <code>require(パス名)</code> とする必要がある</p>
+<ul>
+<li>例えば以下の <code>require("cowsay")</code> は <code>node_modules</code>下に <code>cowsay</code>がないため失敗する</li>
+</ul>
+<pre><code>var cowsay = require("cowsay");
+</code></pre>
+<ul>
+<li>代わりに (<code>git clone</code> を実行したフォルダで実行するのであれば)</li>
+</ul>
+<pre><code>var cowsay = require("./cowsay");
+</code></pre>
+<p>とする.</p>
+<ul>
+<li>または <code>cowsay</code> フォルダで実行するのであれば,</li>
+</ul>
+<pre><code>var cowsay = require(".");
+</code></pre>
+<p>でもよい</p>
 <h2 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h2>
 <ul>
 <li><code>npm search</code>コマンドで検索することもできる</li>
@@ -320,6 +412,18 @@ $ npm link
 </code></pre>
 <ul>
 <li><a href="https://www.npmjs.com/">npm</a> ホームページで検索することもできる</li>
+</ul>
+<h2 id="練習"><a class="header" href="#練習">練習</a></h2>
+<ul>
+<li>JavaScript のパッケージ <code>cowsay</code> のgithubレポジトリを見つけ,</li>
+<li>空のディレクトリを作り, コードをダウンロード (git clone),</li>
+<li>開発用インストール
+<ul>
+<li><code>cowsay</code> ディレクトリに入って <code>npm install</code></li>
+<li>(任意) <code>cowsay</code> の親ディレクトリで <code>npm install ./cowsay</code>
+を行ってみよ</li>
+</ul>
+</li>
 </ul>
 
                     </main>

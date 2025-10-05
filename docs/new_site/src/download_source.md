@@ -25,10 +25,10 @@ $ tar xvf xyz.tar.bz2
 
 ### 練習
 
-+ GNU hello というプログラムの tarball をダウンロードしてみよ
++ GNU awk というプログラムの tarball をダウンロードしてみよ
 + 空フォルダを作りそこでそれを解凍してみよ
 
-* 検索で見つけることを推奨するが見つからないときのため, 一応 [ここ](https://www.gnu.org/software/hello/)
+* 検索で見つけることを推奨するが見つからないときのため, 一応 [ここ](https://www.gnu.org/software/gawk/)
 
 ## github
 
@@ -63,6 +63,7 @@ $ sudo apt install git
 
 ### 練習
 
-+ `curl` という, (主に) webページをブラウザを使わず, コマンドラインでアクセスするツールのgit レポジトリを発見し, `git clone` してみよ
-* 見つからなかったときは[ここ](https://github.com/curl/curl)
++ Python のライブラリである `art` の git レポジトリを発見し, `git clone` してみよ
+  * 検索のヒント: python art github 
+* 見つからなければ [ここ](https://github.com/sepandhaghighi/art)
 

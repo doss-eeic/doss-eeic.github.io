@@ -7,6 +7,9 @@
 * Pythonプログラムは通常「ビルド」という手順は不要で, `pip`もソースコード (.py) をインストールするので原理的には `pip` でソースコードを入手可能だが, 通常は git でダウンロードする
 * git でソースコードをダウンロードした場合も `pip` を使ってそのソースコードを適切な場所に配置するため結局 `pip` が必要となる
 * そこで以下では venv, pip, ビルド手順, の順に説明する
+* 動画で概要を見たい人用 (倍速推奨)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kls-rZkyvZc?si=rrMb9q5xkj7gOCMB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## venv : virtual env 
 
@@ -61,7 +64,7 @@ pip install パッケージ名
 
 ### パッケージの検索
 
-* かつては `pip search 文字列` というコマンドで検索できていたがあるときからその機能が廃止され, https://pypi.org/ から探せということになった (理解不能)
+* かつては `pip search 文字列` というコマンドで検索できていたがあるときからその機能が廃止され, [https://pypi.org/](https://pypi.org/) から探せということになった (理解不能)
 
 ## ビルド
 
@@ -75,4 +78,9 @@ $ pip install -e .
   * 本来インストールされる場所からソースツリー中にシンボリックリンク・ショートカットのようなものができるとイメージすればよい
 * ソースコードを修正すればそれがそのまま反映されるので, 開発するのに便利
 
+## 練習
+
+* Pythonのライブラリ `art` のgithubレポジトリを見つけ, 
+* コードをダウンロード (git clone), 
+* `pip install -e` で開発用インストールを行ってみよ
 
