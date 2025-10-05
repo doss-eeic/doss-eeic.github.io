@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="134.99599mm"
+   height="167.97935mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="goal.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible">
+      <path
+         id="path3834"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="68.690373"
+     inkscape:cy="356.58385"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1025"
+     inkscape:window-height="650"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="レイヤー 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-39.291098,-9.0461577)">
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path2985"
+       sodipodi:cx="128.57143"
+       sodipodi:cy="433.79074"
+       sodipodi:rx="77.14286"
+       sodipodi:ry="47.142857"
+       d="m 205.71095,434.22894 a 77.14286,47.142857 0 0 1 -77.54672,46.704 77.14286,47.142857 0 0 1 -76.735603,-47.20168 77.14286,47.142857 0 0 1 76.930263,-47.0832 77.14286,47.142857 0 0 1 77.35363,46.82344"
+       sodipodi:start="0.0092952571"
+       sodipodi:end="6.2764134"
+       sodipodi:open="true"
+       transform="matrix(1.0714294,0,0,1.0204595,-14.739549,152.13503)"
+       sodipodi:arc-type="arc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="123.17085"
+       y="577.01685"
+       id="text2995"><tspan
+         sodipodi:role="line"
+         id="tspan2997"
+         x="123.17085"
+         y="577.01685"
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle">プログラミング演習</tspan><tspan
+         sodipodi:role="line"
+         x="123.17085"
+         y="597.01685"
+         id="tspan3001"
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle">アルゴリズム</tspan><tspan
+         sodipodi:role="line"
+         x="123.17085"
+         y="617.01685"
+         id="tspan3005"
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle">G1G2G3</tspan><tspan
+         sodipodi:role="line"
+         x="123.17085"
+         y="637.01685"
+         id="tspan3007"
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle">...</tspan></text>
+    <path
+       transform="matrix(2.1307057,0,0,2.1966861,109.06877,-838.10118)"
+       sodipodi:open="true"
+       sodipodi:end="6.2764134"
+       sodipodi:start="0.0092952571"
+       d="m 205.71095,434.22894 a 77.14286,47.142857 0 0 1 -77.54672,46.704 77.14286,47.142857 0 0 1 -76.735603,-47.20168 77.14286,47.142857 0 0 1 76.930263,-47.0832 77.14286,47.142857 0 0 1 77.35363,46.82344"
+       sodipodi:ry="47.142857"
+       sodipodi:rx="77.14286"
+       sodipodi:cy="433.79074"
+       sodipodi:cx="128.57143"
+       id="path3009"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       sodipodi:type="arc"
+       sodipodi:arc-type="arc" />
+    <text
+       id="text3021"
+       y="51.016853"
+       x="383.17084"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         id="tspan3029"
+         y="51.016853"
+         x="383.17084"
+         sodipodi:role="line">実用ソフト</tspan><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         y="71.016853"
+         x="383.17084"
+         sodipodi:role="line"
+         id="tspan3042">コンパイラ(gcc, llvm, python, ...), </tspan><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         y="91.016853"
+         x="383.17084"
+         sodipodi:role="line"
+         id="tspan3048">データベース(sqlite, mariadb, ...), </tspan><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         y="111.01685"
+         x="383.17084"
+         sodipodi:role="line"
+         id="tspan3050">ブラウザ(firefox, chrome, ...)</tspan><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         y="131.01685"
+         x="383.17084"
+         sodipodi:role="line"
+         id="tspan3052">シェル(bash, tcsh, ...)</tspan><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         y="151.01685"
+         x="383.17084"
+         sodipodi:role="line"
+         id="tspan3054">OS (Linux, FreeBSD, Windows, Mac, ...)</tspan><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         y="171.01685"
+         x="383.17084"
+         sodipodi:role="line"
+         id="tspan3046">オフィス (LibreOffice, Goffice, ...)</tspan><tspan
+         style="font-size:16px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+         y="191.01685"
+         x="383.17084"
+         sodipodi:role="line"
+         id="tspan4294">...</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 127.67512,543.85445 c 0,0 5.96713,-68.14407 73.74114,-123.23861 67.77401,-55.09454 83.29432,-12.73702 134.35029,-63.63961 51.05596,-50.90259 42.4264,-140.4112 42.4264,-140.4112"
+       id="path3056"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="czzc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none"
+       x="155.56349"
+       y="391.72241"
+       id="text4290"><tspan
+         sodipodi:role="line"
+         id="tspan4292"
+         x="155.56349"
+         y="391.72241"
+         style="font-size:40px;line-height:1.25;font-family:sans-serif;fill:#0000ff">この差は何なのだろう?</tspan></text>
+  </g>
+</svg>
