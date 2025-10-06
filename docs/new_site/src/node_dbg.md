@@ -1,5 +1,13 @@
-# JavaScript (node.js) 編
+<div style="counter-reset: h1 6"></div>
+<div style="counter-reset: h2 1;"></div>
 
-* 動画で概要を見たい人用 (倍速推奨)
+## JavaScript (node.js) 編
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yHCnxvl01xE?si=COsUBaJ2_lndorDf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+### <font color="green">練習</font>
+
+* cowsay もしくはお手頃な JavaScript で書かれたソフトに変更を施してみよ
+* 題材は何でもよい (目標はあくまで開発用インストール手順や, デバッガの使い方の練習)
+* 以下の動画では cowsay に「尻尾を変更するオプションを追加する」というお題を例にとって説明しているのでそれをやるのでもよい
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B45opH38rOI?si=ZA3SHU7m_qG7Foir&amp;start=630" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+

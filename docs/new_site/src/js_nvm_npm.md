@@ -1,6 +1,9 @@
-# JavaScript (Node.js) : nvm + npm 編
+<div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 2;"></div>
 
-## 基本
+## JavaScript (Node.js) : nvm + npm 編
+
+### 概要
 
 * JavaScript はもともとWebページの一部として書いて, 動的なページを作るためのプログラミング言語だった
 * したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが Node.js
@@ -11,11 +14,8 @@
   * つまりPython にとっての pip が JavaScript にとってはnpm
 * Node.js は `node` のバージョンによって動作が変わることが多いため, 複数の `node` のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的
 * そこで以下では nvm, npm, ビルド手順, の順に説明する
-* 動画で概要を見たい人用 (倍速推奨)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/XTL8mTJnKng?si=Q2YTc52JqA3144-d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-## nvmをインストール
+### nvmをインストール
 
 * `nvm`コマンド自身は[公式レポジトリ](https://github.com/nvm-sh/nvm) の指示にしたがって最新版を入れる
 * 2025/09/30 時点での指示は以下
@@ -49,9 +49,9 @@ export NVM_DIR="$HOME/.nvm"
 $ nvm --help
 ```
 
-## Node.js (`node`) のインストールと切り替え
+### Node.js (`node`, `npm`) のインストールと切り替え
 
-### `node`/`npm` のインストール = nvm install
+#### `node`/`npm` のインストール = nvm install
 
 * `nvm`コマンドがインストールできたら`nvm install ...` で`node`/`npm` をインストールできる
 ```
@@ -72,7 +72,7 @@ $ which npm
 /home/tau/.nvm/versions/node/v24.9.0/bin/npm
 ```
 
-### `node`/`npm` の切り替え = nvm use
+#### `node`/`npm` の切り替え = nvm use
 
 * `nvm`で複数のバージョンの`node`/`npm`をインストールしたら `nvm use ...` で, 利用する`node`/`npm`のバージョンを切り替えられる
 ```
@@ -92,7 +92,7 @@ $ npm -v
 11.6.0
 ```
 
-## npm 概論
+### npm 概論
 
 * npm は, node パッケージを管理するツールであり, パッケージをインストールするには
 ```
@@ -104,7 +104,7 @@ $ npm install パッケージ名
 * つまり, `npm`を実行したディレクトリごとに「別の環境 (Pythonのvenv相当のもの)」が作られるということになる
 * インストールされたパッケージ, それが依存しているパッケージは `package.json`, `package-lock.json` というファイルに記録される
 
-### 例
+#### 例
 
 * [cowsay](https://www.npmjs.com/package/cowsay/v/1.4.0) は牛がセリフを喋っているアスキー画を生成してくれる他愛のないコマンド
 
@@ -148,7 +148,7 @@ console.log(cowsay.say({
 $ node a.js
 ```
 
-### 参考: グローバルなインストール (この演習では不要)
+#### 参考: グローバルなインストール (この演習では不要)
 
 * `node_modules` の下に全てがインストールされるという仕様は, 環境がひとりでに隔離される(開発のためのファイルが普段使う環境を汚さない), 気軽にやり直せる (`node_modules`を削除すれば良い) という意味では便利だが, 普段から色々なところで使うソフトを入れる場合には不便でもある
 * `-g` を使うと, グローバルなディレクトリにインストールされる
@@ -157,7 +157,7 @@ $ npm install -g パッケージ名
 ```
 * 「グローバルなディレクトリ」とは, `nvm` を使って導入した `npm` の場合, あくまでユーザのホームディレクトリの下 (`~/.nvm`) の下であって, 全ユーザ共通ということではない
 
-## ソースコードのダウンロード
+### ソースコードのダウンロード
 
 * Python同様, 多くのプロジェクトは github にレポジトリがある
 * git clone でソースツリーを入手したら, 通常そのトップディレクトリに `package.json` がある
@@ -170,7 +170,7 @@ $ npm install
 ```
 * `npm install パッケージ名` としたときと異なり, **本体** (`cowsay` **自身**)はインストールされないことに注意
 
-## 開発用のビルド
+### 開発用のビルド
 
 * 一般にJavaScript処理系 (`node` やブラウザ) はソースファイルを直接実行できるため, 特別なビルドのステップは不要な場合が多い
 * 必要なパッケージもあり, そのような場合は, `npm install`のあと, 
@@ -208,7 +208,7 @@ var cowsay = require(".");
 ```
 でもよい
 
-## パッケージの検索
+### パッケージの検索
 
 * `npm search`コマンドで検索することもできる
 ```
@@ -216,7 +216,7 @@ npm search キーワード
 ```
 * [npm](https://www.npmjs.com/) ホームページで検索することもできる
 
-## 練習
+### <font color="green">練習</font>
 
 * JavaScript のパッケージ `cowsay` のgithubレポジトリを見つけ, 
 * 空のディレクトリを作り, コードをダウンロード (git clone), 
@@ -225,3 +225,4 @@ npm search キーワード
   + (任意) `cowsay` の親ディレクトリで `npm install ./cowsay`
 を行ってみよ 
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B45opH38rOI?si=ZA3SHU7m_qG7Foir&amp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

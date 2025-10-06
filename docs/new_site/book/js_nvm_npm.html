@@ -176,8 +176,10 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">JavaScript (Node.js) : nvm + npm 編</a></h1>
-<h2 id="基本"><a class="header" href="#基本">基本</a></h2>
+                        <div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 2;"></div>
+<h2 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">JavaScript (Node.js) : nvm + npm 編</a></h2>
+<h3 id="概要"><a class="header" href="#概要">概要</a></h3>
 <ul>
 <li>JavaScript はもともとWebページの一部として書いて, 動的なページを作るためのプログラミング言語だった</li>
 <li>したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが Node.js</li>
@@ -194,10 +196,8 @@
 </li>
 <li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的</li>
 <li>そこで以下では nvm, npm, ビルド手順, の順に説明する</li>
-<li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/XTL8mTJnKng?si=Q2YTc52JqA3144-d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<h2 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h2>
+<h3 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h3>
 <ul>
 <li><code>nvm</code>コマンド自身は<a href="https://github.com/nvm-sh/nvm">公式レポジトリ</a> の指示にしたがって最新版を入れる</li>
 <li>2025/09/30 時点での指示は以下</li>
@@ -235,8 +235,8 @@ export NVM_DIR="$HOME/.nvm"
 </ul>
 <pre><code>$ nvm --help
 </code></pre>
-<h2 id="nodejs-node-のインストールと切り替え"><a class="header" href="#nodejs-node-のインストールと切り替え">Node.js (<code>node</code>) のインストールと切り替え</a></h2>
-<h3 id="nodenpm-のインストール--nvm-install"><a class="header" href="#nodenpm-のインストール--nvm-install"><code>node</code>/<code>npm</code> のインストール = nvm install</a></h3>
+<h3 id="nodejs-node-npm-のインストールと切り替え"><a class="header" href="#nodejs-node-npm-のインストールと切り替え">Node.js (<code>node</code>, <code>npm</code>) のインストールと切り替え</a></h3>
+<h4 id="nodenpm-のインストール--nvm-install"><a class="header" href="#nodenpm-のインストール--nvm-install"><code>node</code>/<code>npm</code> のインストール = nvm install</a></h4>
 <ul>
 <li><code>nvm</code>コマンドがインストールできたら<code>nvm install ...</code> で<code>node</code>/<code>npm</code> をインストールできる</li>
 </ul>
@@ -258,7 +258,7 @@ export NVM_DIR="$HOME/.nvm"
 $ which npm
 /home/tau/.nvm/versions/node/v24.9.0/bin/npm
 </code></pre>
-<h3 id="nodenpm-の切り替え--nvm-use"><a class="header" href="#nodenpm-の切り替え--nvm-use"><code>node</code>/<code>npm</code> の切り替え = nvm use</a></h3>
+<h4 id="nodenpm-の切り替え--nvm-use"><a class="header" href="#nodenpm-の切り替え--nvm-use"><code>node</code>/<code>npm</code> の切り替え = nvm use</a></h4>
 <ul>
 <li><code>nvm</code>で複数のバージョンの<code>node</code>/<code>npm</code>をインストールしたら <code>nvm use ...</code> で, 利用する<code>node</code>/<code>npm</code>のバージョンを切り替えられる</li>
 </ul>
@@ -279,7 +279,7 @@ v24.9.0
 $ npm -v
 11.6.0
 </code></pre>
-<h2 id="npm-概論"><a class="header" href="#npm-概論">npm 概論</a></h2>
+<h3 id="npm-概論"><a class="header" href="#npm-概論">npm 概論</a></h3>
 <ul>
 <li>npm は, node パッケージを管理するツールであり, パッケージをインストールするには</li>
 </ul>
@@ -292,7 +292,7 @@ $ npm -v
 <li>つまり, <code>npm</code>を実行したディレクトリごとに「別の環境 (Pythonのvenv相当のもの)」が作られるということになる</li>
 <li>インストールされたパッケージ, それが依存しているパッケージは <code>package.json</code>, <code>package-lock.json</code> というファイルに記録される</li>
 </ul>
-<h3 id="例"><a class="header" href="#例">例</a></h3>
+<h4 id="例"><a class="header" href="#例">例</a></h4>
 <ul>
 <li><a href="https://www.npmjs.com/package/cowsay/v/1.4.0">cowsay</a> は牛がセリフを喋っているアスキー画を生成してくれる他愛のないコマンド</li>
 </ul>
@@ -337,7 +337,7 @@ console.log(cowsay.say({
 </ul>
 <pre><code>$ node a.js
 </code></pre>
-<h3 id="参考-グローバルなインストール-この演習では不要"><a class="header" href="#参考-グローバルなインストール-この演習では不要">参考: グローバルなインストール (この演習では不要)</a></h3>
+<h4 id="参考-グローバルなインストール-この演習では不要"><a class="header" href="#参考-グローバルなインストール-この演習では不要">参考: グローバルなインストール (この演習では不要)</a></h4>
 <ul>
 <li><code>node_modules</code> の下に全てがインストールされるという仕様は, 環境がひとりでに隔離される(開発のためのファイルが普段使う環境を汚さない), 気軽にやり直せる (<code>node_modules</code>を削除すれば良い) という意味では便利だが, 普段から色々なところで使うソフトを入れる場合には不便でもある</li>
 <li><code>-g</code> を使うと, グローバルなディレクトリにインストールされる</li>
@@ -347,7 +347,7 @@ console.log(cowsay.say({
 <ul>
 <li>「グローバルなディレクトリ」とは, <code>nvm</code> を使って導入した <code>npm</code> の場合, あくまでユーザのホームディレクトリの下 (<code>~/.nvm</code>) の下であって, 全ユーザ共通ということではない</li>
 </ul>
-<h2 id="ソースコードのダウンロード"><a class="header" href="#ソースコードのダウンロード">ソースコードのダウンロード</a></h2>
+<h3 id="ソースコードのダウンロード"><a class="header" href="#ソースコードのダウンロード">ソースコードのダウンロード</a></h3>
 <ul>
 <li>Python同様, 多くのプロジェクトは github にレポジトリがある</li>
 <li>git clone でソースツリーを入手したら, 通常そのトップディレクトリに <code>package.json</code> がある</li>
@@ -361,7 +361,7 @@ $ npm install
 <ul>
 <li><code>npm install パッケージ名</code> としたときと異なり, <strong>本体</strong> (<code>cowsay</code> <strong>自身</strong>)はインストールされないことに注意</li>
 </ul>
-<h2 id="開発用のビルド"><a class="header" href="#開発用のビルド">開発用のビルド</a></h2>
+<h3 id="開発用のビルド"><a class="header" href="#開発用のビルド">開発用のビルド</a></h3>
 <ul>
 <li>一般にJavaScript処理系 (<code>node</code> やブラウザ) はソースファイルを直接実行できるため, 特別なビルドのステップは不要な場合が多い</li>
 <li>必要なパッケージもあり, そのような場合は, <code>npm install</code>のあと,</li>
@@ -404,7 +404,7 @@ $ npm install
 <pre><code>var cowsay = require(".");
 </code></pre>
 <p>でもよい</p>
-<h2 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h2>
+<h3 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h3>
 <ul>
 <li><code>npm search</code>コマンドで検索することもできる</li>
 </ul>
@@ -413,7 +413,7 @@ $ npm install
 <ul>
 <li><a href="https://www.npmjs.com/">npm</a> ホームページで検索することもできる</li>
 </ul>
-<h2 id="練習"><a class="header" href="#練習">練習</a></h2>
+<h3 id="練習"><a class="header" href="#練習"><font color="green">練習</font></a></h3>
 <ul>
 <li>JavaScript のパッケージ <code>cowsay</code> のgithubレポジトリを見つけ,</li>
 <li>空のディレクトリを作り, コードをダウンロード (git clone),</li>
@@ -425,6 +425,7 @@ $ npm install
 </ul>
 </li>
 </ul>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B45opH38rOI?si=ZA3SHU7m_qG7Foir&amp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
                     </main>
 

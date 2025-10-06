@@ -22,3 +22,10 @@
 .content h3::before {
   content: counter(h1) "." counter(h2) "." counter(h3) " ";
 }
+
+.content h4 {
+  counter-increment: h4;
+}
+.content h4::before {
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " ";
+}

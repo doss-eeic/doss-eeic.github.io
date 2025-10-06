@@ -176,8 +176,10 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python : venv + pip 編</a></h1>
-<h2 id="基本"><a class="header" href="#基本">基本</a></h2>
+                        <div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 1;"></div>
+<h2 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python : venv + pip 編</a></h2>
+<h3 id="基本"><a class="header" href="#基本">基本</a></h3>
 <ul>
 <li>Pythonで書かれたソフトウェアは <code>pip</code> というソフトウェア (Ubuntu の <code>apt</code> の Python版だと思えば良い) でインストールできることが多い</li>
 <li>ただし最近の <code>pip</code> は全ユーザ共通のディレクトリ (<code>/usr/local</code>など) へのインストールを非推奨 (最近は禁止に近い) としており, 個人のディレクトリへ, それも venv (仮想環境. 仮想マシンと紛らわしいが, つまりは目的に応じて複数の Python 環境を持てる仕組み) というものを組み合わせて指定した環境へインストールすることを前提にしている</li>
@@ -186,8 +188,7 @@
 <li>そこで以下では venv, pip, ビルド手順, の順に説明する</li>
 <li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/kls-rZkyvZc?si=rrMb9q5xkj7gOCMB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<h2 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h2>
+<h3 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h3>
 <ul>
 <li>Pythonの<code>venv</code>は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
 <li>最初に, システム共通の <code>python</code> コマンド (<code>python3</code> という名前の場合もある) が使える状態を前提とする</li>
@@ -225,7 +226,7 @@ $ which pip
 <li>この<code>pip</code>コマンドはパッケージを <code>my_env</code> 下にインストールするし, <code>python</code>コマンドは <code>import</code> 文を実行する際に <code>my_env</code> 下でモジュールを探す</li>
 <li><code>my_env</code> ディレクトリを消せばそのPython仮想環境は跡形もなく消える</li>
 </ul>
-<h3 id="余談-venvディレクトリの場所と名前"><a class="header" href="#余談-venvディレクトリの場所と名前">余談: venvディレクトリの場所と名前</a></h3>
+<h4 id="余談-venvディレクトリの場所と名前"><a class="header" href="#余談-venvディレクトリの場所と名前">余談: venvディレクトリの場所と名前</a></h4>
 <ul>
 <li>venv でディレクトリ (上記の <code>my_env</code>) を作る際にどこになんという名前で作るのが良いのだろう? 世の中では主に2つの流儀があるようである
 <ul>
@@ -235,7 +236,7 @@ $ which pip
 </ul>
 </li>
 </ul>
-<h2 id="pip--pythonのパッケージインストーラ"><a class="header" href="#pip--pythonのパッケージインストーラ">pip : Pythonのパッケージインストーラ</a></h2>
+<h3 id="pip--pythonのパッケージインストーラ"><a class="header" href="#pip--pythonのパッケージインストーラ">pip : Pythonのパッケージインストーラ</a></h3>
 <ul>
 <li>pip であるPythonパッケージを見つけたら</li>
 </ul>
@@ -245,11 +246,11 @@ $ which pip
 <ul>
 <li>ファイルは実行した<code>pip</code>コマンドと同じPython環境内に配置される</li>
 </ul>
-<h3 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h3>
+<h4 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h4>
 <ul>
 <li>かつては <code>pip search 文字列</code> というコマンドで検索できていたがあるときからその機能が廃止され, <a href="https://pypi.org/">https://pypi.org/</a> から探せということになった (理解不能)</li>
 </ul>
-<h2 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h2>
+<h3 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h3>
 <ul>
 <li>通常はそのプロジェクトの github レポジトリが存在しているので git clone する (やり方は<a href="download_source.html">ソースコードのダウンロード</a> を参照</li>
 <li>ソースツリーのトップレベルに <code>pyproject.toml</code>, <code>setup.py</code>, <code>setup.cfg</code> のどれかが見つかったら</li>
@@ -265,12 +266,13 @@ $ which pip
 </li>
 <li>ソースコードを修正すればそれがそのまま反映されるので, 開発するのに便利</li>
 </ul>
-<h2 id="練習"><a class="header" href="#練習">練習</a></h2>
+<h3 id="練習"><a class="header" href="#練習"><font color="green">練習</font></a></h3>
 <ul>
 <li>Pythonのライブラリ <code>art</code> のgithubレポジトリを見つけ,</li>
 <li>コードをダウンロード (git clone),</li>
 <li><code>pip install -e</code> で開発用インストールを行ってみよ</li>
 </ul>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dk84pK1Nk5E?si=9bINBWMKMh1q2aZs&amp;start=649" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
                     </main>
 

@@ -7,15 +7,16 @@
 	- [C/C++ + autotools/cmake 編](./autotools_cmake.md)
 	- [Python + venv + pip 編](./python_venv_pip.md)
 	- [Javascript (node.js) + nvm + npm 編](./js_nvm_npm.md)
-<!--  - [Rust + cargo 編](./rust_cargo.md) -->
 - [ソースコードを検索する](./search_src_code.md)
 	- [grep](./grep.md)
 	- [クロスリファレンスツール](./xref.md)
 - [デバッガで動作を追跡する](./debugger.md)
 	- [C/C++ (gdb) 編](./gdb.md)
-	- [C/C++ (lldb) 編](./lldb.md)
 	- [Python (pdb) 編](./pdb.md)
 	- [Javascript (node.js) 編](./node_dbg.md)
+
+<!--  - [Rust + cargo 編](./rust_cargo.md) -->
+<!--- - [C/C++ (lldb) 編](./lldb.md) --->
 <!--  - [Rust (gdb) 編](./rust_db.md)
 - [その他のtips](./tips.md)
 	- [自分でビルドしていないライブラリを追跡する](./debug_code_you_dont_build.md)

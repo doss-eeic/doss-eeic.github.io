@@ -176,18 +176,18 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="cc--autotoolscmake-編"><a class="header" href="#cc--autotoolscmake-編">C/C++ + autotools/cmake 編</a></h1>
+                        <div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 0;"></div>
+<h2 id="cc--autotoolscmake-編"><a class="header" href="#cc--autotoolscmake-編">C/C++ + autotools/cmake 編</a></h2>
 <ul>
 <li>主にCやC++で書かれたソースコードのビルド方法</li>
 <li>C, C++は昔から開発言語の主流であり, 歴史も深い</li>
 <li>そのためビルドの慣習もいくつかあり, 古い方式と新しい方式が混在している</li>
 <li>ビルドするためにはそのソフト用のビルド手順を読むのが基本である</li>
 <li>... と述べた上で, ほとんどのソフトが従っている, よくあるパターンをいくつか説明しておく</li>
-<li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/M1k9EGhq0IE?si=DxGyI5Cav4SnPAVG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<h2 id="configure-make-make-install"><a class="header" href="#configure-make-make-install">configure; make; make install</a></h2>
-<h3 id="基本"><a class="header" href="#基本">基本</a></h3>
+<h3 id="configure-make-make-install"><a class="header" href="#configure-make-make-install">configure; make; make install</a></h3>
+<h4 id="基本"><a class="header" href="#基本">基本</a></h4>
 <ul>
 <li>tarballで入手したソースツリーには多くの場合, <code>configure</code> という名前のファイル (実体はシェルスクリプト) が含まれる</li>
 <li>そのソフトを <strong>本番用ディレクトリ (<code>/usr/local</code> など)にインストールする場合 (今はこちらはやらない) の</strong> よくある手順は以下</li>
@@ -209,7 +209,7 @@ $ sudo make install
 <li><code>make</code> は <code>Makefile</code> に書かれた命令を読み込んで実際のビルド (コンパイルやリンク) を行う. 普通はここで, <code>gcc</code>, <code>g++</code> などのコマンドが実行される</li>
 <li><code>make install</code> は最終的な生成物 --- 実行可能ファイル (いわゆるコマンド) やライブラリ --- を所定の場所 (コマンドは<code>/usr/local/bin</code>, ライブラリは<code>/usr/local/lib</code> が典型) にコピーする. それらのディレクトリに書き込み権限がないといけないのでここだけ <code>sudo</code> (root権限つき) で実行するのが普通</li>
 </ul>
-<h3 id="開発デバッグ用の-configure"><a class="header" href="#開発デバッグ用の-configure">開発・デバッグ用の configure</a></h3>
+<h4 id="開発デバッグ用の-configure"><a class="header" href="#開発デバッグ用の-configure">開発・デバッグ用の configure</a></h4>
 <p>ここで我々が行う開発・デバッグ用の configureでは</p>
 <ul>
 <li>インストール先ディレクトリの指定</li>
@@ -250,7 +250,7 @@ $ make install
 <pre><code>$ ./configure --help
 </code></pre>
 <p>で確かめられる</p>
-<h3 id="make"><a class="header" href="#make">make</a></h3>
+<h4 id="make"><a class="header" href="#make">make</a></h4>
 <ul>
 <li><code>./configure</code>後に<code>make</code>コマンドを実行すると<code>gcc</code>, <code>g++</code>などが (普通は数多く) 実行され, うまくすれば成功する</li>
 <li><code>make</code> コマンドは一般的にはどのようなコマンドが実行されるかを表示してくれるので, <code>CFLAGS</code> <strong>や</strong> <code>CXXFLAGS</code> <strong>で指定したオプションが渡っているかに注目</strong>せよ</li>
@@ -261,12 +261,12 @@ $ make install
 <pre><code>$ make VERBOSE=1
 $ make V=1
 </code></pre>
-<h3 id="make-install"><a class="header" href="#make-install">make install</a></h3>
+<h4 id="make-install"><a class="header" href="#make-install">make install</a></h4>
 <ul>
 <li><code>--prefix</code> で指定したディレクトリ下に最終生成物をインストールする</li>
 <li><code>--prefix=</code><em>D</em> としたのであれば <em>D</em><code>/bin</code>, <em>D</em><code>/lib</code>, などのディレクトリができ, コマンドは <em>D</em><code>/bin</code>の下に生成されているはず</li>
 </ul>
-<h3 id="練習"><a class="header" href="#練習">練習</a></h3>
+<h4 id="練習"><a class="header" href="#練習"><font color="green">練習</font></a></h4>
 <ul>
 <li>GNU awk のtarballをダウンロードし, configure; make; make install でビルド, インストールせよ
 <ul>
@@ -276,7 +276,8 @@ $ make V=1
 </ul>
 </li>
 </ul>
-<h2 id="autotools"><a class="header" href="#autotools">autotools</a></h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7cr74yewNqc?si=GkUA0MNO9Pjqg-S0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<h3 id="autotools"><a class="header" href="#autotools">autotools</a></h3>
 <ul>
 <li>上記で tarball には <code>configure</code> が含まれておりその場合は述べた手順でビルドができる (ことが多い) と述べた</li>
 <li>一方 <code>git clone</code> してできたディレクトリはさにあらずで, <code>configure</code> を生成するというステップから行う想定である場合が多い</li>
@@ -320,8 +321,8 @@ $ make V=1
 <p><code>./configure</code> -&gt; Makefile config.h</p>
 </li>
 </ul>
-<h2 id="cmake"><a class="header" href="#cmake">CMake</a></h2>
-<h3 id="基本-1"><a class="header" href="#基本-1">基本</a></h3>
+<h3 id="cmake"><a class="header" href="#cmake">CMake</a></h3>
+<h4 id="基本-1"><a class="header" href="#基本-1">基本</a></h4>
 <ul>
 <li>
 <p><code>configure</code> (autotools) があまりにもややこしいからか, それに変わるものとして CMake があり, 最近はそれが多い印象</p>
@@ -383,13 +384,13 @@ $ cmake ..      # もう一度cmake .. を実行
 $ make VERBOSE=1
 $ make install
 </code></pre>
-<h3 id="練習-1"><a class="header" href="#練習-1">練習</a></h3>
+<h4 id="練習-1"><a class="header" href="#練習-1"><font color="green">練習</font></a></h4>
 <ul>
 <li>CMakeでビルドすることを想定した小さなプロジェクトとして <a href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a> を開発・デバッグ用にビルド, インストールして実行してみよ</li>
 <li>適切にオプション (<code>CMAKE_C_FLAGS</code>, <code>CMAKE_CXX_FLAGS</code>, <code>CMAKE_INSTALL_PREFIX</code>) を設定すること</li>
 <li><code>make VERBOSE=1</code> をつけてコンパイラのコマンドラインを目視し, <code>"-O0 -g3"</code> が行き渡っていることを確認すること</li>
 </ul>
-<h2 id="コードを修正した後の再ビルド"><a class="header" href="#コードを修正した後の再ビルド">コードを修正した後の再ビルド</a></h2>
+<h3 id="コードを修正した後の再ビルド"><a class="header" href="#コードを修正した後の再ビルド">コードを修正した後の再ビルド</a></h3>
 <ul>
 <li>ソースコードの一部を修正してもう一度ビルドする場合は <code>make</code> と <code>make install</code> をやり直せば良い</li>
 </ul>
@@ -406,7 +407,7 @@ $ make install
 $ make 
 $ make install
 </code></pre>
-<h2 id="configure-の再実行"><a class="header" href="#configure-の再実行">configure の再実行</a></h2>
+<h3 id="configure-の再実行"><a class="header" href="#configure-の再実行">configure の再実行</a></h3>
 <ul>
 <li><code>./configure</code> を実行すると <code>config.cache</code> というファイルが生成される</li>
 <li>以降の実行ではこれを参照して一部のコマンド実行をスキップする</li>
@@ -418,7 +419,7 @@ $ ./configure
 <ul>
 <li>もっとも<code>./configure</code> からやり直す, その際に万全を期したいのであれば tarball の展開からやり直すのが一番確実</li>
 </ul>
-<h2 id="cmake-の再実行"><a class="header" href="#cmake-の再実行">cmake の再実行</a></h2>
+<h3 id="cmake-の再実行"><a class="header" href="#cmake-の再実行">cmake の再実行</a></h3>
 <ul>
 <li><code>cmake</code>を実行すると<code>CMakeCache.txt</code>というファイルが生成される</li>
 <li><code>cmake</code>実行中にエラーがでて, 環境を修正したにもかかわらずエラーがで続ける場合, <code>CMakeCache.txt</code> を消してから再実行する</li>
@@ -429,7 +430,7 @@ $ cmake ..
 <ul>
 <li>この場合も, 初期状態に戻すことに万全を期したければ, ソースツリーごと一旦消去してやり直すのも一考する</li>
 </ul>
-<h2 id="configurecmake時のエラー対策"><a class="header" href="#configurecmake時のエラー対策">configure/cmake時のエラー対策</a></h2>
+<h3 id="configurecmake時のエラー対策"><a class="header" href="#configurecmake時のエラー対策">configure/cmake時のエラー対策</a></h3>
 <ul>
 <li><code>./configure</code> や <code>cmake</code> 時にはエラーや警告が出ることがある</li>
 <li>その環境ではビルドができない, ということを早めに検出して, その環境の何が問題なのかを指摘することが主な役割である</li>
@@ -446,7 +447,7 @@ $ cmake ..
 <ul>
 <li>入れるべきパッケージ名を調べる完璧な方法はない (OS (Linux? Mac? BSD?) が違ったり, 同じOSでもディストリビューション (Ubuntu? Arch? Fedora?) が異なればそれによってもパッケージ名が異なる可能性があるためある程度致し方ない)</li>
 </ul>
-<h2 id="make時のエラー-コンパイルエラー-対策"><a class="header" href="#make時のエラー-コンパイルエラー-対策">make時のエラー (コンパイルエラー) 対策</a></h2>
+<h3 id="make時のエラー-コンパイルエラー-対策"><a class="header" href="#make時のエラー-コンパイルエラー-対策">make時のエラー (コンパイルエラー) 対策</a></h3>
 <ul>
 <li><code>configure</code>/<code>cmake</code> は成功したが <code>make</code>の最中にエラーがおきたらそれはじっくりと腰を据えた調査が必要になる</li>
 <li>しっかりと,
@@ -460,12 +461,12 @@ $ cmake ..
 <li>エラーの理由についてはありとあらゆる可能性があるとしか言えないが, おそらく他の環境 (OS, ディストリビューションやそのバージョン) ではコンパイル成功したものだから, 非常に初歩的なエラーということは稀</li>
 <li>依存しているライブラリが更新されてインタフェースが変更された (ソースコードは少し前のバージョンを前提に書かれている), みたいなことが典型である</li>
 </ul>
-<h2 id="必要なパッケージ名を探り当てるいくつかの方法"><a class="header" href="#必要なパッケージ名を探り当てるいくつかの方法">必要なパッケージ名を探り当てるいくつかの方法</a></h2>
+<h3 id="必要なパッケージ名を探り当てるいくつかの方法"><a class="header" href="#必要なパッケージ名を探り当てるいくつかの方法">必要なパッケージ名を探り当てるいくつかの方法</a></h3>
 <ul>
 <li><code>./configure</code>/<code>cmake</code> 時によく遭遇するエラーは, 環境に必要なソフト (コマンド, ライブラリ) が入っていないことに起因するものが多い</li>
 <li>典型的な調査・解決方法</li>
 </ul>
-<h3 id="コマンドがないと言われた場合"><a class="header" href="#コマンドがないと言われた場合">コマンドがないと言われた場合</a></h3>
+<h4 id="コマンドがないと言われた場合"><a class="header" href="#コマンドがないと言われた場合">コマンドがないと言われた場合</a></h4>
 <ul>
 <li>コマンド名=パッケージ名となっていることは結構多い</li>
 </ul>
@@ -489,7 +490,7 @@ $ sudo apt update
 <ul>
 <li>このあと改めて再ログインが必要になるかもしれない</li>
 </ul>
-<h3 id="ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合"><a class="header" href="#ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合">ライブラリ (必要な関数が入ったパッケージ) がないと言われた場合</a></h3>
+<h4 id="ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合"><a class="header" href="#ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合">ライブラリ (必要な関数が入ったパッケージ) がないと言われた場合</a></h4>
 <ul>
 <li>Ubuntuのライブラリのパッケージ名は <code>libXXX-dev</code> という名前のパッケージ名になっていることが多い</li>
 <li>例えばライブラリ <code>gmp</code> がないと言われたら,</li>
@@ -497,7 +498,7 @@ $ sudo apt update
 <pre><code>$ sudo apt install libgmp-dev
 </code></pre>
 <p>をやってみる価値はある. ただしやや当てずっぽうがすぎるという嫌いはある</p>
-<h3 id="汎用的なパッケージ検索方法1-apt-sesarch"><a class="header" href="#汎用的なパッケージ検索方法1-apt-sesarch">汎用的なパッケージ検索方法1 apt sesarch</a></h3>
+<h4 id="汎用的なパッケージ検索方法1-apt-sesarch"><a class="header" href="#汎用的なパッケージ検索方法1-apt-sesarch">汎用的なパッケージ検索方法1 apt sesarch</a></h4>
 <ul>
 <li>Ubuntu であれば <code>apt search キーワード</code> でそのキーワードがパッケージ名や記述に含まれるパッケージを列挙してくれるので, あるパッケージ名が存在することやその簡単な説明を確認できるため, <code>apt install</code> を試みる前に試すことを推奨する</li>
 </ul>
@@ -505,7 +506,7 @@ $ sudo apt update
 $ apt search libgmp-dev | less  # ページめくりで表示
 $ apt search libgmp-dev | grep -A1 -B1 arithmetic  # arithmeticが出現する行とその前後1行を表示
 </code></pre>
-<h3 id="汎用的なパッケージ検索方法2-apt-file-sesarch"><a class="header" href="#汎用的なパッケージ検索方法2-apt-file-sesarch">汎用的なパッケージ検索方法2 apt-file sesarch</a></h3>
+<h4 id="汎用的なパッケージ検索方法2-apt-file-sesarch"><a class="header" href="#汎用的なパッケージ検索方法2-apt-file-sesarch">汎用的なパッケージ検索方法2 apt-file sesarch</a></h4>
 <ul>
 <li>Ubuntu には <code>apt-file</code> というコマンドがありファイル名を与えるとそれが含まれるパッケージ名を教えてくれる</li>
 </ul>

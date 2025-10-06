@@ -1,17 +1,17 @@
-# C/C++ + autotools/cmake 編
+<div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 0;"></div>
+
+## C/C++ + autotools/cmake 編
 
 * 主にCやC++で書かれたソースコードのビルド方法
 * C, C++は昔から開発言語の主流であり, 歴史も深い
 * そのためビルドの慣習もいくつかあり, 古い方式と新しい方式が混在している
 * ビルドするためにはそのソフト用のビルド手順を読むのが基本である
 * ... と述べた上で, ほとんどのソフトが従っている, よくあるパターンをいくつか説明しておく
-* 動画で概要を見たい人用 (倍速推奨)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/M1k9EGhq0IE?si=DxGyI5Cav4SnPAVG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+### configure; make; make install
 
-## configure; make; make install
-
-### 基本
+#### 基本
 
 * tarballで入手したソースツリーには多くの場合, `configure` という名前のファイル (実体はシェルスクリプト) が含まれる
 * そのソフトを **本番用ディレクトリ (`/usr/local` など)にインストールする場合 (今はこちらはやらない) の** よくある手順は以下
@@ -29,7 +29,7 @@ $ sudo make install
 + `make` は `Makefile` に書かれた命令を読み込んで実際のビルド (コンパイルやリンク) を行う. 普通はここで, `gcc`, `g++` などのコマンドが実行される
 + `make install` は最終的な生成物 --- 実行可能ファイル (いわゆるコマンド) やライブラリ --- を所定の場所 (コマンドは`/usr/local/bin`, ライブラリは`/usr/local/lib` が典型) にコピーする. それらのディレクトリに書き込み権限がないといけないのでここだけ `sudo` (root権限つき) で実行するのが普通
 
-### 開発・デバッグ用の configure
+#### 開発・デバッグ用の configure
 
 ここで我々が行う開発・デバッグ用の configureでは
 * インストール先ディレクトリの指定
@@ -61,7 +61,7 @@ $ ./configure --help
 ```
 で確かめられる
 
-### make
+#### make
 
 * `./configure`後に`make`コマンドを実行すると`gcc`, `g++`などが (普通は数多く) 実行され, うまくすれば成功する
 * `make` コマンドは一般的にはどのようなコマンドが実行されるかを表示してくれるので, `CFLAGS` **や** `CXXFLAGS` **で指定したオプションが渡っているかに注目**せよ
@@ -73,19 +73,21 @@ $ make VERBOSE=1
 $ make V=1
 ```
 
-### make install
+#### make install
 
 * `--prefix` で指定したディレクトリ下に最終生成物をインストールする
 * `--prefix=`_D_ としたのであれば _D_`/bin`, _D_`/lib`, などのディレクトリができ, コマンドは _D_`/bin`の下に生成されているはず
 
-### 練習
+#### <font color="green">練習</font>
 
 * GNU awk のtarballをダウンロードし, configure; make; make install でビルド, インストールせよ
   * `--prefix` の指定
   * `CFLAGS`  の指定
 を忘れずに, gccのコマンドラインにCFLAGSが渡っていることを目視せよ
 
-## autotools
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7cr74yewNqc?si=GkUA0MNO9Pjqg-S0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+### autotools
 
 * 上記で tarball には `configure` が含まれておりその場合は述べた手順でビルドができる (ことが多い) と述べた
 * 一方 `git clone` してできたディレクトリはさにあらずで, `configure` を生成するというステップから行う想定である場合が多い
@@ -112,9 +114,9 @@ $ sudo apt install autoconf automake libtoolize
 * `autoreconf -i` -> configure, Makefile.in, libtool 
 * `./configure` -> Makefile config.h
 
-## CMake
+### CMake
 
-### 基本
+#### 基本
 
 * `configure` (autotools) があまりにもややこしいからか, それに変わるものとして CMake があり, 最近はそれが多い印象
 * `make` と似た名前なので `make` の代替のように見えるがそれは誤解で, あくまで `configure` のステップ (`Makefile` を生成するまで) の代替であり, 実際のコンパイルは `make` で行う
@@ -156,13 +158,13 @@ $ make VERBOSE=1
 $ make install
 ```
 
-### 練習
+#### <font color="green">練習</font>
 
 * CMakeでビルドすることを想定した小さなプロジェクトとして [fastfetch](https://github.com/fastfetch-cli/fastfetch) を開発・デバッグ用にビルド, インストールして実行してみよ
 * 適切にオプション (`CMAKE_C_FLAGS`, `CMAKE_CXX_FLAGS`, `CMAKE_INSTALL_PREFIX`) を設定すること
 * `make VERBOSE=1` をつけてコンパイラのコマンドラインを目視し, `"-O0 -g3"` が行き渡っていることを確認すること
 
-## コードを修正した後の再ビルド
+### コードを修正した後の再ビルド
 
 * ソースコードの一部を修正してもう一度ビルドする場合は `make` と `make install` をやり直せば良い
 ```
@@ -179,7 +181,7 @@ $ make
 $ make install
 ```
 
-## configure の再実行
+### configure の再実行
 
 * `./configure` を実行すると `config.cache` というファイルが生成される
 * 以降の実行ではこれを参照して一部のコマンド実行をスキップする
@@ -190,7 +192,7 @@ $ ./configure
 ```
 * もっとも`./configure` からやり直す, その際に万全を期したいのであれば tarball の展開からやり直すのが一番確実
 
-## cmake の再実行
+### cmake の再実行
 
 * `cmake`を実行すると`CMakeCache.txt`というファイルが生成される
 * `cmake`実行中にエラーがでて, 環境を修正したにもかかわらずエラーがで続ける場合, `CMakeCache.txt` を消してから再実行する
@@ -201,7 +203,7 @@ $ cmake ..
 * この場合も, 初期状態に戻すことに万全を期したければ, ソースツリーごと一旦消去してやり直すのも一考する
 
 
-## configure/cmake時のエラー対策
+### configure/cmake時のエラー対策
 
 * `./configure` や `cmake` 時にはエラーや警告が出ることがある
 * その環境ではビルドができない, ということを早めに検出して, その環境の何が問題なのかを指摘することが主な役割である
@@ -214,7 +216,7 @@ $ sudo apt install gcc
 ```
 * 入れるべきパッケージ名を調べる完璧な方法はない (OS (Linux? Mac? BSD?) が違ったり, 同じOSでもディストリビューション (Ubuntu? Arch? Fedora?) が異なればそれによってもパッケージ名が異なる可能性があるためある程度致し方ない)
 
-## make時のエラー (コンパイルエラー) 対策
+### make時のエラー (コンパイルエラー) 対策
 
 * `configure`/`cmake` は成功したが `make`の最中にエラーがおきたらそれはじっくりと腰を据えた調査が必要になる
 * しっかりと, 
@@ -225,12 +227,12 @@ $ sudo apt install gcc
 * エラーの理由についてはありとあらゆる可能性があるとしか言えないが, おそらく他の環境 (OS, ディストリビューションやそのバージョン) ではコンパイル成功したものだから, 非常に初歩的なエラーということは稀
 * 依存しているライブラリが更新されてインタフェースが変更された (ソースコードは少し前のバージョンを前提に書かれている), みたいなことが典型である
 
-## 必要なパッケージ名を探り当てるいくつかの方法
+### 必要なパッケージ名を探り当てるいくつかの方法
 
 * `./configure`/`cmake` 時によく遭遇するエラーは, 環境に必要なソフト (コマンド, ライブラリ) が入っていないことに起因するものが多い
 * 典型的な調査・解決方法
 
-### コマンドがないと言われた場合
+#### コマンドがないと言われた場合
 * コマンド名=パッケージ名となっていることは結構多い
 ```
 $ g++
@@ -250,7 +252,7 @@ $ sudo apt update
 ```
 * このあと改めて再ログインが必要になるかもしれない
 
-### ライブラリ (必要な関数が入ったパッケージ) がないと言われた場合
+#### ライブラリ (必要な関数が入ったパッケージ) がないと言われた場合
 * Ubuntuのライブラリのパッケージ名は `libXXX-dev` という名前のパッケージ名になっていることが多い
 * 例えばライブラリ `gmp` がないと言われたら, 
 ```
@@ -258,7 +260,7 @@ $ sudo apt install libgmp-dev
 ```
 をやってみる価値はある. ただしやや当てずっぽうがすぎるという嫌いはある
 
-### 汎用的なパッケージ検索方法1 apt sesarch
+#### 汎用的なパッケージ検索方法1 apt sesarch
 
 * Ubuntu であれば `apt search キーワード` でそのキーワードがパッケージ名や記述に含まれるパッケージを列挙してくれるので, あるパッケージ名が存在することやその簡単な説明を確認できるため, `apt install` を試みる前に試すことを推奨する
 ```
@@ -267,7 +269,7 @@ $ apt search libgmp-dev | less  # ページめくりで表示
 $ apt search libgmp-dev | grep -A1 -B1 arithmetic  # arithmeticが出現する行とその前後1行を表示
 ```
 
-### 汎用的なパッケージ検索方法2 apt-file sesarch
+#### 汎用的なパッケージ検索方法2 apt-file sesarch
 
 * Ubuntu には `apt-file` というコマンドがありファイル名を与えるとそれが含まれるパッケージ名を教えてくれる
 ```

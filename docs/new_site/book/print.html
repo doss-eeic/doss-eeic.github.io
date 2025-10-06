@@ -237,7 +237,8 @@
 <li>ただし一部は書きかけ</li>
 <li>2024年度までのサイトでは C/C++ の場合について詳細解説しているが, 本サイトでは Python, JavaScript など近年よく使われている (実験でも選ばれている) エコシステムの説明を充実させ, 説明の多くの部分を動画でカバーした</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="任意-開発用仮想マシン環境の構築"><a class="header" href="#任意-開発用仮想マシン環境の構築">(任意) 開発用仮想マシン環境の構築</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 1;"></div>
+<h1 id="任意-開発用仮想マシン環境の構築"><a class="header" href="#任意-開発用仮想マシン環境の構築">(任意) 開発用仮想マシン環境の構築</a></h1>
 <ul>
 <li>開発のために仮想マシンを使って, その中にLinux (Ubuntu) 環境を構築しそこで開発をすることを推奨する</li>
 <li>理由:
@@ -252,7 +253,8 @@
 <li>このページを参照して, ホスト (PC本体) からゲスト (仮想マシン) へ SSH でログインできるようにし, SSHで作業をすると良い (仮想マシンのコンソールは使いづらい)</li>
 <li>GUIアプリケーションを開発する場合は, 直接仮想マシンのデスクトップで操作をする</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="ソースコードのダウンロード"><a class="header" href="#ソースコードのダウンロード">ソースコードのダウンロード</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 2;"></div>
+<h1 id="ソースコードのダウンロード"><a class="header" href="#ソースコードのダウンロード">ソースコードのダウンロード</a></h1>
 <h2 id="tarball"><a class="header" href="#tarball">tarball</a></h2>
 <ul>
 <li>"tarball"は多数のファイルを収めたディレクトリ一式を, tarというコマンドで一つのファイルにまとめ (Windowsでzipに馴染みのある人はそれのUnix版だと思えば良い), 通常はそれを gzip, bzip2 などの圧縮ファイルで圧縮したものである.</li>
@@ -325,7 +327,8 @@ $ tar xvf xyz.tar.bz2
 <ul>
 <li>見つからなければ <a href="https://github.com/sepandhaghighi/art">ここ</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="開発デバッグ用のビルド"><a class="header" href="#開発デバッグ用のビルド">開発・デバッグ用のビルド</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 3;"></div>
+<h1 id="開発デバッグ用のビルド"><a class="header" href="#開発デバッグ用のビルド">開発・デバッグ用のビルド</a></h1>
 <ul>
 <li>tarballダウンロードにせよ, git cloneにせよ, 結果的にはソースコードが一式収められたディレクトリが手に入る</li>
 <li>次のステップはそれをビルドすることである</li>
@@ -339,18 +342,18 @@ $ tar xvf xyz.tar.bz2
 </ul>
 </li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="cc--autotoolscmake-編"><a class="header" href="#cc--autotoolscmake-編">C/C++ + autotools/cmake 編</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 0;"></div>
+<h2 id="cc--autotoolscmake-編"><a class="header" href="#cc--autotoolscmake-編">C/C++ + autotools/cmake 編</a></h2>
 <ul>
 <li>主にCやC++で書かれたソースコードのビルド方法</li>
 <li>C, C++は昔から開発言語の主流であり, 歴史も深い</li>
 <li>そのためビルドの慣習もいくつかあり, 古い方式と新しい方式が混在している</li>
 <li>ビルドするためにはそのソフト用のビルド手順を読むのが基本である</li>
 <li>... と述べた上で, ほとんどのソフトが従っている, よくあるパターンをいくつか説明しておく</li>
-<li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/M1k9EGhq0IE?si=DxGyI5Cav4SnPAVG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<h2 id="configure-make-make-install"><a class="header" href="#configure-make-make-install">configure; make; make install</a></h2>
-<h3 id="基本"><a class="header" href="#基本">基本</a></h3>
+<h3 id="configure-make-make-install"><a class="header" href="#configure-make-make-install">configure; make; make install</a></h3>
+<h4 id="基本"><a class="header" href="#基本">基本</a></h4>
 <ul>
 <li>tarballで入手したソースツリーには多くの場合, <code>configure</code> という名前のファイル (実体はシェルスクリプト) が含まれる</li>
 <li>そのソフトを <strong>本番用ディレクトリ (<code>/usr/local</code> など)にインストールする場合 (今はこちらはやらない) の</strong> よくある手順は以下</li>
@@ -372,7 +375,7 @@ $ sudo make install
 <li><code>make</code> は <code>Makefile</code> に書かれた命令を読み込んで実際のビルド (コンパイルやリンク) を行う. 普通はここで, <code>gcc</code>, <code>g++</code> などのコマンドが実行される</li>
 <li><code>make install</code> は最終的な生成物 --- 実行可能ファイル (いわゆるコマンド) やライブラリ --- を所定の場所 (コマンドは<code>/usr/local/bin</code>, ライブラリは<code>/usr/local/lib</code> が典型) にコピーする. それらのディレクトリに書き込み権限がないといけないのでここだけ <code>sudo</code> (root権限つき) で実行するのが普通</li>
 </ul>
-<h3 id="開発デバッグ用の-configure"><a class="header" href="#開発デバッグ用の-configure">開発・デバッグ用の configure</a></h3>
+<h4 id="開発デバッグ用の-configure"><a class="header" href="#開発デバッグ用の-configure">開発・デバッグ用の configure</a></h4>
 <p>ここで我々が行う開発・デバッグ用の configureでは</p>
 <ul>
 <li>インストール先ディレクトリの指定</li>
@@ -413,7 +416,7 @@ $ make install
 <pre><code>$ ./configure --help
 </code></pre>
 <p>で確かめられる</p>
-<h3 id="make"><a class="header" href="#make">make</a></h3>
+<h4 id="make"><a class="header" href="#make">make</a></h4>
 <ul>
 <li><code>./configure</code>後に<code>make</code>コマンドを実行すると<code>gcc</code>, <code>g++</code>などが (普通は数多く) 実行され, うまくすれば成功する</li>
 <li><code>make</code> コマンドは一般的にはどのようなコマンドが実行されるかを表示してくれるので, <code>CFLAGS</code> <strong>や</strong> <code>CXXFLAGS</code> <strong>で指定したオプションが渡っているかに注目</strong>せよ</li>
@@ -424,12 +427,12 @@ $ make install
 <pre><code>$ make VERBOSE=1
 $ make V=1
 </code></pre>
-<h3 id="make-install"><a class="header" href="#make-install">make install</a></h3>
+<h4 id="make-install"><a class="header" href="#make-install">make install</a></h4>
 <ul>
 <li><code>--prefix</code> で指定したディレクトリ下に最終生成物をインストールする</li>
 <li><code>--prefix=</code><em>D</em> としたのであれば <em>D</em><code>/bin</code>, <em>D</em><code>/lib</code>, などのディレクトリができ, コマンドは <em>D</em><code>/bin</code>の下に生成されているはず</li>
 </ul>
-<h3 id="練習-2"><a class="header" href="#練習-2">練習</a></h3>
+<h4 id="練習-2"><a class="header" href="#練習-2"><font color="green">練習</font></a></h4>
 <ul>
 <li>GNU awk のtarballをダウンロードし, configure; make; make install でビルド, インストールせよ
 <ul>
@@ -439,7 +442,8 @@ $ make V=1
 </ul>
 </li>
 </ul>
-<h2 id="autotools"><a class="header" href="#autotools">autotools</a></h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7cr74yewNqc?si=GkUA0MNO9Pjqg-S0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<h3 id="autotools"><a class="header" href="#autotools">autotools</a></h3>
 <ul>
 <li>上記で tarball には <code>configure</code> が含まれておりその場合は述べた手順でビルドができる (ことが多い) と述べた</li>
 <li>一方 <code>git clone</code> してできたディレクトリはさにあらずで, <code>configure</code> を生成するというステップから行う想定である場合が多い</li>
@@ -483,8 +487,8 @@ $ make V=1
 <p><code>./configure</code> -&gt; Makefile config.h</p>
 </li>
 </ul>
-<h2 id="cmake"><a class="header" href="#cmake">CMake</a></h2>
-<h3 id="基本-1"><a class="header" href="#基本-1">基本</a></h3>
+<h3 id="cmake"><a class="header" href="#cmake">CMake</a></h3>
+<h4 id="基本-1"><a class="header" href="#基本-1">基本</a></h4>
 <ul>
 <li>
 <p><code>configure</code> (autotools) があまりにもややこしいからか, それに変わるものとして CMake があり, 最近はそれが多い印象</p>
@@ -546,13 +550,13 @@ $ cmake ..      # もう一度cmake .. を実行
 $ make VERBOSE=1
 $ make install
 </code></pre>
-<h3 id="練習-3"><a class="header" href="#練習-3">練習</a></h3>
+<h4 id="練習-3"><a class="header" href="#練習-3"><font color="green">練習</font></a></h4>
 <ul>
 <li>CMakeでビルドすることを想定した小さなプロジェクトとして <a href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a> を開発・デバッグ用にビルド, インストールして実行してみよ</li>
 <li>適切にオプション (<code>CMAKE_C_FLAGS</code>, <code>CMAKE_CXX_FLAGS</code>, <code>CMAKE_INSTALL_PREFIX</code>) を設定すること</li>
 <li><code>make VERBOSE=1</code> をつけてコンパイラのコマンドラインを目視し, <code>"-O0 -g3"</code> が行き渡っていることを確認すること</li>
 </ul>
-<h2 id="コードを修正した後の再ビルド"><a class="header" href="#コードを修正した後の再ビルド">コードを修正した後の再ビルド</a></h2>
+<h3 id="コードを修正した後の再ビルド"><a class="header" href="#コードを修正した後の再ビルド">コードを修正した後の再ビルド</a></h3>
 <ul>
 <li>ソースコードの一部を修正してもう一度ビルドする場合は <code>make</code> と <code>make install</code> をやり直せば良い</li>
 </ul>
@@ -569,7 +573,7 @@ $ make install
 $ make 
 $ make install
 </code></pre>
-<h2 id="configure-の再実行"><a class="header" href="#configure-の再実行">configure の再実行</a></h2>
+<h3 id="configure-の再実行"><a class="header" href="#configure-の再実行">configure の再実行</a></h3>
 <ul>
 <li><code>./configure</code> を実行すると <code>config.cache</code> というファイルが生成される</li>
 <li>以降の実行ではこれを参照して一部のコマンド実行をスキップする</li>
@@ -581,7 +585,7 @@ $ ./configure
 <ul>
 <li>もっとも<code>./configure</code> からやり直す, その際に万全を期したいのであれば tarball の展開からやり直すのが一番確実</li>
 </ul>
-<h2 id="cmake-の再実行"><a class="header" href="#cmake-の再実行">cmake の再実行</a></h2>
+<h3 id="cmake-の再実行"><a class="header" href="#cmake-の再実行">cmake の再実行</a></h3>
 <ul>
 <li><code>cmake</code>を実行すると<code>CMakeCache.txt</code>というファイルが生成される</li>
 <li><code>cmake</code>実行中にエラーがでて, 環境を修正したにもかかわらずエラーがで続ける場合, <code>CMakeCache.txt</code> を消してから再実行する</li>
@@ -592,7 +596,7 @@ $ cmake ..
 <ul>
 <li>この場合も, 初期状態に戻すことに万全を期したければ, ソースツリーごと一旦消去してやり直すのも一考する</li>
 </ul>
-<h2 id="configurecmake時のエラー対策"><a class="header" href="#configurecmake時のエラー対策">configure/cmake時のエラー対策</a></h2>
+<h3 id="configurecmake時のエラー対策"><a class="header" href="#configurecmake時のエラー対策">configure/cmake時のエラー対策</a></h3>
 <ul>
 <li><code>./configure</code> や <code>cmake</code> 時にはエラーや警告が出ることがある</li>
 <li>その環境ではビルドができない, ということを早めに検出して, その環境の何が問題なのかを指摘することが主な役割である</li>
@@ -609,7 +613,7 @@ $ cmake ..
 <ul>
 <li>入れるべきパッケージ名を調べる完璧な方法はない (OS (Linux? Mac? BSD?) が違ったり, 同じOSでもディストリビューション (Ubuntu? Arch? Fedora?) が異なればそれによってもパッケージ名が異なる可能性があるためある程度致し方ない)</li>
 </ul>
-<h2 id="make時のエラー-コンパイルエラー-対策"><a class="header" href="#make時のエラー-コンパイルエラー-対策">make時のエラー (コンパイルエラー) 対策</a></h2>
+<h3 id="make時のエラー-コンパイルエラー-対策"><a class="header" href="#make時のエラー-コンパイルエラー-対策">make時のエラー (コンパイルエラー) 対策</a></h3>
 <ul>
 <li><code>configure</code>/<code>cmake</code> は成功したが <code>make</code>の最中にエラーがおきたらそれはじっくりと腰を据えた調査が必要になる</li>
 <li>しっかりと,
@@ -623,12 +627,12 @@ $ cmake ..
 <li>エラーの理由についてはありとあらゆる可能性があるとしか言えないが, おそらく他の環境 (OS, ディストリビューションやそのバージョン) ではコンパイル成功したものだから, 非常に初歩的なエラーということは稀</li>
 <li>依存しているライブラリが更新されてインタフェースが変更された (ソースコードは少し前のバージョンを前提に書かれている), みたいなことが典型である</li>
 </ul>
-<h2 id="必要なパッケージ名を探り当てるいくつかの方法"><a class="header" href="#必要なパッケージ名を探り当てるいくつかの方法">必要なパッケージ名を探り当てるいくつかの方法</a></h2>
+<h3 id="必要なパッケージ名を探り当てるいくつかの方法"><a class="header" href="#必要なパッケージ名を探り当てるいくつかの方法">必要なパッケージ名を探り当てるいくつかの方法</a></h3>
 <ul>
 <li><code>./configure</code>/<code>cmake</code> 時によく遭遇するエラーは, 環境に必要なソフト (コマンド, ライブラリ) が入っていないことに起因するものが多い</li>
 <li>典型的な調査・解決方法</li>
 </ul>
-<h3 id="コマンドがないと言われた場合"><a class="header" href="#コマンドがないと言われた場合">コマンドがないと言われた場合</a></h3>
+<h4 id="コマンドがないと言われた場合"><a class="header" href="#コマンドがないと言われた場合">コマンドがないと言われた場合</a></h4>
 <ul>
 <li>コマンド名=パッケージ名となっていることは結構多い</li>
 </ul>
@@ -652,7 +656,7 @@ $ sudo apt update
 <ul>
 <li>このあと改めて再ログインが必要になるかもしれない</li>
 </ul>
-<h3 id="ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合"><a class="header" href="#ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合">ライブラリ (必要な関数が入ったパッケージ) がないと言われた場合</a></h3>
+<h4 id="ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合"><a class="header" href="#ライブラリ-必要な関数が入ったパッケージ-がないと言われた場合">ライブラリ (必要な関数が入ったパッケージ) がないと言われた場合</a></h4>
 <ul>
 <li>Ubuntuのライブラリのパッケージ名は <code>libXXX-dev</code> という名前のパッケージ名になっていることが多い</li>
 <li>例えばライブラリ <code>gmp</code> がないと言われたら,</li>
@@ -660,7 +664,7 @@ $ sudo apt update
 <pre><code>$ sudo apt install libgmp-dev
 </code></pre>
 <p>をやってみる価値はある. ただしやや当てずっぽうがすぎるという嫌いはある</p>
-<h3 id="汎用的なパッケージ検索方法1-apt-sesarch"><a class="header" href="#汎用的なパッケージ検索方法1-apt-sesarch">汎用的なパッケージ検索方法1 apt sesarch</a></h3>
+<h4 id="汎用的なパッケージ検索方法1-apt-sesarch"><a class="header" href="#汎用的なパッケージ検索方法1-apt-sesarch">汎用的なパッケージ検索方法1 apt sesarch</a></h4>
 <ul>
 <li>Ubuntu であれば <code>apt search キーワード</code> でそのキーワードがパッケージ名や記述に含まれるパッケージを列挙してくれるので, あるパッケージ名が存在することやその簡単な説明を確認できるため, <code>apt install</code> を試みる前に試すことを推奨する</li>
 </ul>
@@ -668,7 +672,7 @@ $ sudo apt update
 $ apt search libgmp-dev | less  # ページめくりで表示
 $ apt search libgmp-dev | grep -A1 -B1 arithmetic  # arithmeticが出現する行とその前後1行を表示
 </code></pre>
-<h3 id="汎用的なパッケージ検索方法2-apt-file-sesarch"><a class="header" href="#汎用的なパッケージ検索方法2-apt-file-sesarch">汎用的なパッケージ検索方法2 apt-file sesarch</a></h3>
+<h4 id="汎用的なパッケージ検索方法2-apt-file-sesarch"><a class="header" href="#汎用的なパッケージ検索方法2-apt-file-sesarch">汎用的なパッケージ検索方法2 apt-file sesarch</a></h4>
 <ul>
 <li>Ubuntu には <code>apt-file</code> というコマンドがありファイル名を与えるとそれが含まれるパッケージ名を教えてくれる</li>
 </ul>
@@ -681,8 +685,10 @@ $ apt-file search /gmp.h  # igmp.h などが引っかかってほしくない場
 <pre><code>$ sudo apt apt-file
 $ sudo apt-file update
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python : venv + pip 編</a></h1>
-<h2 id="基本-2"><a class="header" href="#基本-2">基本</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 1;"></div>
+<h2 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python : venv + pip 編</a></h2>
+<h3 id="基本-2"><a class="header" href="#基本-2">基本</a></h3>
 <ul>
 <li>Pythonで書かれたソフトウェアは <code>pip</code> というソフトウェア (Ubuntu の <code>apt</code> の Python版だと思えば良い) でインストールできることが多い</li>
 <li>ただし最近の <code>pip</code> は全ユーザ共通のディレクトリ (<code>/usr/local</code>など) へのインストールを非推奨 (最近は禁止に近い) としており, 個人のディレクトリへ, それも venv (仮想環境. 仮想マシンと紛らわしいが, つまりは目的に応じて複数の Python 環境を持てる仕組み) というものを組み合わせて指定した環境へインストールすることを前提にしている</li>
@@ -691,8 +697,7 @@ $ sudo apt-file update
 <li>そこで以下では venv, pip, ビルド手順, の順に説明する</li>
 <li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/kls-rZkyvZc?si=rrMb9q5xkj7gOCMB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<h2 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h2>
+<h3 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h3>
 <ul>
 <li>Pythonの<code>venv</code>は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
 <li>最初に, システム共通の <code>python</code> コマンド (<code>python3</code> という名前の場合もある) が使える状態を前提とする</li>
@@ -730,7 +735,7 @@ $ which pip
 <li>この<code>pip</code>コマンドはパッケージを <code>my_env</code> 下にインストールするし, <code>python</code>コマンドは <code>import</code> 文を実行する際に <code>my_env</code> 下でモジュールを探す</li>
 <li><code>my_env</code> ディレクトリを消せばそのPython仮想環境は跡形もなく消える</li>
 </ul>
-<h3 id="余談-venvディレクトリの場所と名前"><a class="header" href="#余談-venvディレクトリの場所と名前">余談: venvディレクトリの場所と名前</a></h3>
+<h4 id="余談-venvディレクトリの場所と名前"><a class="header" href="#余談-venvディレクトリの場所と名前">余談: venvディレクトリの場所と名前</a></h4>
 <ul>
 <li>venv でディレクトリ (上記の <code>my_env</code>) を作る際にどこになんという名前で作るのが良いのだろう? 世の中では主に2つの流儀があるようである
 <ul>
@@ -740,7 +745,7 @@ $ which pip
 </ul>
 </li>
 </ul>
-<h2 id="pip--pythonのパッケージインストーラ"><a class="header" href="#pip--pythonのパッケージインストーラ">pip : Pythonのパッケージインストーラ</a></h2>
+<h3 id="pip--pythonのパッケージインストーラ"><a class="header" href="#pip--pythonのパッケージインストーラ">pip : Pythonのパッケージインストーラ</a></h3>
 <ul>
 <li>pip であるPythonパッケージを見つけたら</li>
 </ul>
@@ -750,11 +755,11 @@ $ which pip
 <ul>
 <li>ファイルは実行した<code>pip</code>コマンドと同じPython環境内に配置される</li>
 </ul>
-<h3 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h3>
+<h4 id="パッケージの検索"><a class="header" href="#パッケージの検索">パッケージの検索</a></h4>
 <ul>
 <li>かつては <code>pip search 文字列</code> というコマンドで検索できていたがあるときからその機能が廃止され, <a href="https://pypi.org/">https://pypi.org/</a> から探せということになった (理解不能)</li>
 </ul>
-<h2 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h2>
+<h3 id="ビルド"><a class="header" href="#ビルド">ビルド</a></h3>
 <ul>
 <li>通常はそのプロジェクトの github レポジトリが存在しているので git clone する (やり方は<a href="download_source.html">ソースコードのダウンロード</a> を参照</li>
 <li>ソースツリーのトップレベルに <code>pyproject.toml</code>, <code>setup.py</code>, <code>setup.cfg</code> のどれかが見つかったら</li>
@@ -770,14 +775,17 @@ $ which pip
 </li>
 <li>ソースコードを修正すればそれがそのまま反映されるので, 開発するのに便利</li>
 </ul>
-<h2 id="練習-4"><a class="header" href="#練習-4">練習</a></h2>
+<h3 id="練習-4"><a class="header" href="#練習-4"><font color="green">練習</font></a></h3>
 <ul>
 <li>Pythonのライブラリ <code>art</code> のgithubレポジトリを見つけ,</li>
 <li>コードをダウンロード (git clone),</li>
 <li><code>pip install -e</code> で開発用インストールを行ってみよ</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">JavaScript (Node.js) : nvm + npm 編</a></h1>
-<h2 id="基本-3"><a class="header" href="#基本-3">基本</a></h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dk84pK1Nk5E?si=9bINBWMKMh1q2aZs&amp;start=649" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 4;"></div>
+<div style="counter-reset: h2 2;"></div>
+<h2 id="javascript-nodejs--nvm--npm-編"><a class="header" href="#javascript-nodejs--nvm--npm-編">JavaScript (Node.js) : nvm + npm 編</a></h2>
+<h3 id="概要"><a class="header" href="#概要">概要</a></h3>
 <ul>
 <li>JavaScript はもともとWebページの一部として書いて, 動的なページを作るためのプログラミング言語だった</li>
 <li>したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが Node.js</li>
@@ -794,10 +802,8 @@ $ which pip
 </li>
 <li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的</li>
 <li>そこで以下では nvm, npm, ビルド手順, の順に説明する</li>
-<li>動画で概要を見たい人用 (倍速推奨)</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/XTL8mTJnKng?si=Q2YTc52JqA3144-d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<h2 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h2>
+<h3 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h3>
 <ul>
 <li><code>nvm</code>コマンド自身は<a href="https://github.com/nvm-sh/nvm">公式レポジトリ</a> の指示にしたがって最新版を入れる</li>
 <li>2025/09/30 時点での指示は以下</li>
@@ -835,8 +841,8 @@ export NVM_DIR="$HOME/.nvm"
 </ul>
 <pre><code>$ nvm --help
 </code></pre>
-<h2 id="nodejs-node-のインストールと切り替え"><a class="header" href="#nodejs-node-のインストールと切り替え">Node.js (<code>node</code>) のインストールと切り替え</a></h2>
-<h3 id="nodenpm-のインストール--nvm-install"><a class="header" href="#nodenpm-のインストール--nvm-install"><code>node</code>/<code>npm</code> のインストール = nvm install</a></h3>
+<h3 id="nodejs-node-npm-のインストールと切り替え"><a class="header" href="#nodejs-node-npm-のインストールと切り替え">Node.js (<code>node</code>, <code>npm</code>) のインストールと切り替え</a></h3>
+<h4 id="nodenpm-のインストール--nvm-install"><a class="header" href="#nodenpm-のインストール--nvm-install"><code>node</code>/<code>npm</code> のインストール = nvm install</a></h4>
 <ul>
 <li><code>nvm</code>コマンドがインストールできたら<code>nvm install ...</code> で<code>node</code>/<code>npm</code> をインストールできる</li>
 </ul>
@@ -858,7 +864,7 @@ export NVM_DIR="$HOME/.nvm"
 $ which npm
 /home/tau/.nvm/versions/node/v24.9.0/bin/npm
 </code></pre>
-<h3 id="nodenpm-の切り替え--nvm-use"><a class="header" href="#nodenpm-の切り替え--nvm-use"><code>node</code>/<code>npm</code> の切り替え = nvm use</a></h3>
+<h4 id="nodenpm-の切り替え--nvm-use"><a class="header" href="#nodenpm-の切り替え--nvm-use"><code>node</code>/<code>npm</code> の切り替え = nvm use</a></h4>
 <ul>
 <li><code>nvm</code>で複数のバージョンの<code>node</code>/<code>npm</code>をインストールしたら <code>nvm use ...</code> で, 利用する<code>node</code>/<code>npm</code>のバージョンを切り替えられる</li>
 </ul>
@@ -879,7 +885,7 @@ v24.9.0
 $ npm -v
 11.6.0
 </code></pre>
-<h2 id="npm-概論"><a class="header" href="#npm-概論">npm 概論</a></h2>
+<h3 id="npm-概論"><a class="header" href="#npm-概論">npm 概論</a></h3>
 <ul>
 <li>npm は, node パッケージを管理するツールであり, パッケージをインストールするには</li>
 </ul>
@@ -892,7 +898,7 @@ $ npm -v
 <li>つまり, <code>npm</code>を実行したディレクトリごとに「別の環境 (Pythonのvenv相当のもの)」が作られるということになる</li>
 <li>インストールされたパッケージ, それが依存しているパッケージは <code>package.json</code>, <code>package-lock.json</code> というファイルに記録される</li>
 </ul>
-<h3 id="例"><a class="header" href="#例">例</a></h3>
+<h4 id="例"><a class="header" href="#例">例</a></h4>
 <ul>
 <li><a href="https://www.npmjs.com/package/cowsay/v/1.4.0">cowsay</a> は牛がセリフを喋っているアスキー画を生成してくれる他愛のないコマンド</li>
 </ul>
@@ -937,7 +943,7 @@ console.log(cowsay.say({
 </ul>
 <pre><code>$ node a.js
 </code></pre>
-<h3 id="参考-グローバルなインストール-この演習では不要"><a class="header" href="#参考-グローバルなインストール-この演習では不要">参考: グローバルなインストール (この演習では不要)</a></h3>
+<h4 id="参考-グローバルなインストール-この演習では不要"><a class="header" href="#参考-グローバルなインストール-この演習では不要">参考: グローバルなインストール (この演習では不要)</a></h4>
 <ul>
 <li><code>node_modules</code> の下に全てがインストールされるという仕様は, 環境がひとりでに隔離される(開発のためのファイルが普段使う環境を汚さない), 気軽にやり直せる (<code>node_modules</code>を削除すれば良い) という意味では便利だが, 普段から色々なところで使うソフトを入れる場合には不便でもある</li>
 <li><code>-g</code> を使うと, グローバルなディレクトリにインストールされる</li>
@@ -947,7 +953,7 @@ console.log(cowsay.say({
 <ul>
 <li>「グローバルなディレクトリ」とは, <code>nvm</code> を使って導入した <code>npm</code> の場合, あくまでユーザのホームディレクトリの下 (<code>~/.nvm</code>) の下であって, 全ユーザ共通ということではない</li>
 </ul>
-<h2 id="ソースコードのダウンロード-1"><a class="header" href="#ソースコードのダウンロード-1">ソースコードのダウンロード</a></h2>
+<h3 id="ソースコードのダウンロード-1"><a class="header" href="#ソースコードのダウンロード-1">ソースコードのダウンロード</a></h3>
 <ul>
 <li>Python同様, 多くのプロジェクトは github にレポジトリがある</li>
 <li>git clone でソースツリーを入手したら, 通常そのトップディレクトリに <code>package.json</code> がある</li>
@@ -961,7 +967,7 @@ $ npm install
 <ul>
 <li><code>npm install パッケージ名</code> としたときと異なり, <strong>本体</strong> (<code>cowsay</code> <strong>自身</strong>)はインストールされないことに注意</li>
 </ul>
-<h2 id="開発用のビルド"><a class="header" href="#開発用のビルド">開発用のビルド</a></h2>
+<h3 id="開発用のビルド"><a class="header" href="#開発用のビルド">開発用のビルド</a></h3>
 <ul>
 <li>一般にJavaScript処理系 (<code>node</code> やブラウザ) はソースファイルを直接実行できるため, 特別なビルドのステップは不要な場合が多い</li>
 <li>必要なパッケージもあり, そのような場合は, <code>npm install</code>のあと,</li>
@@ -1004,7 +1010,7 @@ $ npm install
 <pre><code>var cowsay = require(".");
 </code></pre>
 <p>でもよい</p>
-<h2 id="パッケージの検索-1"><a class="header" href="#パッケージの検索-1">パッケージの検索</a></h2>
+<h3 id="パッケージの検索-1"><a class="header" href="#パッケージの検索-1">パッケージの検索</a></h3>
 <ul>
 <li><code>npm search</code>コマンドで検索することもできる</li>
 </ul>
@@ -1013,7 +1019,7 @@ $ npm install
 <ul>
 <li><a href="https://www.npmjs.com/">npm</a> ホームページで検索することもできる</li>
 </ul>
-<h2 id="練習-5"><a class="header" href="#練習-5">練習</a></h2>
+<h3 id="練習-5"><a class="header" href="#練習-5"><font color="green">練習</font></a></h3>
 <ul>
 <li>JavaScript のパッケージ <code>cowsay</code> のgithubレポジトリを見つけ,</li>
 <li>空のディレクトリを作り, コードをダウンロード (git clone),</li>
@@ -1025,7 +1031,9 @@ $ npm install
 </ul>
 </li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="ソースコードを検索する"><a class="header" href="#ソースコードを検索する">ソースコードを検索する</a></h1>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B45opH38rOI?si=ZA3SHU7m_qG7Foir&amp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 4;"></div>
+<h1 id="ソースコードを検索する"><a class="header" href="#ソースコードを検索する">ソースコードを検索する</a></h1>
 <ul>
 <li>ソースコードを入手して, ビルド, 実行できるようになったらコードを修正する準備が整ったことになる</li>
 <li>どんな修正をするにせよ, 何か目標が決まったら, ソースコード内でそれに関連するコードがどこに書かれているかを突き止めるのが最初の仕事になる</li>
@@ -1051,13 +1059,15 @@ $ npm install
 <li>しかし静的な検索ツールも手軽さや, 大規模なコードに対しても簡単に適用できるという利点もあり, 両方をうまく使い分けることが必要</li>
 <li>例え話としては, 静的な検索ツールは「森全体」を把握するツール, デバッガは木を一本ずつ観察するツール</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="grep--汎用ファイルディレクトリ検索"><a class="header" href="#grep--汎用ファイルディレクトリ検索">grep : 汎用ファイル・ディレクトリ検索</a></h1>
-<h2 id="基本-4"><a class="header" href="#基本-4">基本</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 5"></div>
+<div style="counter-reset: h2 0;"></div>
+<h2 id="grep--汎用ファイルディレクトリ検索"><a class="header" href="#grep--汎用ファイルディレクトリ検索">grep : 汎用ファイル・ディレクトリ検索</a></h2>
+<h3 id="基本-3"><a class="header" href="#基本-3">基本</a></h3>
 <pre><code>grep 文字列 ファイル
 </code></pre>
 <p>で, 「ファイル」から「文字列」を検索する</p>
 <p>具体的には, ファイル中に「文字列」が含まれる行があればそれらの行を表示する</p>
-<h2 id="複数ファイル"><a class="header" href="#複数ファイル">複数ファイル</a></h2>
+<h3 id="複数ファイル"><a class="header" href="#複数ファイル">複数ファイル</a></h3>
 <pre><code>grep 文字列 ファイル ファイル ファイル ...
 </code></pre>
 <p>与えられた全てのファイルを検索する</p>
@@ -1067,7 +1077,7 @@ $ npm install
 <pre><code>$ grep *.c *.h
 </code></pre>
 <p>でカレントディレクトリの全ての <code>.c</code>, <code>.h</code> で終わるファイルを検索する</p>
-<h2 id="ディレクトリの再帰的探索"><a class="header" href="#ディレクトリの再帰的探索">ディレクトリの再帰的探索</a></h2>
+<h3 id="ディレクトリの再帰的探索"><a class="header" href="#ディレクトリの再帰的探索">ディレクトリの再帰的探索</a></h3>
 <pre><code>grep -r 文字列 ディレクトリ
 </code></pre>
 <p>「ディレクトリ」下の全てのファイルを検索する</p>
@@ -1081,32 +1091,173 @@ $ npm install
 </ul>
 <pre><code>$ grep -rI  文字列 .
 </code></pre>
-<p>はカレントディレクトリ下の全てのファイルを検索する</p>
-<h2 id="正規表現の検索"><a class="header" href="#正規表現の検索">正規表現の検索</a></h2>
+<p>はカレントディレクトリ下の, バイナリファイルを除く全てのファイルを検索する</p>
+<h3 id="正規表現の検索"><a class="header" href="#正規表現の検索">正規表現の検索</a></h3>
 <ul>
 <li>これまでは与えた文字列の完全一致を含む行だけを見つけるものであったが, その代わりに正規表現を用いることも可能 (<code>-e</code> オプション)</li>
-<li>例えば以下は, <code>int</code> が行頭に現れる行を, カレントディレクトリ内の全てのテキストファイルから検索する</li>
+<li>例えば以下は, <code>int</code> が行頭に現れる行を, カレントディレクトリ内のバイナリファイルを除く全てのファイルから検索する</li>
 </ul>
 <pre><code>$ grep -e '^int' -rI .
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="クロスリファレンスツール"><a class="header" href="#クロスリファレンスツール">クロスリファレンスツール</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="デバッガで動作を追跡する"><a class="header" href="#デバッガで動作を追跡する">デバッガで動作を追跡する</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="cc-gdb-編"><a class="header" href="#cc-gdb-編">C/C++ (gdb) 編</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 5"></div>
+<div style="counter-reset: h2 1;"></div>
+<h2 id="クロスリファレンスツール"><a class="header" href="#クロスリファレンスツール">クロスリファレンスツール</a></h2>
+<p>now writing ...</p>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 5;"></div>
+<h1 id="デバッガで動作を追跡する"><a class="header" href="#デバッガで動作を追跡する">デバッガで動作を追跡する</a></h1>
+<h2 id="前口上"><a class="header" href="#前口上">前口上</a></h2>
 <ul>
-<li>動画で概要を見たい人用 (倍速推奨)</li>
+<li>デバッガは文字通りデバッグをするためのものだが, 実際の機能はプログラムを, その状態 (どの文を実行しているか, 変数の値がどうなっているか) を表示しながら少しずつ実行する, というものである</li>
+<li>したがってバグがない状態でも <strong>プログラムの動作・仕組み</strong> を知るのに最適なツールである</li>
+<li>特に, まだ仕組みがわからないのプログラムが, どこでなにをしているか, 自分が実現したいことに関係した機能はどこ (どのファイルのなんという関数) で行われているかを調べることができる</li>
+<li>ある機能がどこで行われているかを探るのに, 勘 (ファイル名や関数名) や静的なソースコード検索 (grepなど) で探すこともひとつの方法ではあるが, 一見関係しそうで実は無関係とか, その環境では全く使われていないコードなどが見つかってしまうこともよくある</li>
+<li>デバッガは <strong>実際に実行されているコード</strong> に限定して追跡ができ, 静的な検索よりも確実性高く, 関連するコードを突き止めることができる</li>
+<li>この演習で, デバッガを使ったコードの追跡をぜひ身につけてください</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ueNznLzn93k?si=_-Y6PgW2nVvPq1xy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="cc-lldb-編"><a class="header" href="#cc-lldb-編">C/C++ (lldb) 編</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="python-pdb-編"><a class="header" href="#python-pdb-編">Python (pdb) 編</a></h1>
+<h2 id="デバッガの機能"><a class="header" href="#デバッガの機能">デバッガの機能</a></h2>
+<h3 id="基本はプログラムを少しずつ-止めながら実行する"><a class="header" href="#基本はプログラムを少しずつ-止めながら実行する">基本はプログラムを「少しずつ, 止めながら実行する」</a></h3>
 <ul>
-<li>動画で概要を見たい人用 (倍速推奨)</li>
+<li>
+<p>そのやり方に何種類かある</p>
+</li>
+<li>
+<p>デバッガやデバッグ環境によって微妙に呼び方が異なる場合があるが, 概念はどれもほとんど同じ</p>
+</li>
+<li>
+<p><code>next</code> または <code>step over</code> : 次の行まで実行する. ただしその行に関数呼び出しが含まれていたらそれらすべてを飛ばす. つまり文字通りプログラム上の次の行まで実行する (関数呼び出しの最後の文の場合はその関数の終わりまで)</p>
+</li>
+<li>
+<p><code>step</code> または <code>step into</code> : 次の行まで実行するが, その行に関数呼び出しが含まれていたらその関数の中に入っていく (呼び出している関数の先頭まで実行する)</p>
+</li>
+<li>
+<p><code>finish</code>, <code>return</code> または <code>step out</code> : 現在実行中の関数の終了まで実行する</p>
+</li>
+<li>
+<p><code>continue</code> : 明示的に設定した「次に止めるポイント (breakpoint)」まで実行する</p>
+</li>
+<li>
+<p><code>breakpoint</code> : continueを実行したときに止めるポイントを設定する</p>
+</li>
+<li>
+<p>どれも目的は同じで, <em>プログラムの実行を前に進める</em> それだけ</p>
+</li>
+<li>
+<p>どこまで進めるかが違うだけ</p>
+</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/rPhEIoFiXyw?si=nH7eQOJEAsiPIQzL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="javascript-nodejs-編"><a class="header" href="#javascript-nodejs-編">JavaScript (node.js) 編</a></h1>
+<p>例え話:</p>
 <ul>
-<li>動画で概要を見たい人用 (倍速推奨)</li>
+<li><code>next</code>, <code>step over</code> = 各駅停車 : 各行 (駅) で止まる</li>
+<li><code>step</code>, <code>step into</code> = 途中下車の旅 : 各行 (駅) で止まるのみならず, 各駅で下車して寄り道をする (呼び出している関数の中に入る). やや例えが苦しいが勘弁</li>
+<li><code>continue</code> = 急行 : 次の停車駅まで止まらずに通過する</li>
 </ul>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yHCnxvl01xE?si=COsUBaJ2_lndorDf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<h3 id="変数や式の値を調べる"><a class="header" href="#変数や式の値を調べる">変数や式の値を調べる</a></h3>
+<ul>
+<li>
+<p>環境によってやり方は異なり, 明示的にコマンドを打って表示する環境もあれば, 統合環境のように画面を分けて局所変数の値を一覧にしてくれる環境もある</p>
+</li>
+<li>
+<p><code>print &lt;式&gt;</code> : 明示的にコマンドを打って表示する環境では, <code>print</code> などのコマンド名で式 (特別な場合として変数) を表示できることが通常</p>
+</li>
+<li>
+<p>統合環境 (VS Codeなど) では画面を分けて局所変数の値を自動的に一覧にしてくれる</p>
+<ul>
+<li>それでも単なる変数値だけでなく, 配列の特定の要素値や, 複雑な計算をした値を表示したい場合もあるので, それを能動的にできるようにすることが重要</li>
+</ul>
+</li>
+<li>
+<p><code>up</code>, <code>down</code> : 今実行が停止している関数だけでなく, それを呼び出している関数, 更にそれを呼び出している関数, ... に焦点を切り替えて, 変数や式を表示することができる</p>
+<ul>
+<li><code>up</code> は焦点を caller (今焦点が当たっている関数を呼び出した関数) 側にひとつずらす</li>
+<li><code>down</code> は焦点を callee (今焦点が当たっている関数から呼び出された関数) 側にひとつずらす</li>
+<li>どちらの場合も <code>up</code>, <code>down</code> をした後は <code>print &lt;式&gt;</code> を通常通り実行できる (使える変数が違うだけ)</li>
+</ul>
+</li>
+<li>
+<p>VS Codeのような統合環境ではスタックトレース (今実行が停止ている関数, それを呼び出した関数, それを呼び出した関数, ... ) が自動的に表示されておりその中から焦点を当てたい関数を選べば同じ効果が得られる</p>
+</li>
+</ul>
+<h2 id="デバッガを使ったソースコードの追跡調査-----思考過程"><a class="header" href="#デバッガを使ったソースコードの追跡調査-----思考過程">デバッガを使ったソースコードの追跡・調査 --- 思考過程</a></h2>
+<ul>
+<li>デバッガを使って, ソースコードのどこで自分の興味がある機能が実現されているかを追跡・調査することができる</li>
+<li>基本は,
+<ol>
+<li>プログラムの先頭 (例: C/C++であれば main関数の先頭, PythonやJavaScriptであればファイルの先頭) で実行を止める</li>
+<li>そこから「少しずつ実行」していき, 関係がありそうなコードにたどり着く</li>
+</ol>
+</li>
+<li>問題は,「少しずつ実行」していくといっても<strong>文字通り1行ずつ実行して行くと永遠に時間がかかってしまう</strong>こと</li>
+<li>そこで以下では興味ある場所を発見するための「作戦」「思考過程」を, もう少しそれらしく言語化する</li>
+</ul>
+<ol>
+<li>当初は next (step over) を基本にして, 関数呼び出しは飛ばしながら実行する</li>
+</ol>
+<ul>
+<li>つまりC/C++言語であればmain関数中の各行, PythonやJavaScriptであればファイルトップレベルの各行に停車してくイメージ</li>
+</ul>
+<ol start="2">
+<li>今止まっている行 (次に実行する行) で呼び出されている関数が, 関数名などから明らかに自分の興味に関係しそうであれば step (step into) で関数の中に入っていく</li>
+<li>step (step into) で入ってみて違うなと思ったら finish (step out) で脱出</li>
+<li>逆に, next (step over) で飛ばしたら実は興味ある関数を飛ばしてしまった (行き過ぎた), ということもある
+<ul>
+<li>そうなったことは典型的には, 外から観測できるプログラムの出力で判断できる. 例えばプログラムが "hello" と出力するのを変更したいのに, "hello" と表示されてしまったら明らかに行き過ぎたことになる</li>
+<li>行き過ぎが判明したら, 基本はもう一度プログラムの先頭からの実行をやり直す</li>
+<li>同じところまで next (step over) でたどり着いて今度は step (step into) するのが原始的なやり方</li>
+<li>慣れてきたらそうする代わりに, 行き過ぎた行に breakpoint を設定してそこまで continue で一気に実行(急行) するのがよい</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>これを通して「どの関数の中で興味ある処理が実行されているか」ということに関する知識が, 一段精度高く得られたことになる</li>
+<li>あとは同じことをその関数の中でも繰り返していき, 徐々にその精度を高めていく (大きな配列中から目当ての値を2分探索しているイメージと言えば伝わるか?)</li>
+</ul>
+<p>ひとたびどの関数で興味ある処理が行われているかの当たりがついてきたら, その関数の中の処理の流れや, データの流れを見ていく</p>
+<ul>
+<li>特に, 必要な情報がデータ (変数, 配列, 構造体など) としてどう表現されているかを突き止め, それがどう計算されているかの元をたどっていくことが主な目標になる</li>
+<li>目当てのデータがどの変数や配列に入っていそうかを調べるには端末のデバッガであれば <code>print</code> コマンド, VS Codeであればの変数表示のペインやDebug Console で式の値を表示する機能を活用して当たりをつける</li>
+<li>変数に当たりがついたらそれがどこから渡ってきているかを, ソースコードを見ながら考える</li>
+<li>見ている関数内で計算されている場合もあれば, 引数として渡されている場合もある</li>
+<li>前者であれば, それを計算するのに使われている別の変数 (「親」の変数とでも言うべきか) が見つかるかもしれない</li>
+<li>後者であれば, 呼び出している関数 (親関数) の中を観察することが重要になる</li>
+<li>それには, 端末内のデバッガであれば <code>up</code>コマンド, VS Code であればスタックトレースからcallerを選択することで, 親関数の状態が観測可能になる</li>
+<li>親関数にたどり着いたら同様に, そのデータを親関数自身が計算しているか, さらに親から渡されているかなどを追跡していく</li>
+<li>このようなことを繰り返して, 変更したいデータの発生から完成に至るまでの流れを突き止めていくことができる (ことが多い)</li>
+</ul>
+<h2 id="実際は実践あるのみ"><a class="header" href="#実際は実践あるのみ">実際は実践あるのみ</a></h2>
+<ul>
+<li>以上がデバッガを使ってソフトウェアの動作を解明していくときの「思考過程」</li>
+<li>抽象的で, 読むだけですぐに腑に落ちることは少ないと思うので, 以降のページの実例を見て, 自分でも実践して, 習得してください</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 6"></div>
+<div style="counter-reset: h2 0;"></div>
+<h2 id="cc-gdb-編"><a class="header" href="#cc-gdb-編">C/C++ (gdb) 編</a></h2>
+<h3 id="練習-6"><a class="header" href="#練習-6"><font color="green">練習</font></a></h3>
+<ul>
+<li>GNU awk もしくはお手頃な C/C++ で書かれたソフトに変更を施してみよ</li>
+<li>題材は何でもよい (目標はあくまで開発用インストール手順や, デバッガの使い方の練習)</li>
+<li>以下の動画では GNU awk を「未定義変数が参照されたらエラー」というお題を例にとって説明しているのでそれをやるのでもよい</li>
+</ul>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7cr74yewNqc?si=gIXjnskjV9-z3MLL&amp;start=562" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 6"></div>
+<div style="counter-reset: h2 1;"></div>
+<h2 id="python-pdb-編"><a class="header" href="#python-pdb-編">Python (pdb) 編</a></h2>
+<h3 id="練習-7"><a class="header" href="#練習-7"><font color="green">練習</font></a></h3>
+<ul>
+<li>art もしくはお手頃な Python で書かれたソフトに変更を施してみよ</li>
+<li>題材は何でもよい (目標はあくまで開発用インストール手順や, デバッガの使い方の練習)</li>
+<li>以下の動画では art に「等幅表示オプションを追加する」というお題を例にとって説明しているのでそれをやるのでもよい</li>
+</ul>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dk84pK1Nk5E?si=9bINBWMKMh1q2aZs&amp;start=649" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div style="break-before: page; page-break-before: always;"></div><div style="counter-reset: h1 6"></div>
+<div style="counter-reset: h2 1;"></div>
+<h2 id="javascript-nodejs-編"><a class="header" href="#javascript-nodejs-編">JavaScript (node.js) 編</a></h2>
+<h3 id="練習-8"><a class="header" href="#練習-8"><font color="green">練習</font></a></h3>
+<ul>
+<li>cowsay もしくはお手頃な JavaScript で書かれたソフトに変更を施してみよ</li>
+<li>題材は何でもよい (目標はあくまで開発用インストール手順や, デバッガの使い方の練習)</li>
+<li>以下の動画では cowsay に「尻尾を変更するオプションを追加する」というお題を例にとって説明しているのでそれをやるのでもよい</li>
+</ul>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B45opH38rOI?si=ZA3SHU7m_qG7Foir&amp;start=630" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
                     </main>
 

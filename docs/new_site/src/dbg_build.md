@@ -1,3 +1,5 @@
+<div style="counter-reset: h1 3;"></div>
+
 # 開発・デバッグ用のビルド
 
 * tarballダウンロードにせよ, git cloneにせよ, 結果的にはソースコードが一式収められたディレクトリが手に入る
