@@ -287,7 +287,7 @@ $ tar xvf xyz.tar.bz2
 </ul>
 </li>
 </ul>
-<h3 id="練習"><a class="header" href="#練習">練習</a></h3>
+<h3 id="練習"><a class="header" href="#練習"><font color="green">練習</font></a></h3>
 <ul>
 <li>GNU awk というプログラムの tarball をダウンロードしてみよ</li>
 <li>空フォルダを作りそこでそれを解凍してみよ</li>
@@ -321,7 +321,7 @@ $ tar xvf xyz.tar.bz2
 <p><code>git</code> コマンドが見つからなければ, Ubuntuであれば以下のようにしてインストールする</p>
 <pre><code>$ sudo apt install git
 </code></pre>
-<h3 id="練習-1"><a class="header" href="#練習-1">練習</a></h3>
+<h3 id="練習-1"><a class="header" href="#練習-1"><font color="green">練習</font></a></h3>
 <ul>
 <li>Python のライブラリである <code>art</code> の git レポジトリを発見し, <code>git clone</code> してみよ
 <ul>
@@ -496,7 +496,7 @@ $ make V=1
 <h4 id="基本-1"><a class="header" href="#基本-1">基本</a></h4>
 <ul>
 <li>
-<p><code>configure</code> (autotools) があまりにもややこしいからか, それに変わるものとして CMake があり, 最近はそれが多い印象</p>
+<p><code>configure</code> (autotools) があまりにもややこしいからか, それに変わるものとして <a href="https://cmake.org/">CMake</a> があり, 最近はそれが多い印象</p>
 </li>
 <li>
 <p><code>make</code> と似た名前なので <code>make</code> の代替のように見えるがそれは誤解で, あくまで <code>configure</code> のステップ (<code>Makefile</code> を生成するまで) の代替であり, 実際のコンパイルは <code>make</code> で行う</p>
@@ -695,8 +695,8 @@ $ sudo apt-file update
 <h2 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python : venv + pip 編</a></h2>
 <h3 id="基本-2"><a class="header" href="#基本-2">基本</a></h3>
 <ul>
-<li>Pythonで書かれたソフトウェアは <code>pip</code> というソフトウェア (Ubuntu の <code>apt</code> の Python版だと思えば良い) でインストールできることが多い</li>
-<li>ただし最近の <code>pip</code> は全ユーザ共通のディレクトリ (<code>/usr/local</code>など) へのインストールを非推奨 (最近は禁止に近い) としており, 個人のディレクトリへ, それも venv (仮想環境. 仮想マシンと紛らわしいが, つまりは目的に応じて複数の Python 環境を持てる仕組み) というものを組み合わせて指定した環境へインストールすることを前提にしている</li>
+<li>Pythonで書かれたソフトウェアは <a href="https://pypi.org/project/pip/">pip</a> というソフトウェア (Ubuntu の <code>apt</code> の Python版だと思えば良い) でインストールできることが多い</li>
+<li>ただし最近の <code>pip</code> は全ユーザ共通のディレクトリ (<code>/usr/local</code>など) へのインストールを非推奨 (最近は禁止に近い) としており, 個人のディレクトリへ, それも <a href="https://docs.python.org/3/library/venv.html">venv</a> (仮想環境. 仮想マシンと紛らわしいが, つまりは目的に応じて複数の Python 環境を持てる仕組み) というものを組み合わせて指定した環境へインストールすることを前提にしている</li>
 <li>Pythonプログラムは通常「ビルド」という手順は不要で, <code>pip</code>もソースコード (.py) をインストールするので原理的には <code>pip</code> でソースコードを入手可能だが, 通常は git でダウンロードする</li>
 <li>git でソースコードをダウンロードした場合も <code>pip</code> を使ってそのソースコードを適切な場所に配置するため結局 <code>pip</code> が必要となる</li>
 <li>そこで以下では venv, pip, ビルド手順, の順に説明する</li>
@@ -704,7 +704,7 @@ $ sudo apt-file update
 </ul>
 <h3 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h3>
 <ul>
-<li>Pythonの<code>venv</code>は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
+<li>Pythonの<a href="https://docs.python.org/3/library/venv.html">venv</a> は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
 <li>最初に, システム共通の <code>python</code> コマンド (<code>python3</code> という名前の場合もある) が使える状態を前提とする</li>
 </ul>
 <pre><code>$ which python
@@ -793,19 +793,19 @@ $ which pip
 <h3 id="概要"><a class="header" href="#概要">概要</a></h3>
 <ul>
 <li>JavaScript はもともとWebページの一部として書いて, 動的なページを作るためのプログラミング言語だった</li>
-<li>したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが Node.js</li>
+<li>したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが <a href="https://nodejs.org/en">Node.js</a></li>
 <li>つまり Node.js = 普通の (ブラウザと無関係な) JavaScript の実行環境
 <ul>
 <li>Python プログラムを実行するためにPython処理系 (<code>python</code> コマンド)があるのと同じように JavaScript に対して Node.js (<code>node</code>コマンド) がある</li>
 <li><code>Node.js</code> というとまるでそれ自身がJavaScriptのプログラムのようだがそうではない (このネーミングは理解不能)</li>
 </ul>
 </li>
-<li>JavaScript で書かれたソフトウェアは npm (Node Package Manager) という仕組みで配布・インストールされることが多い
+<li>JavaScript で書かれたソフトウェアは <a href="https://www.npmjs.com/">npm (Node Package Manager)</a> という仕組みで配布・インストールされることが多い
 <ul>
 <li>つまりPython にとっての pip が JavaScript にとってはnpm</li>
 </ul>
 </li>
-<li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的</li>
+<li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる <a href="https://github.com/nvm-sh/nvm">nvm (Node Version Manager)</a> を組み合わせて使うのが一般的</li>
 <li>そこで以下では nvm, npm, ビルド手順, の順に説明する</li>
 </ul>
 <h3 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h3>

@@ -118,7 +118,7 @@ $ sudo apt install autoconf automake libtoolize
 
 #### 基本
 
-* `configure` (autotools) があまりにもややこしいからか, それに変わるものとして CMake があり, 最近はそれが多い印象
+* `configure` (autotools) があまりにもややこしいからか, それに変わるものとして [CMake](https://cmake.org/) があり, 最近はそれが多い印象
 * `make` と似た名前なので `make` の代替のように見えるがそれは誤解で, あくまで `configure` のステップ (`Makefile` を生成するまで) の代替であり, 実際のコンパイルは `make` で行う
 * CMakeでもconfigureでもどちらでもビルドできるようになっているプロジェクトもある
 

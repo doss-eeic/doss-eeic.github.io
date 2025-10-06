@@ -6,13 +6,13 @@
 ### 概要
 
 * JavaScript はもともとWebページの一部として書いて, 動的なページを作るためのプログラミング言語だった
-* したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが Node.js
+* したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが [Node.js](https://nodejs.org/en)
 * つまり Node.js = 普通の (ブラウザと無関係な) JavaScript の実行環境
   * Python プログラムを実行するためにPython処理系 (`python` コマンド)があるのと同じように JavaScript に対して Node.js (`node`コマンド) がある
   * `Node.js` というとまるでそれ自身がJavaScriptのプログラムのようだがそうではない (このネーミングは理解不能)
-* JavaScript で書かれたソフトウェアは npm (Node Package Manager) という仕組みで配布・インストールされることが多い
+* JavaScript で書かれたソフトウェアは [npm (Node Package Manager)](https://www.npmjs.com/) という仕組みで配布・インストールされることが多い
   * つまりPython にとっての pip が JavaScript にとってはnpm
-* Node.js は `node` のバージョンによって動作が変わることが多いため, 複数の `node` のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的
+* Node.js は `node` のバージョンによって動作が変わることが多いため, 複数の `node` のバージョンを切り替えられる [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm) を組み合わせて使うのが一般的
 * そこで以下では nvm, npm, ビルド手順, の順に説明する
 
 ### nvmをインストール

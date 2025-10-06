@@ -182,19 +182,19 @@
 <h3 id="概要"><a class="header" href="#概要">概要</a></h3>
 <ul>
 <li>JavaScript はもともとWebページの一部として書いて, 動的なページを作るためのプログラミング言語だった</li>
-<li>したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが Node.js</li>
+<li>したがって実行環境はWebブラウザの中と決まっていたのだが, ブラウザ外でも通常のプログラミング言語として実行できるよう, 単体の処理系として切り出されたのが <a href="https://nodejs.org/en">Node.js</a></li>
 <li>つまり Node.js = 普通の (ブラウザと無関係な) JavaScript の実行環境
 <ul>
 <li>Python プログラムを実行するためにPython処理系 (<code>python</code> コマンド)があるのと同じように JavaScript に対して Node.js (<code>node</code>コマンド) がある</li>
 <li><code>Node.js</code> というとまるでそれ自身がJavaScriptのプログラムのようだがそうではない (このネーミングは理解不能)</li>
 </ul>
 </li>
-<li>JavaScript で書かれたソフトウェアは npm (Node Package Manager) という仕組みで配布・インストールされることが多い
+<li>JavaScript で書かれたソフトウェアは <a href="https://www.npmjs.com/">npm (Node Package Manager)</a> という仕組みで配布・インストールされることが多い
 <ul>
 <li>つまりPython にとっての pip が JavaScript にとってはnpm</li>
 </ul>
 </li>
-<li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる nvm (Node Version Manager) を組み合わせて使うのが一般的</li>
+<li>Node.js は <code>node</code> のバージョンによって動作が変わることが多いため, 複数の <code>node</code> のバージョンを切り替えられる <a href="https://github.com/nvm-sh/nvm">nvm (Node Version Manager)</a> を組み合わせて使うのが一般的</li>
 <li>そこで以下では nvm, npm, ビルド手順, の順に説明する</li>
 </ul>
 <h3 id="nvmをインストール"><a class="header" href="#nvmをインストール">nvmをインストール</a></h3>

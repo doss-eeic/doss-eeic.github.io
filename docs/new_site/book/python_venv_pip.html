@@ -181,8 +181,8 @@
 <h2 id="python--venv--pip-編"><a class="header" href="#python--venv--pip-編">Python : venv + pip 編</a></h2>
 <h3 id="基本"><a class="header" href="#基本">基本</a></h3>
 <ul>
-<li>Pythonで書かれたソフトウェアは <code>pip</code> というソフトウェア (Ubuntu の <code>apt</code> の Python版だと思えば良い) でインストールできることが多い</li>
-<li>ただし最近の <code>pip</code> は全ユーザ共通のディレクトリ (<code>/usr/local</code>など) へのインストールを非推奨 (最近は禁止に近い) としており, 個人のディレクトリへ, それも venv (仮想環境. 仮想マシンと紛らわしいが, つまりは目的に応じて複数の Python 環境を持てる仕組み) というものを組み合わせて指定した環境へインストールすることを前提にしている</li>
+<li>Pythonで書かれたソフトウェアは <a href="https://pypi.org/project/pip/">pip</a> というソフトウェア (Ubuntu の <code>apt</code> の Python版だと思えば良い) でインストールできることが多い</li>
+<li>ただし最近の <code>pip</code> は全ユーザ共通のディレクトリ (<code>/usr/local</code>など) へのインストールを非推奨 (最近は禁止に近い) としており, 個人のディレクトリへ, それも <a href="https://docs.python.org/3/library/venv.html">venv</a> (仮想環境. 仮想マシンと紛らわしいが, つまりは目的に応じて複数の Python 環境を持てる仕組み) というものを組み合わせて指定した環境へインストールすることを前提にしている</li>
 <li>Pythonプログラムは通常「ビルド」という手順は不要で, <code>pip</code>もソースコード (.py) をインストールするので原理的には <code>pip</code> でソースコードを入手可能だが, 通常は git でダウンロードする</li>
 <li>git でソースコードをダウンロードした場合も <code>pip</code> を使ってそのソースコードを適切な場所に配置するため結局 <code>pip</code> が必要となる</li>
 <li>そこで以下では venv, pip, ビルド手順, の順に説明する</li>
@@ -190,7 +190,7 @@
 </ul>
 <h3 id="venv--virtual-env"><a class="header" href="#venv--virtual-env">venv : virtual env</a></h3>
 <ul>
-<li>Pythonの<code>venv</code>は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
+<li>Pythonの<a href="https://docs.python.org/3/library/venv.html">venv</a> は, 目的に応じた複数の Python 環境 (ここでは環境 = インストールされているパッケージの集合のことだと思えば良い) を持つことができる仕組み</li>
 <li>最初に, システム共通の <code>python</code> コマンド (<code>python3</code> という名前の場合もある) が使える状態を前提とする</li>
 </ul>
 <pre><code>$ which python

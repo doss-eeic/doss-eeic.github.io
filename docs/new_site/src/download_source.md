@@ -25,7 +25,7 @@ $ tar xvf xyz.tar.bz2
   * `v` ... 進捗表示 (verbose) : ファイルが解凍されるたびにその名前を表示する
   * `f` ... ファイル指定 : xyz.tar.bz2 が解凍の対象であることを指定
 
-### 練習
+### <font color="green">練習</font>
 
 + GNU awk というプログラムの tarball をダウンロードしてみよ
 + 空フォルダを作りそこでそれを解凍してみよ
@@ -63,7 +63,7 @@ $ git clone https://github.com/xyz/xyz.git
 $ sudo apt install git
 ```
 
-### 練習
+### <font color="green">練習</font>
 
 + Python のライブラリである `art` の git レポジトリを発見し, `git clone` してみよ
   * 検索のヒント: python art github 
