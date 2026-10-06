@@ -1,0 +1,97 @@
+<p><link rel="stylesheet" href="../scripts/style.css"></p>
+<h1 class="unnumbered"
+id="大規模ソフトウェアを手探る-ai-coding-の使い方">大規模ソフトウェアを手探る</br>
+AI coding の使い方</h1>
+<h1 id="open-webui">Open WebUI</h1>
+<ul>
+<li><a href="https://taulec.zapto.org:3000/" target="_blank"
+rel="noopener">こちら</a> に東大の Google アカウント (<span
+class="citation" data-cites="g.ecc">@g.ecc</span>)
+でログインして下さい</li>
+</ul>
+<h1 id="opencode">OpenCode</h1>
+<ul>
+<li>OpenCode はオープンソースの Coding Agent ツール (骨組み,
+ハーネス)</li>
+<li>知っている人は Claude Code, Codex CLI
+もどきと思ってくれればいいと思いますが,
+授業ではこちらを使ってみます</li>
+</ul>
+<h2 id="インストール">インストール</h2>
+<ul>
+<li><font color=red>注意:</font> 最近(?) version 2
+になったらしく普通に見つかるのは version 2 の方だが,
+こちらで提供する設定ファイル等を version 1 でしか確認していないので,
+おとなしくversion 1 にするか, version 2 でダメだったらそこで引き下がって
+version 1 にするか頑張って version 2 用の設定を作って共有して下さい</li>
+<li>自分のPCへのインストール
+<ul>
+<li>version 1 (無難): <code>npm install -g opencode-ai</code></li>
+<li>version 2 (参考): <code>npm install -g @opencode/cli</code></li>
+<li>詳しくは https://opencode.ai/docs/ja</li>
+<li>npm のインストールの仕方はちょうど<a
+href="https://doss.eidos.ic.i.u-tokyo.ac.jp/new_site/book/js_nvm_npm.html"
+target="_blank" rel="noopener">こちら</a></li>
+</ul></li>
+</ul>
+<h2 id="起動">起動</h2>
+<p>初めての人は一旦設定ファイル無しで起動して終了してから設定ファイルをコピーするとよいでしょう</p>
+<ul>
+<li>端末から</li>
+</ul>
+<pre><code>$ opencode</code></pre>
+<p>(<code>$</code> はシェルプロンプトのつもりで,
+入力の一部ではありません) - 終了</p>
+<pre><code>&gt; /exit</code></pre>
+<p>(<code>&gt;</code> はコーディングエージェント, つまりOpenCode
+に向かっての入力というつもりですが実際はこんなものは出てきません) -
+起動して終了すると以下の二つのフォルダが勝手にできているはず (Windows は
+WSL を使えば同様のはず. そうじゃない場合は誰か教えて) -
+<code>~/.config/opencode/</code> -
+<code>~/.local/share/opencode/</code></p>
+<h2 id="設定ファイル">設定ファイル</h2>
+<ul>
+<li>opencode.jsonc を<a
+href="https://drive.google.com/drive/folders/1Jww4rPH9tC0HQ0eiAW6uZ-CudQ_XiLkq?usp=sharing"
+target="_blank" rel="noopener">こちら</a>からダウンロードして,
+<code>~/.config/opencode/opencode.jsonc</code> としてコピー
+(元々あったら一応中身を確認. 初めて使ったのならほぼ空のはず.
+問題なさげなことを確認して上書き)</li>
+<li>auth.json.template を同じ場所からダウンロードして,
+<code>~/.local/share/opencode/auth.json</code> にコピー (OpenCode
+が初めてだったらこのファイルは存在していないはずだがあったら中身を確認.
+マージする場合は “litellm” { … } の部分を書き足す(多分)).
+エディタで開いて鍵 (<code>sk-...</code> の部分に, UTOLで配布)
+を書き込む</li>
+</ul>
+<h2 id="会話の続き">会話の続き</h2>
+<pre><code>$ claude --continue</code></pre>
+<p>省略形:</p>
+<pre><code>$ claude -c </code></pre>
+<p>これは最後のセッションを勝手に起動するもののよう.
+もう少し柔軟に選ぶ方法があると思うが調べて共有して下さい.</p>
+<h2 id="モデルの選択">モデルの選択</h2>
+<ul>
+<li><code>opencode.jsonc</code>
+に列挙されたモデルが使えるようになっています</li>
+<li>最後の行がデフォルトのモデルです</li>
+<li><code>/models</code> というコマンドで,
+OpenCodeの中から切り替え可能です</li>
+</ul>
+<pre><code>&gt; /models</code></pre>
+<p>こちらで提供しているのと違うモデルも表示されるので - (mdx MaaS) -
+(LLM-jp) - (UTokyo Azure) のどれかの印が入った物を選んで下さい</p>
+<ul>
+<li>UTokyo Azure には新し目の強力なモデル (GPT-6など) があります</li>
+<li>試すのは全然OKですが, どれがお高めか (Astra &gt; Sol &gt; Luna)
+も知らずにとにかく一番いいモデル, とかいう使い方はNG</li>
+<li>UTokyo Azure 大量に使うと料金が発生する可能性があるので,
+様子を見て利用が激しければ制限したくなるかも知れません</li>
+<li><a href="https://llm-jp.nii.ac.jp/" target="_blank"
+rel="noopener">LLM-jp</a> は日本の研究者が作っているモデルで,
+発展途上で粗が見つかるかも知れませんがLLMに興味があるならば将来参加することも含めて積極的に使ってみて下さい</li>
+<li>実用的には日常の質問用途での利用は gpt-oss-20b-mdx-maas
+(レスポンス速め), LLM-jp を試しつつ, 必要な時には
+gpt-5.3-codex-utokyo-azure, それでも足りないと思った時に GPT-6
+に手を出す, くらいの感じでしょうか (主観)</li>
+</ul>
