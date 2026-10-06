@@ -35,8 +35,13 @@ $ opencode
 ```
 (`>` はコーディングエージェント, つまりOpenCode に向かっての入力というつもりですが実際はこんなものは出てきません)
 - 起動して終了すると以下の二つのフォルダが勝手にできているはず (Windows は WSL を使えば同様のはず. そうじゃない場合は誰か教えて)
-  - `~/.config/opencode/`
-  - `~/.local/share/opencode/`
+
+これをやると
+
+- `~/.config/opencode/`
+- `~/.local/share/opencode/`
+
+という二つのフォルダが勝手にできていることと思います
 
 ## 設定ファイル
 
@@ -46,11 +51,11 @@ $ opencode
 ## 会話の続き
 
 ```
-$ claude --continue
+$ opencode --continue
 ```
 省略形:
 ```
-$ claude -c 
+$ opencode -c 
 ```
 
 これは最後のセッションを勝手に起動するもののよう. もう少し柔軟に選ぶ方法があると思うが調べて共有して下さい.

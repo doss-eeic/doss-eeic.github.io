@@ -46,9 +46,13 @@ target="_blank" rel="noopener">こちら</a></li>
 <p>(<code>&gt;</code> はコーディングエージェント, つまりOpenCode
 に向かっての入力というつもりですが実際はこんなものは出てきません) -
 起動して終了すると以下の二つのフォルダが勝手にできているはず (Windows は
-WSL を使えば同様のはず. そうじゃない場合は誰か教えて) -
-<code>~/.config/opencode/</code> -
-<code>~/.local/share/opencode/</code></p>
+WSL を使えば同様のはず. そうじゃない場合は誰か教えて)</p>
+<p>これをやると</p>
+<ul>
+<li><code>~/.config/opencode/</code></li>
+<li><code>~/.local/share/opencode/</code></li>
+</ul>
+<p>という二つのフォルダが勝手にできていることと思います</p>
 <h2 id="設定ファイル">設定ファイル</h2>
 <ul>
 <li>opencode.jsonc を<a
@@ -65,9 +69,9 @@ target="_blank" rel="noopener">こちら</a>からダウンロードして,
 を書き込む</li>
 </ul>
 <h2 id="会話の続き">会話の続き</h2>
-<pre><code>$ claude --continue</code></pre>
+<pre><code>$ opencode --continue</code></pre>
 <p>省略形:</p>
-<pre><code>$ claude -c </code></pre>
+<pre><code>$ opencode -c </code></pre>
 <p>これは最後のセッションを勝手に起動するもののよう.
 もう少し柔軟に選ぶ方法があると思うが調べて共有して下さい.</p>
 <h2 id="モデルの選択">モデルの選択</h2>
