@@ -14,6 +14,7 @@
 
 - [テキスト](new_site/book/index.html) 初日はこれを読んだり動画を見たりして練習してください
 - [イントロスライド](new_slides/00_intro.pdf)
+- [提出物について](new_slides/01_report.pdf)
 - [どんなソフト](html/soft.html) をいじればいいかのヒント
 - [過去のチーム・テーマ](https://github.com/orgs/doss-eeic/teams)
 
